@@ -323,14 +323,14 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
     if (isDisabled) {
       return {
         ...baseStyle,
-        backgroundColor: '#90EE90', 
-        color: '#000000',
+        background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
+        color: 'white',
         '&:hover': {
-          backgroundColor: '#90EE90', 
+          background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
         },
         '&.Mui-disabled': {
-          backgroundColor: '#90EE90',
-          color: '#000000',
+          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
+          color: 'white',
         }
       };
     }
@@ -345,19 +345,23 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
       case 'approved':
         return {
           ...baseStyle,
-          backgroundColor: '#28a745',
-          '&:hover': { backgroundColor: '#218838' },
+          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
+          color: 'white',
+          '&:hover': { 
+            background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
+          },
         };
       default:
         return {
           ...baseStyle,
-          backgroundColor: '#DDAC17',
-          '&:hover': { backgroundColor: '#Ecc440' },
+          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
+          color: 'white',
+          '&:hover': { 
+            background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
+          },
         };
     }
-  };
-
-  return (
+  };  return (
     <>
       {/* Payment verification loading overlay */}
       {isVerifyingPayment && (
@@ -413,7 +417,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
             </div>
           </div>
 
-          {/* Show status button when Processing or Approved, otherwise show Claim Reward if eligible */}
+          {/* Show status message when Processing or Approved, otherwise show Claim Reward if eligible */}
           {hasProcessingOrApprovedStatus ? (
             <div className="flex justify-center mt-4">
               <Button
@@ -421,7 +425,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
                 sx={getButtonStyle(statusButtonText, true)}
                 disabled
               >
-                {statusButtonText}
+                {statusButtonText?.toLowerCase() === 'approved' ? 'Reward Approved' : statusButtonText}
               </Button>
             </div>
           ) : sponsorRewardData?.isEligibleForReward ? (
@@ -434,8 +438,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
                 Claim Reward
               </Button>
             </div>
-          ) : null}
-        </div>
+          ) : null}        </div>
       </div>
 
       {/* Referral Link Box */}

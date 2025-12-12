@@ -118,20 +118,24 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             onClick={onRepay}
             disabled={!isRepayEnabled}
             sx={{
-              backgroundColor: isRepayEnabled 
-                ? 'rgba(255, 255, 255, 0.2)' 
+              background: isRepayEnabled 
+                ? 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)'
                 : 'rgba(255, 255, 255, 0.1)',
               color: 'white',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.3)',
               '&:hover': {
-                backgroundColor: isRepayEnabled 
-                  ? 'rgba(255, 255, 255, 0.3)' 
+                background: isRepayEnabled 
+                  ? 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)'
                   : 'rgba(255, 255, 255, 0.1)',
+                boxShadow: isRepayEnabled 
+                  ? '0 4px 12px rgba(107, 33, 168, 0.3)'
+                  : 'none',
               },
               '&:disabled': {
                 color: 'rgba(255, 255, 255, 0.5)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
+                background: 'rgba(255, 255, 255, 0.1)',
               },
               fontWeight: 'bold',
               textTransform: 'none',
