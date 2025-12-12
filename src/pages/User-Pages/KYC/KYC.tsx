@@ -32,18 +32,19 @@ const KYC: React.FC = () => {
     address: '',
   });
 
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        accountName: user?.Name ,
-        account_number: user?.account_number ,
-        ifsc_code: user?.ifsc_code ,
-        bank_name: user?.bank_name ,
-        Pan_no: user?.Pan_no ,
-        address: user?.address ,
-      });
-    }
-  }, [user]);
+ useEffect(() => {
+  if (user) {
+    setFormData({
+      accountName: user.Name,
+      account_number: user.account_number,
+      ifsc_code: user.ifsc_code,
+      bank_name: user.bank_name,
+      Pan_no: user.Pan_no,
+      address: user.address,
+    });
+  }
+}, []); 
+
 
   const submitKYC = useSubmitKYC();
 

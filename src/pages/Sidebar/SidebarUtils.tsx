@@ -1,4 +1,4 @@
-import { CheckCircle2Icon, PackageIcon } from "lucide-react";
+import {  PackageIcon } from "lucide-react";
 import { SideBarMenuItemType } from "../../store/store";
 import {
   DashboardIcon,
@@ -148,12 +148,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <DashboardIcon />,
     isExpandable: true, 
     subItems: [
-      {
-        name: "Activate",
-        icon: <CheckCircle2Icon />,
-        path: "/admin/Activate",
+      // {
+      //   name: "Activate",
+      //   icon: <CheckCircle2Icon />,
+      //   path: "/admin/Activate",
         
-      },
+      // },
       {
         name: "Activate Package",
         icon: <PackageIcon />,
