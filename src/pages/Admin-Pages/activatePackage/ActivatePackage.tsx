@@ -86,7 +86,7 @@ const ActivatePackage: React.FC = () => {
 
   // ✅ Added RD package
   const packageOptions: PackageOption[] = [
-    { value: 'standard', label: 'Standard Package - ₹2600', amount: 2600 },
+    { value: 'standard', label: 'Standard Package - ₹1200', amount: 1200 },
     { value: 'RD', label: 'RD Package - ₹1000', amount: 1000 },
   ];
 
