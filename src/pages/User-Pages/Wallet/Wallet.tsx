@@ -29,8 +29,8 @@ import { useGetWalletOverview, useWalletWithdraw } from "../../../api/Memeber";
 const Wallet = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [amount, setAmount] = useState("");
-  const [deduction, setDeduction] = useState(0);
-  const [netAmount, setNetAmount] = useState(0);
+  const [adminCharges, setAdminCharges] = useState(0);
+  const [tds, setTds] = useState(0);  const [netAmount, setNetAmount] = useState(0);
   const [optimisticBalance, setOptimisticBalance] = useState<number | null>(null);
   const [isWithdrawalAllowed, setIsWithdrawalAllowed] = useState<boolean>(true);
   // const [ setLoanStatusMessage] = useState<string>("");
@@ -64,13 +64,16 @@ const Wallet = () => {
 
     if (selectedAmount && selectedAmount !== "0") {
       const withdrawalAmount = parseFloat(selectedAmount);
-      const calculatedDeduction = withdrawalAmount * 0.15;
-      const calculatedNetAmount = withdrawalAmount - calculatedDeduction;
+      const adminChargeAmount = withdrawalAmount * 0.15; // 15% admin charges
+      const tdsAmount = withdrawalAmount * 0.05; // 5% TDS
+      const calculatedNetAmount = withdrawalAmount - adminChargeAmount - tdsAmount;
 
-      setDeduction(calculatedDeduction);
+      setAdminCharges(adminChargeAmount);
+      setTds(tdsAmount);
       setNetAmount(calculatedNetAmount);
     } else {
-      setDeduction(0);
+      setAdminCharges(0);
+      setTds(0);
       setNetAmount(0);
     }
   };
@@ -107,7 +110,8 @@ const Wallet = () => {
       {
         onSuccess: () => {
           setAmount("");
-          setDeduction(0);
+          setAdminCharges(0);
+          setTds(0);
           setNetAmount(0);
           refetch();
         },
@@ -343,8 +347,22 @@ const Wallet = () => {
               </FormControl>
 
               <TextField
-                label="Deduction Amount (15%)"
-                value={`₹${deduction.toFixed(2)}`}
+                label="Admin Charges (15%)"
+                value={`₹${adminCharges.toFixed(2)}`}
+                fullWidth
+                size="medium"
+                InputProps={{ readOnly: true }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
+                  },
+                }}
+              />
+              
+              <TextField
+                label="TDS (5%)"
+                value={`₹${tds.toFixed(2)}`}
                 fullWidth
                 size="medium"
                 InputProps={{ readOnly: true }}
@@ -385,7 +403,7 @@ const Wallet = () => {
                   </Typography>
                   <Box sx={{ display: "flex", gap: 4, flexDirection: isMobile ? "column" : "row" }}>
                     <Box>
-                      <Typography variant="body2">• 15% deduction applied</Typography>
+                      <Typography variant="body2">• 15% admin charges + 5% TDS applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹500</Typography>
                     </Box>
                     <Box>
