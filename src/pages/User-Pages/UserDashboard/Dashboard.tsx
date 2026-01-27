@@ -94,40 +94,70 @@ const UserDashboard = () => {
   const isRepayEnabled = transactionsResponse?.isRepayEnabled || false;
   const alreadyRepaidToday = transactionsResponse?.alreadyRepaidToday || false;
 
-  const approvedLoan = Array.isArray(allTransactions) 
-    ? allTransactions.find((transaction: any) => 
-        transaction.status?.toLowerCase() === 'approved' && 
-        (transaction.transaction_type?.includes('Loan') || transaction.benefit_type === 'loan')
-      )
+  // Loan Tiers configuration matching backend
+  const LOAN_TIERS = [
+    { level: 1, amount: 5000 },
+    { level: 2, amount: 10000 },
+    { level: 3, amount: 25000 },
+    { level: 4, amount: 50000 },
+    { level: 5, amount: 100000 },
+  ];
+
+  const completedLoansCount = Array.isArray(allTransactions)
+    ? allTransactions.filter((t: any) =>
+      t.transaction_type === "Reward Loan Request" &&
+      t.status === "Approved" &&
+      t.repayment_status === "Paid"
+    ).length
+    : 0;
+
+  const approvedLoan = Array.isArray(allTransactions)
+    ? allTransactions.find((transaction: any) =>
+      transaction.status?.toLowerCase() === 'approved' &&
+      transaction.repayment_status !== 'Paid' &&
+      (transaction.transaction_type?.includes('Loan') || transaction.benefit_type === 'loan')
+    )
     : null;
 
   const isLoanApproved = !!approvedLoan;
-    
-  const initialLoanAmount = approvedLoan?.ew_credit ? parseFloat(approvedLoan.ew_credit) : 0; 
-// Find the last completed repayment
-const lastCompletedRepayment = Array.isArray(allTransactions)
-  ? allTransactions
-      .filter((t: any) => t.is_loan_repayment && t.repayment_status === "Completed")
-      .sort((a: any, b: any) => new Date(b.transaction_date).getTime() - new Date(a.transaction_date).getTime())[0]
-  : null;
 
-// Now update dueAmount
-const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
-  ? parseFloat(lastCompletedRepayment.repayment_context.new_due_amount)
-  : approvedLoan?.net_amount
-  ? parseFloat(approvedLoan.net_amount)
-  : initialLoanAmount;
+  // Determine current loan amount based on level
+  const activeLoanTierIndex = completedLoansCount;
+  const currentTierAmount = activeLoanTierIndex < LOAN_TIERS.length
+    ? LOAN_TIERS[activeLoanTierIndex].amount
+    : LOAN_TIERS[LOAN_TIERS.length - 1].amount;
 
+  const initialLoanAmount = approvedLoan ? currentTierAmount : 0;
 
-  // Find the first transaction with Processing or Approved status
-  const processingOrApprovedTransaction = Array.isArray(allTransactions) 
-    ? allTransactions.find((transaction: any) => 
-        transaction.status && 
-        (transaction.status.toLowerCase() === 'processing' || 
-         transaction.status.toLowerCase() === 'approved')
+  // Calculate net amount for due amount fallback
+  const loanNetAmount = approvedLoan?.net_amount ? parseFloat(approvedLoan.net_amount) : (approvedLoan?.ew_credit ? parseFloat(approvedLoan.ew_credit) : 0);
+
+  // Find the last completed repayment linked to this SPECIFIC approved loan
+  const lastCompletedRepayment = Array.isArray(allTransactions) && approvedLoan
+    ? allTransactions
+      .filter((t: any) =>
+        t.is_loan_repayment &&
+        t.repayment_status === "Completed" &&
+        t.repayment_context?.reference_no === approvedLoan.reference_no
       )
+      .sort((a: any, b: any) => new Date(b.transaction_date).getTime() - new Date(a.transaction_date).getTime())[0]
     : null;
-    
+
+  // Now update dueAmount
+  const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
+    ? parseFloat(lastCompletedRepayment.repayment_context.new_due_amount)
+    : loanNetAmount;
+
+
+  // Find the first transaction with Processing or Approved status (excluding fully paid loans)
+  const processingOrApprovedTransaction = Array.isArray(allTransactions)
+    ? allTransactions.find((transaction: any) =>
+      transaction.status &&
+      (transaction.status.toLowerCase() === 'processing' ||
+        (transaction.status.toLowerCase() === 'approved' && transaction.repayment_status !== 'Paid'))
+    )
+    : null;
+
   const getStatusButtonText = () => {
     if (processingOrApprovedTransaction) {
       return processingOrApprovedTransaction.status;
@@ -137,6 +167,12 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
 
   const statusButtonText = getStatusButtonText();
   const hasProcessingOrApprovedStatus = !!statusButtonText;
+
+  // Determine next loan amount
+  const nextLoanTierIndex = completedLoansCount;
+  const nextLoanAmount = nextLoanTierIndex < LOAN_TIERS.length
+    ? LOAN_TIERS[nextLoanTierIndex].amount
+    : LOAN_TIERS[LOAN_TIERS.length - 1].amount;
 
   const loading = walletLoading || sponsersLoading || memberLoading || loanStatusLoading;
 
@@ -218,9 +254,9 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
 
   const handleCopyReferralLink = () => {
     if (!memberDetails?.Member_id) return;
-    
+
     const referralLink = `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}`;
-    
+
     navigator.clipboard.writeText(referralLink)
       .then(() => {
         toast.success('Referral link copied to clipboard!');
@@ -232,24 +268,24 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
 
   const handleShareReferralLink = () => {
     if (!memberDetails?.Member_id) return;
-    
+
     const referralLink = `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}`;
-    
+
     if (navigator.share) {
       navigator.share({
         title: 'Join me!',
         text: 'Check out this amazing platform and join using my referral link!',
         url: referralLink,
       })
-      .then(() => console.log('Successful share'))
-      .catch((error) => console.log('Error sharing:', error));
+        .then(() => console.log('Successful share'))
+        .catch((error) => console.log('Error sharing:', error));
     } else {
       handleCopyReferralLink();
     }
   };
 
-  const levelBenefitsAmount = walletOverview?.levelBenefits ||  0;
-  const directBenefitsAmount =  walletOverview?.directBenefits || 0;
+  const levelBenefitsAmount = walletOverview?.levelBenefits || 0;
+  const directBenefitsAmount = walletOverview?.directBenefits || 0;
   const totalEarningsAmount = walletOverview?.totalBenefits || 0;
   const totalWithdrawsAmount = walletOverview?.totalWithdrawal || 0;
   const walletBalanceAmount = walletOverview?.balance || 0;
@@ -257,44 +293,44 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
   const tableData = [
     {
       title: "Today's Registration",
-      direct: sponsersData?.sponsoredUsers?.filter((user:any) => user.status === 'active')?.length || 0,
+      direct: sponsersData?.sponsoredUsers?.filter((user: any) => user.status === 'active')?.length || 0,
       indirect: 0,
-      total: sponsersData?.sponsoredUsers?.filter((user:any) => user.status === 'active')?.length || 0,
+      total: sponsersData?.sponsoredUsers?.filter((user: any) => user.status === 'active')?.length || 0,
     },
     {
       title: "Today's Activation",
-      direct: sponsersData?.sponsoredUsers?.filter((user:any) => 
-        user.status === 'active' && 
+      direct: sponsersData?.sponsoredUsers?.filter((user: any) =>
+        user.status === 'active' &&
         user.activationDate?.toDateString() === new Date().toDateString()
       )?.length || 0,
       indirect: 0,
-      total: sponsersData?.sponsoredUsers?.filter((user:any) => 
-        user.status === 'active' && 
+      total: sponsersData?.sponsoredUsers?.filter((user: any) =>
+        user.status === 'active' &&
         user.activationDate?.toDateString() === new Date().toDateString()
       )?.length || 0,
     },
     {
       title: 'Total Registration',
-      direct: memberDetails?.direct_referrals?.filter((ref:any) => ref.status === 'active')?.length || 0,
-      indirect: (memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.filter((ref:any) => ref.status === 'active')?.length || 0),
+      direct: memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0,
+      indirect: (memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0),
       total: memberDetails?.total_team || 0,
     },
     {
       title: 'Total Activation',
-      direct: memberDetails?.direct_referrals?.filter((ref:any) => ref.status === 'active')?.length || 0,
-      indirect: (memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.filter((ref:any) => ref.status === 'active')?.length || 0),
+      direct: memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0,
+      indirect: (memberDetails?.total_team || 0) - (memberDetails?.direct_referrals?.filter((ref: any) => ref.status === 'active')?.length || 0),
       total: memberDetails?.total_team || 0,
     },
     {
       title: 'Current Month Activation',
-      direct: memberDetails?.direct_referrals?.filter((ref:any) => 
-        ref.status === 'active' && 
+      direct: memberDetails?.direct_referrals?.filter((ref: any) =>
+        ref.status === 'active' &&
         new Date(ref.activationDate).getMonth() === new Date().getMonth() &&
         new Date(ref.activationDate).getFullYear() === new Date().getFullYear()
       )?.length || 0,
       indirect: 0,
-      total: memberDetails?.direct_referrals?.filter((ref:any) => 
-        ref.status === 'active' && 
+      total: memberDetails?.direct_referrals?.filter((ref: any) =>
+        ref.status === 'active' &&
         new Date(ref.activationDate).getMonth() === new Date().getMonth() &&
         new Date(ref.activationDate).getFullYear() === new Date().getFullYear()
       )?.length || 0,
@@ -347,7 +383,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           ...baseStyle,
           background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
           color: 'white',
-          '&:hover': { 
+          '&:hover': {
             background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
           },
         };
@@ -356,12 +392,12 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           ...baseStyle,
           background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
           color: 'white',
-          '&:hover': { 
+          '&:hover': {
             background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
           },
         };
     }
-  };  return (
+  }; return (
     <>
       {/* Payment verification loading overlay */}
       {isVerifyingPayment && (
@@ -442,8 +478,8 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
       </div>
 
       {/* Referral Link Box */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           mx: { xs: 2, sm: 3, md: 4 },
           my: 1.5,
           p: 2,
@@ -453,10 +489,10 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           boxShadow: '0 2px 8px rgba(107, 33, 168, 0.1)',
         }}
       >
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            mb: 1, 
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 1,
             color: '#7e22ce',
             fontWeight: 'bold',
             textAlign: 'center'
@@ -464,18 +500,18 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
         >
           Your Referral Link
         </Typography>
-        
-        <Box 
-          sx={{ 
-            display: 'flex', 
+
+        <Box
+          sx={{
+            display: 'flex',
             flexDirection: { xs: 'column', sm: 'row' },
             alignItems: 'center',
             gap: 2,
             justifyContent: 'center'
           }}
         >
-          <Box 
-            sx={{ 
+          <Box
+            sx={{
               flexGrow: 1,
               maxWidth: { sm: '400px', md: '500px' },
               width: '100%'
@@ -483,7 +519,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           >
             <Link
               href={memberDetails?.Member_id ? `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}` : '#'}
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               sx={{
                 color: '#6b21a8',
@@ -501,24 +537,24 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
                 fontSize: { xs: '0.8rem', sm: '0.9rem' }
               }}
             >
-              <Typography 
-                variant="body2" 
-                sx={{ 
+              <Typography
+                variant="body2"
+                sx={{
                   color: '#6b21a8',
                   fontWeight: 'medium',
                 }}
               >
-                {memberDetails?.Member_id ? 
-                  `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}` : 
+                {memberDetails?.Member_id ?
+                  `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}` :
                   'Loading...'
                 }
               </Typography>
             </Link>
           </Box>
 
-          <Box 
-            sx={{ 
-              display: 'flex', 
+          <Box
+            sx={{
+              display: 'flex',
               gap: 1,
               flexDirection: { xs: 'row', sm: 'column', md: 'row' },
               width: { xs: '100%', sm: 'auto' },
@@ -543,7 +579,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
             >
               Copy Link
             </Button>
-            
+
             <Button
               variant="outlined"
               startIcon={<ShareIcon />}
@@ -565,10 +601,10 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
             </Button>
           </Box>
         </Box>
-        
-        <Typography 
-          variant="caption" 
-          sx={{ 
+
+        <Typography
+          variant="caption"
+          sx={{
             display: 'block',
             textAlign: 'center',
             mt: 1,
@@ -581,11 +617,11 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
       </Box>
 
       {/* Dashboard Cards Grid */}
-      <Grid 
-        container 
-        spacing={{ xs: 2, sm: 3 }} 
-        sx={{ 
-          mx: { xs: 1, sm: 2 }, 
+      <Grid
+        container
+        spacing={{ xs: 2, sm: 3 }}
+        sx={{
+          mx: { xs: 1, sm: 2 },
           my: 2,
           pt: 3,
           pr: 7,
@@ -610,8 +646,8 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
         </Grid>
-        
-        {isLoanApproved &&  (
+
+        {isLoanApproved && (
           <Grid item xs={12} sm={6} md={4}>
             <DashboardCard
               amount={initialLoanAmount}
@@ -640,9 +676,9 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           }
         }}
       >
-        <DialogTitle 
+        <DialogTitle
           id="claim-reward-dialog-title"
-          sx={{ 
+          sx={{
             textAlign: 'center',
             color: '#7e22ce',
             fontWeight: 'bold',
@@ -652,9 +688,9 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
         >
           🎉 Congratulations!
         </DialogTitle>
-        
+
         <DialogContent>
-          <DialogContentText 
+          <DialogContentText
             id="claim-reward-dialog-description"
             sx={{
               textAlign: 'center',
@@ -665,11 +701,11 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           >
             <p>
               You are eligible for a reward loan of{" "}
-              <span style={{ color: "gold", fontWeight: "bold" }}>₹5000</span>!
+              <span style={{ color: "gold", fontWeight: "bold" }}>₹{nextLoanAmount}</span>!
             </p>
           </DialogContentText>
-          
-          <DialogContentText 
+
+          <DialogContentText
             sx={{
               textAlign: 'center',
               color: '#6b7280',
@@ -679,7 +715,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
             Submit your loan request and our admin team will review and approve the appropriate amount based on your eligibility.
           </DialogContentText>
         </DialogContent>
-        
+
         <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 3, pt: 1 }}>
           <Button
             onClick={handleCloseDialog}
@@ -730,8 +766,8 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           },
         }}
       >
-        <DialogTitle 
-          sx={{ 
+        <DialogTitle
+          sx={{
             textAlign: 'center',
             color: '#7e22ce',
             fontWeight: 'bold',
@@ -756,10 +792,10 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           </DialogContentText>
 
           <Box sx={{ mb: 3 }}>
-            <Typography 
-              variant="subtitle2" 
-              sx={{ 
-                color: '#6b7280', 
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: '#6b7280',
                 mb: 1.5,
                 fontSize: '0.85rem',
                 textTransform: 'uppercase',
@@ -768,10 +804,10 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
             >
               Loan Summary
             </Typography>
-            
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-              <Box sx={{ 
-                display: 'flex', 
+              <Box sx={{
+                display: 'flex',
                 justifyContent: 'space-between',
                 p: 1.5,
                 backgroundColor: '#f8fafc',
@@ -781,9 +817,9 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
                 <Typography sx={{ color: '#64748b' }}>Total Loan</Typography>
                 <Typography sx={{ fontWeight: 600 }}>₹{initialLoanAmount.toFixed(2)}</Typography>
               </Box>
-              
-              <Box sx={{ 
-                display: 'flex', 
+
+              <Box sx={{
+                display: 'flex',
                 justifyContent: 'space-between',
                 p: 1.5,
                 backgroundColor: '#f0fdf4',
@@ -795,9 +831,9 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
                   ₹{(initialLoanAmount - dueAmount).toFixed(2)}
                 </Typography>
               </Box>
-              
-              <Box sx={{ 
-                display: 'flex', 
+
+              <Box sx={{
+                display: 'flex',
                 justifyContent: 'space-between',
                 p: 1.5,
                 backgroundColor: '#fef2f2',
@@ -829,8 +865,16 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
                 },
               }}
             >
-              {[1, 500]
-                .filter(amount => amount <= dueAmount)
+              {[
+                1, // Testing amount
+                activeLoanTierIndex === 0 ? 500 : // Level 1
+                  activeLoanTierIndex >= 1 && activeLoanTierIndex <= 3 ? 1000 : // Level 2, 3, 4
+                    activeLoanTierIndex === 4 ? 2000 : 1000 // Level 5 (default to 1000 if undefined)
+              ]
+                .filter(amount => amount <= dueAmount || amount === 1) // Only show options less than due amount, except 1 which is for testing
+                .concat(dueAmount) // Always include full due amount
+                .sort((a, b) => a - b)
+                .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], [] as number[])
                 .map((amount) => (
                   <MenuItem
                     key={amount}
@@ -853,8 +897,8 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
           )}
         </DialogContent>
 
-        <DialogActions sx={{ 
-          justifyContent: 'center', 
+        <DialogActions sx={{
+          justifyContent: 'center',
           pb: 2,
           pt: 1,
           gap: 1,
@@ -901,7 +945,7 @@ const dueAmount = lastCompletedRepayment?.repayment_context?.new_due_amount
       </Dialog>
 
       {/* Member Statistics */}
-      <div className='mt-10 p-4 rounded shadow'>    
+      <div className='mt-10 p-4 rounded shadow'>
         <Card className='bg-gray-300'>
           <CardContent>
             <div className="flex justify-between items-center mb-4">

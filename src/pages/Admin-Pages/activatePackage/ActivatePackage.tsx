@@ -86,8 +86,8 @@ const ActivatePackage: React.FC = () => {
 
   // ✅ Added RD package
   const packageOptions: PackageOption[] = [
-    { value: 'standard', label: 'Standard Package - ₹1200', amount: 1200 },
-    { value: 'RD', label: 'RD Package - ₹1000', amount: 1000 },
+    { value: 'RD_1200', label: 'RD Package - ₹1200', amount: 1200 },
+    { value: 'RD_600', label: 'RD Package - ₹600', amount: 600 },
   ];
 
   // Handle member ID search
@@ -264,15 +264,15 @@ const ActivatePackage: React.FC = () => {
                         selectedMember.status === 'active'
                           ? 'active'
                           : selectedMember.status === 'Inactive'
-                          ? 'Inactive'
-                          : 'Pending'
+                            ? 'Inactive'
+                            : 'Pending'
                       }
                       color={
                         selectedMember.status === 'active'
                           ? 'success'
                           : selectedMember.status === 'Inactive'
-                          ? 'error'
-                          : 'warning'
+                            ? 'error'
+                            : 'warning'
                       }
                       variant="outlined"
                     />

@@ -42,7 +42,7 @@ import {
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import { getLoansListColumns } from '../../../utils/DataTableColumnsProvider';
 import { useGetAllTransactionDetails } from '../../../api/Admin';
-import { 
+import {
   useCreatePaymentOrder
 } from '../../../api/Memeber';
 import { toast } from 'react-toastify';
@@ -82,20 +82,20 @@ export default function LoansList() {
   const [tabValue, setTabValue] = useState(0);
   const [manualAmount, setManualAmount] = useState<string>('');
 
-  const { 
-    data: transactionsResponse, 
-    isLoading, 
+  const {
+    data: transactionsResponse,
+    isLoading,
     error,
-    refetch 
+    refetch
   } = useGetAllTransactionDetails();
 
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } = useCreatePaymentOrder();
-  
+
   const allTransactions = transactionsResponse || [];
   const loanTransactions = allTransactions
-    .filter((transaction: any) => 
+    .filter((transaction: any) =>
       (transaction.transaction_type?.toLowerCase().includes('loan') ||
-       transaction.benefit_type === 'loan') &&
+        transaction.benefit_type === 'loan') &&
       transaction.status === 'Approved'
     )
     .map((transaction: any) => ({
@@ -104,7 +104,10 @@ export default function LoansList() {
       member_id: transaction.member_id,
       Name: transaction.Name || 'N/A',
       mobileno: transaction.mobileno || 'N/A',
-      net_amount: parseFloat(transaction.net_amount) || 0,
+      // Fix for backend issue: If Unpaid, use ew_credit (full amount) as net_amount (due), otherwise trust net_amount
+      net_amount: transaction.repayment_status === 'Unpaid' && parseFloat(transaction.ew_credit) > 0
+        ? parseFloat(transaction.ew_credit)
+        : parseFloat(transaction.net_amount) || 0,
       ew_debit: parseFloat(transaction.ew_debit) || 0,
       ew_credit: parseFloat(transaction.ew_credit) || 0,
       status: transaction.status || 'Approved',
@@ -206,7 +209,7 @@ export default function LoansList() {
     const aValue = a[orderBy as keyof typeof a];
     const bValue = b[orderBy as keyof typeof b];
     return order === 'asc' ? (aValue < bValue ? -1 : aValue > bValue ? 1 : 0)
-                           : (aValue > bValue ? -1 : aValue < bValue ? 1 : 0);
+      : (aValue > bValue ? -1 : aValue < bValue ? 1 : 0);
   });
 
   const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -339,8 +342,8 @@ export default function LoansList() {
       </Card>
 
       {/* Enhanced Repay Dialog */}
-      <Dialog 
-        open={repayDialogOpen} 
+      <Dialog
+        open={repayDialogOpen}
         onClose={() => !isCreatingOrder && setRepayDialogOpen(false)}
         PaperProps={{
           sx: {
@@ -352,8 +355,8 @@ export default function LoansList() {
           },
         }}
       >
-        <DialogTitle 
-          sx={{ 
+        <DialogTitle
+          sx={{
             textAlign: 'center',
             color: '#7e22ce',
             fontWeight: 'bold',
@@ -378,10 +381,10 @@ export default function LoansList() {
           </DialogContentText>
 
           <Box sx={{ mb: 3 }}>
-            <Typography 
-              variant="subtitle2" 
-              sx={{ 
-                color: '#6b7280', 
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: '#6b7280',
                 mb: 1.5,
                 fontSize: '0.85rem',
                 textTransform: 'uppercase',
@@ -390,10 +393,10 @@ export default function LoansList() {
             >
               Loan Summary
             </Typography>
-            
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-              <Box sx={{ 
-                display: 'flex', 
+              <Box sx={{
+                display: 'flex',
                 justifyContent: 'space-between',
                 p: 1.5,
                 backgroundColor: '#f8fafc',
@@ -403,9 +406,9 @@ export default function LoansList() {
                 <Typography sx={{ color: '#64748b' }}>Member ID</Typography>
                 <Typography sx={{ fontWeight: 600 }}>{selectedLoan?.member_id}</Typography>
               </Box>
-              
-              <Box sx={{ 
-                display: 'flex', 
+
+              <Box sx={{
+                display: 'flex',
                 justifyContent: 'space-between',
                 p: 1.5,
                 backgroundColor: '#f8fafc',
@@ -420,8 +423,8 @@ export default function LoansList() {
             </Box>
           </Box>
 
-          <Tabs 
-            value={tabValue} 
+          <Tabs
+            value={tabValue}
             onChange={handleTabChange}
             centered
             sx={{
@@ -459,8 +462,8 @@ export default function LoansList() {
                 {[500, 1000, 2000, 5000]
                   .filter(amount => amount <= (selectedLoan?.net_amount || 0))
                   .map((amount) => (
-                    <MenuItem 
-                      key={amount} 
+                    <MenuItem
+                      key={amount}
                       value={amount}
                       sx={{ fontWeight: amount === selectedLoan?.net_amount ? 600 : 400 }}
                     >
@@ -502,8 +505,8 @@ export default function LoansList() {
           )}
         </DialogContent>
 
-        <DialogActions sx={{ 
-          justifyContent: 'center', 
+        <DialogActions sx={{
+          justifyContent: 'center',
           pb: 2,
           pt: 1,
           gap: 1,
