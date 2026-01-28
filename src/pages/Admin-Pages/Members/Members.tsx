@@ -6,7 +6,7 @@ import './Members.scss'
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useGetAllMembersDetails, useUpdateMemberStatus } from '../../../api/Admin';
+import { useGetAllMembersDetails, } from '../../../api/Admin';
 import { useNavigate } from 'react-router-dom';
 import useSearch from '../../../hooks/SearchQuery';
 
