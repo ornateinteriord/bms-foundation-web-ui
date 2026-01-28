@@ -1,10 +1,10 @@
 import DataTable from 'react-data-table-component';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, TextField, Typography, Button, Grid, CircularProgress,  } from '@mui/material';
+import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, TextField, Typography, Button, Grid, CircularProgress, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { DASHBOARD_CUTSOM_STYLE, getMembersColumns, getPendingMembersColumns } from '../../../utils/DataTableColumnsProvider';
 import './Members.scss'
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
-import {  useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGetAllMembersDetails, useUpdateMemberStatus } from '../../../api/Admin';
 import { useNavigate } from 'react-router-dom';
@@ -21,15 +21,15 @@ interface MemberTableProps {
   isActivating?: boolean;
 }
 
-const MemberTable = ({ 
-  title, 
-  summaryTitle, 
-  data, 
-  showEdit = false, 
-  showActivate = false, 
+const MemberTable = ({
+  title,
+  summaryTitle,
+  data,
+  showEdit = false,
+  showActivate = false,
   isLoading = false,
   onActivate,
-  isActivating = false 
+  isActivating = false
 }: MemberTableProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
@@ -41,7 +41,7 @@ const MemberTable = ({
 
   const handleEditClick = (memberId: string) => {
     setIsEdit(true);
-    setSelectedMemberId(memberId); 
+    setSelectedMemberId(memberId);
   };
 
   const handleActivateClick = (memberId: string) => {
@@ -51,7 +51,7 @@ const MemberTable = ({
   };
 
   useEffect(() => {
-    if(isEdit){
+    if (isEdit) {
       navigate(`/admin/members/${selectedMemberId}`)
     }
   }, [isEdit])
@@ -133,7 +133,7 @@ interface Member {
   Member_id: string;
   Date_of_joining: string;
   password: string;
-  Sponsor_name: number | string; 
+  Sponsor_name: number | string;
   spackage: number | string;
   mobileno: number | string;
   status: string;
@@ -143,7 +143,7 @@ interface Member {
 type status = "All" | "active" | "Inactive" | "Pending";
 
 const useMembers = (status: status) => {
-  const { data: members, isLoading, isError, error  } = useGetAllMembersDetails()
+  const { data: members, isLoading, isError, error } = useGetAllMembersDetails()
 
   useEffect(() => {
     if (isError) {
@@ -156,16 +156,16 @@ const useMembers = (status: status) => {
 
   const memberdata = Array.isArray(members)
     ? members.filter((member: Member) => (status === "All" ? true : member.status === status)).map((member: Member, index) => ({
-        ...member,
-        sNo: index + 1,
-      }))
+      ...member,
+      sNo: index + 1,
+    }))
     : [];
-    
+
   return { memberdata, isLoading };
 };
 
 export const Members = () => {
-  const { memberdata, isLoading } = useMembers("All"); 
+  const { memberdata, isLoading } = useMembers("All");
   return (
     <MemberTable
       title="Members"
@@ -203,10 +203,10 @@ export const InActiveMembers = () => {
 
 export const PendingMembers = () => {
   const { memberdata, isLoading } = useMembers("Pending");
-  const { mutate: updateMemberStatus, isPending: isActivating } = useUpdateMemberStatus();
+  const navigate = useNavigate();
 
   const handleActivateClick = (memberId: string) => {
-    updateMemberStatus({ memberId, status: 'active' });
+    navigate('/admin/ActivatePackage', { state: { memberId } });
   };
 
   return (
@@ -217,7 +217,7 @@ export const PendingMembers = () => {
       showActivate={true}
       isLoading={isLoading}
       onActivate={handleActivateClick}
-      isActivating={isActivating}
+      isActivating={false}
     />
   );
 };

@@ -38,6 +38,7 @@ import {
 } from '@mui/icons-material';
 import { useGetMemberDetails } from '../../../api/Admin';
 import { useActivatePackage } from '../../../api/Memeber';
+import { useLocation } from 'react-router-dom';
 
 interface PackageOption {
   value: string;
@@ -66,6 +67,7 @@ interface ActivationResponse {
 }
 
 const ActivatePackage: React.FC = () => {
+  const location = useLocation(); // Add hook
   // State management
   const [memberId, setMemberId] = useState<string>('');
   const [searchedMemberId, setSearchedMemberId] = useState<string>('');
@@ -78,6 +80,15 @@ const ActivatePackage: React.FC = () => {
   // Stable values to display in success dialog (prevent reset from wiping them)
   const [activatedMember, setActivatedMember] = useState<any>(null);
   const [activatedPackage, setActivatedPackage] = useState<string>('');
+
+  // Handle incoming memberId from navigation
+  React.useEffect(() => {
+    if (location.state?.memberId) {
+      const id = location.state.memberId;
+      setMemberId(id);
+      setSearchedMemberId(id);
+    }
+  }, [location.state]);
 
   // API hooks
   const { data: selectedMember, isLoading: isSearching } = useGetMemberDetails(searchedMemberId);
