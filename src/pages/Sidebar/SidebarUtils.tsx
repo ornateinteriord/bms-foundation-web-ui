@@ -1,4 +1,4 @@
-import {  PackageIcon } from "lucide-react";
+import { PackageIcon } from "lucide-react";
 import { SideBarMenuItemType } from "../../store/store";
 import {
   DashboardIcon,
@@ -60,7 +60,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  {
+  /* {
     name: "Earnings",
     icon: <MonetizationOnIcon />,
     isExpandable: true,
@@ -76,14 +76,14 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
     ],
-  },
- {
+  }, */
+  {
     name: "Transactions",
     icon: <ShowChartIcon />,
     isExpandable: true,
     subItems: [
       {
-        name: "Wallet",
+        name: "RD Deposit", // Renamed from Wallet
         path: "/user/transactions",
         icon: <CreditCardIcon />,
       },
@@ -94,12 +94,12 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  {
+  /* {
     name: "Wallet Balance",
     icon: <CreditCardIcon />,
     path: "/user/wallet",
     isExpandable: false,
-  },
+  }, */
   {
     name: "Mail Box",
     icon: <MailOutlineIcon />,
@@ -143,22 +143,22 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-   {
-    name: "Activate", 
+  {
+    name: "Activate",
     icon: <DashboardIcon />,
-    isExpandable: true, 
+    isExpandable: true,
     subItems: [
       // {
       //   name: "Activate",
       //   icon: <CheckCircle2Icon />,
       //   path: "/admin/Activate",
-        
+
       // },
       {
         name: "Activate Package",
         icon: <PackageIcon />,
         path: "/admin/ActivatePackage",
-       
+
       },
     ],
   },
@@ -192,7 +192,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
   //       icon: <HistoryIcon />,
   //     },
   //   ],
- 
+
   {
     name: "Incomes",
     icon: <MonetizationOnIcon />,
@@ -216,38 +216,38 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     ],
   },
 
-  
 
-{
-  name: "Loans",
-  icon: <CreditCardIcon />,
-  isExpandable: true,
-  subItems: [
-    { 
-      name: "Loan Pending", 
-      path: "/admin/member/pending", 
-      icon: <Pending/> 
-    },
-    { 
-      name: " Loan Processed", 
-      path: "/admin/member/processed", 
-      icon: <CardMembershipRounded /> 
-    },
-   
-  ],
-},
-{
-  name: "Repayments",
-  icon: <PaymentsIcon />,
-  isExpandable: true,
-  subItems: [
-    { 
-      name: "Repayments List", 
-      path: "/admin/repayments/list", 
-      icon: <PaymentsIcon /> 
-    },
-  ],
-},
+
+  {
+    name: "Loans",
+    icon: <CreditCardIcon />,
+    isExpandable: true,
+    subItems: [
+      {
+        name: "Loan Pending",
+        path: "/admin/member/pending",
+        icon: <Pending />
+      },
+      {
+        name: " Loan Processed",
+        path: "/admin/member/processed",
+        icon: <CardMembershipRounded />
+      },
+
+    ],
+  },
+  {
+    name: "Repayments",
+    icon: <PaymentsIcon />,
+    isExpandable: true,
+    subItems: [
+      {
+        name: "Repayments List",
+        path: "/admin/repayments/list",
+        icon: <PaymentsIcon />
+      },
+    ],
+  },
 
 
   {

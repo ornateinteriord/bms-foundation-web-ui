@@ -53,9 +53,9 @@ const UserDashboard = () => {
   const memberId = TokenService.getMemberId();
 
   const { data: sponsorRewardData } = useCheckSponsorReward(memberId);
-  const { data: walletOverview, isLoading: walletLoading } = useGetWalletOverview(memberId);
-  const { data: sponsersData, isLoading: sponsersLoading } = useGetSponsers(memberId);
-  const { data: memberDetails, isLoading: memberLoading } = useGetMemberDetails(memberId);
+  useGetWalletOverview(memberId);
+  const { data: sponsersData } = useGetSponsers(memberId);
+  const { data: memberDetails, } = useGetMemberDetails(memberId);
   const { mutate: climeLoan, isPending: isClaiming } = useClimeLoan();
 
   // Use the enhanced repay loan hook
@@ -64,7 +64,7 @@ const UserDashboard = () => {
   // Payment verification hook
   const { mutate: verifyPayment, isPending: isVerifyingPayment } = useVerifyPayment();
 
-  const { data: transactionsResponse, isLoading: loanStatusLoading, refetch: refetchTransactions } = useGetTransactionDetails("all");
+  const { data: transactionsResponse, refetch: refetchTransactions } = useGetTransactionDetails("all");
 
   // Handle payment redirect from Cashfree
   useEffect(() => {
@@ -174,7 +174,6 @@ const UserDashboard = () => {
     ? LOAN_TIERS[nextLoanTierIndex].amount
     : LOAN_TIERS[LOAN_TIERS.length - 1].amount;
 
-  const loading = walletLoading || sponsersLoading || memberLoading || loanStatusLoading;
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
@@ -284,11 +283,11 @@ const UserDashboard = () => {
     }
   };
 
-  const levelBenefitsAmount = walletOverview?.levelBenefits || 0;
-  const directBenefitsAmount = walletOverview?.directBenefits || 0;
-  const totalEarningsAmount = walletOverview?.totalBenefits || 0;
-  const totalWithdrawsAmount = walletOverview?.totalWithdrawal || 0;
-  const walletBalanceAmount = walletOverview?.balance || 0;
+  // const levelBenefitsAmount = walletOverview?.levelBenefits || 0;
+  // const directBenefitsAmount = walletOverview?.directBenefits || 0;
+  // const totalEarningsAmount = walletOverview?.totalBenefits || 0;
+  // const totalWithdrawsAmount = walletOverview?.totalWithdrawal || 0;
+  // const walletBalanceAmount = walletOverview?.balance || 0;
 
   const tableData = [
     {
@@ -632,12 +631,22 @@ const UserDashboard = () => {
         }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Benefits" />
+          <DashboardCard
+            amount={initialLoanAmount > 0 ? initialLoanAmount : "0.00"}
+            title="Loan Amount"
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Benefits" />
+          <DashboardCard
+            amount={
+              memberDetails?.spackage
+                ? `${memberDetails.spackage} - ₹${memberDetails.package_value || 0}`
+                : "No Package"
+            }
+            title="RD Deposit"
+          />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        {/* <Grid item xs={12} sm={6} md={4}>
           <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -645,7 +654,7 @@ const UserDashboard = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
-        </Grid>
+        </Grid> */}
 
         {isLoanApproved && (
           <Grid item xs={12} sm={6} md={4}>
