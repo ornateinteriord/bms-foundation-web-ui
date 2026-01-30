@@ -53,12 +53,19 @@ const UserDashboard = () => {
   const [selectedRepayAmount, setSelectedRepayAmount] = useState(1);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
 
+  // Package Selection State
+  const [packageSelectionDialogOpen, setPackageSelectionDialogOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string>('');
+
   const memberId = TokenService.getMemberId();
 
   const { data: sponsorRewardData } = useCheckSponsorReward(memberId);
   useGetWalletOverview(memberId);
   const { data: sponsersData } = useGetSponsers(memberId);
-  const { data: memberDetails, } = useGetMemberDetails(memberId);
+  const { data: memberDetails, refetch: refetchMemberDetails } = useGetMemberDetails(memberId);
+
+  // Determine if user is new (no package value or 0)
+  const isNewUser = !memberDetails?.package_value || memberDetails.package_value === 0;
 
   const { mutate: climeLoan, isPending: isClaiming } = useClimeLoan();
   const createPaymentOrder = useCreatePaymentOrder();
@@ -88,8 +95,56 @@ const UserDashboard = () => {
     }
   }, [memberDetails?.Date_of_joining]);
 
+  const handlePackagePurchase = async () => {
+    if (!memberId) {
+      toast.error("User not identified");
+      return;
+    }
+
+    if (!selectedPackage) {
+      toast.error("Please select a package");
+      return;
+    }
+
+    const packageMap: { [key: string]: number } = {
+      "RD_600": 600,
+      "RD_1200": 1200
+    };
+
+    const amount = packageMap[selectedPackage];
+    if (!amount) return;
+
+    try {
+      console.log(`Initiating Package Purchase: ${selectedPackage} - ₹${amount}`);
+
+      await createPaymentOrder.mutateAsync({
+        amount: amount,
+        currency: "INR",
+        customer: {
+          customer_id: memberId!,
+          customer_email: memberDetails.email,
+          customer_phone: memberDetails.mobileno,
+          customer_name: memberDetails.Name
+        },
+        notes: {
+          isLoanRepayment: false,
+          note: `Purchase of ${selectedPackage}`,
+          meta: {
+            type: "package_purchase",
+            package: selectedPackage,
+            amount: amount
+          }
+        }
+      });
+      // setPackageSelectionDialogOpen(false); // This line is removed as per the instruction's implied change
+
+    } catch (error) {
+      console.error("Package Purchase Failed:", error);
+    }
+  };
+
   const handleRenewPackage = async () => {
-    if (!memberDetails) return;
+    if (!memberId || !memberDetails) return;
 
     try {
       console.log("Initiating Package Renewal Payment...");
@@ -142,6 +197,7 @@ const UserDashboard = () => {
           setSearchParams({});
           // Refresh transactions to show updated data
           refetchTransactions();
+          refetchMemberDetails();
         },
         onError: () => {
           // Still clear URL params even on error
@@ -724,8 +780,9 @@ const UserDashboard = () => {
             title="RD Purchase"
             type="renewal"
             renewalDays={renewalDays}
-            onRenew={handleRenewPackage}
-            isRenewEnabled={isRenewEnabled}
+            onRenew={isNewUser ? () => setPackageSelectionDialogOpen(true) : handleRenewPackage}
+            isRenewEnabled={isNewUser || isRenewEnabled}
+            isNewUser={isNewUser}
           />
         </Grid>
 
@@ -830,6 +887,65 @@ const UserDashboard = () => {
             }}
           >
             {isClaiming ? 'Processing...' : 'Submit Request'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Package Selection Dialog */}
+      <Dialog
+        open={packageSelectionDialogOpen}
+        onClose={() => setPackageSelectionDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            background: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', color: '#000831', fontSize: '1.5rem' }}>
+          Select Package
+        </DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, py: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel id="package-select-label">Select Package</InputLabel>
+            <Select
+              labelId="package-select-label"
+              id="package-select"
+              value={selectedPackage}
+              label="Select Package"
+              onChange={(e) => setSelectedPackage(e.target.value)}
+              sx={{
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#000831',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#000831',
+                }
+              }}
+            >
+              <MenuItem value="RD_600">RD Scheme ₹600</MenuItem>
+              <MenuItem value="RD_1200">RD Scheme ₹1200</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 3, gap: 2 }}>
+          <Button onClick={() => setPackageSelectionDialogOpen(false)} sx={{ color: '#6b7280' }}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handlePackagePurchase}
+            disabled={!selectedPackage}
+            sx={{
+              backgroundColor: '#000831',
+              '&:hover': {
+                backgroundColor: '#001242'
+              }
+            }}
+          >
+            Submit
           </Button>
         </DialogActions>
       </Dialog>
