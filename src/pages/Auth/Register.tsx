@@ -53,9 +53,10 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [genderError, setGenderError] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-  const [registrationData, setRegistrationData] = useState<{ memberId: string; password: string }>({
+  const [registrationData, setRegistrationData] = useState<{ memberId: string; password: string; email: string }>({
     memberId: '',
-    password: ''
+    password: '',
+    email: ''
   });
 
   const {
@@ -182,7 +183,8 @@ const Register = () => {
           if (response.success) {
             setRegistrationData({
               memberId: response.user.Member_id,
-              password: formData.password
+              password: formData.password,
+              email: formData.email
             });
             setSuccessDialogOpen(true);
           }
@@ -646,6 +648,9 @@ const Register = () => {
               <Typography variant="body1" sx={{ mb: 2 }}>
                 <strong>Member ID:</strong> {registrationData.memberId}
               </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <strong>Email:</strong> {registrationData.email}
+              </Typography>
               <Typography variant="body1">
                 <strong>Password:</strong> {registrationData.password}
               </Typography>
@@ -672,7 +677,7 @@ const Register = () => {
                 }
               }}
             >
-              Close
+              Login
             </Button>
           </DialogActions>
         </Dialog>
