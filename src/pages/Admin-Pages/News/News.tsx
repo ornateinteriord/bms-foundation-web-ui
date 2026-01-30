@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { 
-  Card, 
-  CardContent, 
-  Accordion, 
-  AccordionSummary, 
-  AccordionDetails, 
-  TextField, 
-  Typography, 
-  Button, 
+import {
+  Card,
+  CardContent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
+  Typography,
+  Button,
   Grid,
   Dialog,
   DialogTitle,
@@ -28,7 +28,7 @@ import { getFormattedDate } from '../../../utils/common';
 
 
 const News = () => {
-  const {data:news,isLoading,isError,error} = useGetNews()
+  const { data: news, isLoading, isError, error } = useGetNews()
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNews, setNewNews] = useState<{
@@ -42,10 +42,10 @@ const News = () => {
   });
 
   useEffect(() => {
-      if (isError) {
-        toast.error(error.message );
-      }
-    }, [isError, error]);
+    if (isError) {
+      toast.error(error.message);
+    }
+  }, [isError, error]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(news)
 
@@ -54,20 +54,20 @@ const News = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     if (newNews.fromDate && newNews.toDate && newNews.content) {
-      try{
-      e.preventDefault();
-      const NewsData ={
-        from_date: newNews.fromDate  ? getFormattedDate(newNews.fromDate) :"-", 
-        to_date: newNews.toDate? getFormattedDate(newNews.fromDate) :"-",
-        news_details: newNews.content,
+      try {
+        e.preventDefault();
+        const NewsData = {
+          from_date: newNews.fromDate ? getFormattedDate(newNews.fromDate) : "-",
+          to_date: newNews.toDate ? getFormattedDate(newNews.fromDate) : "-",
+          news_details: newNews.content,
+        }
+        updateNews.mutate(NewsData)
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Failed to create News", error);
+      } finally {
+        setNewNews({ fromDate: null, toDate: null, content: '' });
       }
-      updateNews.mutate(NewsData)
-      setIsModalOpen(false);
-    }catch(error){
-      console.error("Failed to create News", error);
-    }finally{
-      setNewNews({ fromDate: null, toDate: null, content: '' });
-    }
 
     }
   };
@@ -82,8 +82,8 @@ const News = () => {
           variant="contained"
           onClick={() => setIsModalOpen(true)}
           sx={{
-            backgroundColor: '#7e22ce',
-            '&:hover': { backgroundColor: '#7e22ce' }
+            backgroundColor: '#000831',
+            '&:hover': { backgroundColor: '#000831' }
           }}
         >
           Add News
@@ -96,7 +96,7 @@ const News = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#000831',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -115,11 +115,11 @@ const News = () => {
               </div>
               <DataTable
                 columns={getNewsColumns()}
-                data={ filteredData }
+                data={filteredData}
                 pagination
                 progressPending={isLoading || updateNews.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
                 }
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}
@@ -131,8 +131,8 @@ const News = () => {
         </CardContent>
       </Card>
 
-      <Dialog 
-        open={isModalOpen} 
+      <Dialog
+        open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         sx={{ zIndex: 1200 }}
       >
@@ -149,23 +149,23 @@ const News = () => {
                 onChange={(e) => setNewNews({ ...newNews, content: e.target.value })}
               />
             </Grid>
-           <Grid className='addnews-container'>
-            <Grid item  className='date-container'>
-            <Typography  className="date-label">From:</Typography>
-              <MuiDatePicker
-                date={newNews.fromDate}
-                setDate={(date) => setNewNews({ ...newNews, fromDate: date })}
-                label="From Date"
-              />
-            </Grid>
-            <Grid item xs={6}className='date-container'>
-            <Typography  className="date-label">To:</Typography>
-              <MuiDatePicker
-                date={newNews.toDate}
-                setDate={(date) => setNewNews({ ...newNews, toDate: date })}
-                label="To Date"
-              />
-            </Grid>
+            <Grid className='addnews-container'>
+              <Grid item className='date-container'>
+                <Typography className="date-label">From:</Typography>
+                <MuiDatePicker
+                  date={newNews.fromDate}
+                  setDate={(date) => setNewNews({ ...newNews, fromDate: date })}
+                  label="From Date"
+                />
+              </Grid>
+              <Grid item xs={6} className='date-container'>
+                <Typography className="date-label">To:</Typography>
+                <MuiDatePicker
+                  date={newNews.toDate}
+                  setDate={(date) => setNewNews({ ...newNews, toDate: date })}
+                  label="To Date"
+                />
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>

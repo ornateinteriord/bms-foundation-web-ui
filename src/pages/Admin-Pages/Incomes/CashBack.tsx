@@ -10,13 +10,13 @@ const CashBack = () => {
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Empty data array for demonstration
   const data: any[] = [];
-  
+
   const noDataComponent = (
-    <Box sx={{ 
-      padding: "40px", 
+    <Box sx={{
+      padding: "40px",
       textAlign: "center",
       color: "text.secondary"
     }}>
@@ -50,7 +50,7 @@ const CashBack = () => {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#7e22ce",
+              backgroundColor: "#000831",
               "&:hover": { backgroundColor: "#6b21a8" },
             }}
           >
@@ -64,7 +64,7 @@ const CashBack = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
@@ -99,9 +99,9 @@ const CashBack = () => {
                 noDataComponent={noDataComponent}
                 subHeader
                 subHeaderComponent={
-                  <Box sx={{ 
-                    display: "flex", 
-                    justifyContent: "space-between", 
+                  <Box sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
                     width: "100%",
                     p: 1

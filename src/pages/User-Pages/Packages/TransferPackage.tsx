@@ -19,10 +19,10 @@ const TransferPackage: React.FC = () => {
     quantity: 1,
     transfered_to: '',
   });
-  const [userName , setUserName] = useState<string | null>('')
+  const [userName, setUserName] = useState<string | null>('')
 
-   const { data: memberdata ,isError,error,refetch } = useGetSponserRef(formData.transfered_to);
-   const transferPackage = useTransferPackage();
+  const { data: memberdata, isError, error, refetch } = useGetSponserRef(formData.transfered_to);
+  const transferPackage = useTransferPackage();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -54,7 +54,7 @@ const TransferPackage: React.FC = () => {
   return (
     <Card sx={{ margin: '2rem', mt: 10, boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
       <CardContent>
-        <Accordion 
+        <Accordion
           defaultExpanded
           sx={{
             boxShadow: 'none',
@@ -66,7 +66,7 @@ const TransferPackage: React.FC = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#000831',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' }
             }}
@@ -91,10 +91,10 @@ const TransferPackage: React.FC = () => {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     }
                   }
                 }}
@@ -111,10 +111,10 @@ const TransferPackage: React.FC = () => {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     }
                   }
                 }}
@@ -125,7 +125,7 @@ const TransferPackage: React.FC = () => {
                 variant="contained"
                 onClick={handleSubmit}
                 sx={{
-                  backgroundColor: '#7e22ce',
+                  backgroundColor: '#000831',
                   alignSelf: 'flex-end',
                   '&:hover': {
                     backgroundColor: '#581c87'

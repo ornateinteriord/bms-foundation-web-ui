@@ -75,7 +75,7 @@ const PayoutTable = ({ data, columns, tabTitle, loading }: PayoutTableProps) => 
         expandIcon={<ExpandMoreIcon />}
         sx={{
           mt: 2,
-          backgroundColor: "#7e22ce",
+          backgroundColor: "#000831",
           color: "#fff",
           "& .MuiSvgIcon-root": { color: "#fff" },
         }}
@@ -121,7 +121,7 @@ export const Requests = ({ tabTitle }: { tabTitle: any }) => {
   const withdrawalRequests = pending?.filter((transaction: any) => {
     const transactionType = String(transaction.transaction_type || '').toLowerCase();
     const description = String(transaction.description || '').toLowerCase();
-    
+
     return (
       transactionType.includes('withdrawal') ||
       description.includes('withdrawal request') ||
@@ -146,7 +146,7 @@ export const Proccessed = ({ tabTitle }: { tabTitle: any }) => {
   const filteredData = Approved?.filter((transaction: any) => {
     const description = String(transaction.description || '').toLowerCase();
     const transactionType = String(transaction.transaction_type || '').toLowerCase();
-    
+
     // Check if it's a withdrawal transaction
     const isWithdrawal = (
       transactionType.includes('withdrawal') ||
@@ -155,15 +155,15 @@ export const Proccessed = ({ tabTitle }: { tabTitle: any }) => {
     );
 
     // Exclude level and direct benefits
-    const isLevelBenefits = description.includes('level benefit') || 
-                           description.includes('level benefits') ||
-                           transactionType.includes('level benefit') ||
-                           transactionType.includes('level benefits');
+    const isLevelBenefits = description.includes('level benefit') ||
+      description.includes('level benefits') ||
+      transactionType.includes('level benefit') ||
+      transactionType.includes('level benefits');
 
-    const isDirectBenefits = description.includes('direct benefit') || 
-                            description.includes('direct benefits') ||
-                            transactionType.includes('direct benefit') ||
-                            transactionType.includes('direct benefits');
+    const isDirectBenefits = description.includes('direct benefit') ||
+      description.includes('direct benefits') ||
+      transactionType.includes('direct benefit') ||
+      transactionType.includes('direct benefits');
 
     return isWithdrawal && !isLevelBenefits && !isDirectBenefits;
   }) || [];

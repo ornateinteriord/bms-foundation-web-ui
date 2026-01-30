@@ -11,28 +11,28 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
 import { useGetAllMembersDetails } from '../../../api/Admin';
 
-const AdminDashboard = () => { 
+const AdminDashboard = () => {
   const { data: members = [], isLoading, error } = useGetAllMembersDetails();
 
   // Sort members by most recent registration date
   const sortedMembers = [...members].sort((a, b) => {
-    return new Date(b.createdAt || b.Date_of_joining).getTime() - 
-           new Date(a.createdAt || a.Date_of_joining).getTime();
+    return new Date(b.createdAt || b.Date_of_joining).getTime() -
+      new Date(a.createdAt || a.Date_of_joining).getTime();
   });
 
   const totalMembers = members.length;
-  const activeMembers = members.filter((member: any) => 
-  member.status?.toLowerCase() === 'active'
-).length;
+  const activeMembers = members.filter((member: any) =>
+    member.status?.toLowerCase() === 'active'
+  ).length;
 
-const pendingMembers = members.filter((member: any) => 
-  member.status?.toLowerCase() === 'pending'
-).length;
+  const pendingMembers = members.filter((member: any) =>
+    member.status?.toLowerCase() === 'pending'
+  ).length;
 
-  const totalCities = new Set(members.map((member: any) =>  member.location).filter(Boolean)).size;
+  const totalCities = new Set(members.map((member: any) => member.location).filter(Boolean)).size;
   const totalDegrees = new Set(members.map((member: any) => member.degree || member.education).filter(Boolean)).size;
   const totalEvents = 0;
-  const totalLikes = 0; 
+  const totalLikes = 0;
 
   if (isLoading) {
     return (
@@ -99,12 +99,12 @@ const pendingMembers = members.filter((member: any) =>
           </div>
         </div>
       </div>
-      
-      <Grid 
-        container 
-        spacing={{ xs: 2, sm: 3 }} 
-        sx={{ 
-          mx: { xs: 1, sm: 2 }, 
+
+      <Grid
+        container
+        spacing={{ xs: 2, sm: 3 }}
+        sx={{
+          mx: { xs: 1, sm: 2 },
           my: 2,
           pt: 5,
           pr: 7,
@@ -115,42 +115,42 @@ const pendingMembers = members.filter((member: any) =>
         }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard 
-            amount={totalMembers} 
-            title="Total Members" 
-            subTitle={`${totalMembers} members in total`} 
-            IconComponent={PersonIcon} 
+          <DashboardCard
+            amount={totalMembers}
+            title="Total Members"
+            subTitle={`${totalMembers} members in total`}
+            IconComponent={PersonIcon}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard 
-            amount={activeMembers} 
-            title="Active Members" 
-            subTitle={`${activeMembers} active members`} 
-            IconComponent={PersonIcon} 
+          <DashboardCard
+            amount={activeMembers}
+            title="Active Members"
+            subTitle={`${activeMembers} active members`}
+            IconComponent={PersonIcon}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard 
-            amount={pendingMembers} 
-            title="Pending Members" 
-            subTitle={`${pendingMembers} pending activation`} 
-            IconComponent={PersonIcon} 
+          <DashboardCard
+            amount={pendingMembers}
+            title="Pending Members"
+            subTitle={`${pendingMembers} pending activation`}
+            IconComponent={PersonIcon}
           />
         </Grid>
       </Grid>
-      
-      <div className='mt-10 p-4 rounded shadow'>    
+
+      <div className='mt-10 p-4 rounded shadow'>
         <Card className='bg-gray-300'>
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#7e22ce' }}>
+              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#000831' }}>
                 Member Statistics ({sortedMembers.length} members)
               </Typography>
             </div>
-            <DashboardTable 
-              data={sortedMembers} 
-              columns={getAdminDashboardTableColumns()} 
+            <DashboardTable
+              data={sortedMembers}
+              columns={getAdminDashboardTableColumns()}
             />
           </CardContent>
         </Card>

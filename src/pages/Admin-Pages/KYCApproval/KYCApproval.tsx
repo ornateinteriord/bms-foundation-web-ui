@@ -104,11 +104,11 @@ const KYCApproval: React.FC = () => {
         <Typography variant="h5" gutterBottom sx={{ mb: 3, fontWeight: 'bold' }}>
           KYC Approval
         </Typography>
-        
+
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#7e22ce' }}>
+              <TableRow sx={{ backgroundColor: '#000831' }}>
                 <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Member ID</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Name</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Account Number</TableCell>
@@ -130,8 +130,8 @@ const KYCApproval: React.FC = () => {
                   <TableCell>{submission.bank_name}</TableCell>
                   <TableCell>{submission.Pan_no || 'N/A'}</TableCell>
                   <TableCell>
-                    <Chip 
-                      label={submission.kycStatus ? submission.kycStatus.charAt(0).toUpperCase() + submission.kycStatus.slice(1).toLowerCase() : 'Unknown'} 
+                    <Chip
+                      label={submission.kycStatus ? submission.kycStatus.charAt(0).toUpperCase() + submission.kycStatus.slice(1).toLowerCase() : 'Unknown'}
                       color={getStatusColor(submission.kycStatus?.toLowerCase() || 'processing') as any}
                       size="small"
                     />
@@ -143,8 +143,8 @@ const KYCApproval: React.FC = () => {
                     <Button
                       variant="contained"
                       size="small"
-                      sx={{ 
-                        backgroundColor: '#7e22ce',
+                      sx={{
+                        backgroundColor: '#000831',
                         '&:hover': { backgroundColor: '#581c87' },
                         mr: 1
                       }}
@@ -192,8 +192,8 @@ const KYCApproval: React.FC = () => {
                 </Box>
                 <Box>
                   <Typography variant="body2" color="textSecondary">Status</Typography>
-                  <Chip 
-                    label={selectedKYC?.kycStatus ? selectedKYC.kycStatus.charAt(0).toUpperCase() + selectedKYC.kycStatus.slice(1).toLowerCase() : 'Unknown'} 
+                  <Chip
+                    label={selectedKYC?.kycStatus ? selectedKYC.kycStatus.charAt(0).toUpperCase() + selectedKYC.kycStatus.slice(1).toLowerCase() : 'Unknown'}
                     color={getStatusColor(selectedKYC?.kycStatus?.toLowerCase() || 'processing') as any}
                     size="small"
                   />
@@ -230,18 +230,18 @@ const KYCApproval: React.FC = () => {
         <DialogActions>
           {selectedKYC && selectedKYC.kycStatus === 'PROCESSING' && (
             <>
-              <Button 
+              <Button
                 onClick={handleReject}
                 variant="outlined"
                 color="error"
               >
                 Reject
               </Button>
-              <Button 
+              <Button
                 onClick={handleApprove}
                 variant="contained"
-                sx={{ 
-                  backgroundColor: '#7e22ce',
+                sx={{
+                  backgroundColor: '#000831',
                   '&:hover': { backgroundColor: '#581c87' }
                 }}
               >
@@ -254,15 +254,15 @@ const KYCApproval: React.FC = () => {
       </Dialog>
 
       {/* Snackbar */}
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={6000} 
-        onClose={() => setSnackbar({...snackbar, open: false})}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={() => setSnackbar({...snackbar, open: false})} 
-          severity={snackbar.severity} 
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
           sx={{ width: '100%' }}
         >
           {snackbar.message}

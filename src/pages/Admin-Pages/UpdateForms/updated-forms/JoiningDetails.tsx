@@ -24,7 +24,7 @@ export const JoiningDetails: React.FC<JoiningDetailsProps> = ({
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}
         sx={{
-          backgroundColor: "#7e22ce",
+          backgroundColor: "#000831",
           color: "#fff",
         }}
       >
@@ -51,7 +51,7 @@ export const JoiningDetails: React.FC<JoiningDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#7e22ce" }} />
+                    <PersonIcon sx={{ color: "#000831" }} />
                   </InputAdornment>
                 ),
               }}
@@ -67,7 +67,7 @@ export const JoiningDetails: React.FC<JoiningDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#7e22ce" }} />
+                    <PersonIcon sx={{ color: "#000831" }} />
                   </InputAdornment>
                 ),
               }}
@@ -83,7 +83,7 @@ export const JoiningDetails: React.FC<JoiningDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#7e22ce" }} />
+                    <PersonIcon sx={{ color: "#000831" }} />
                   </InputAdornment>
                 ),
               }}
@@ -109,7 +109,7 @@ export const JoiningDetails: React.FC<JoiningDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#7e22ce" }} />
+                    <PersonIcon sx={{ color: "#000831" }} />
                   </InputAdornment>
                 ),
               }}
@@ -125,7 +125,7 @@ export const JoiningDetails: React.FC<JoiningDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#7e22ce" }} />
+                    <PersonIcon sx={{ color: "#000831" }} />
                   </InputAdornment>
                 ),
               }}

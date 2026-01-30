@@ -30,7 +30,7 @@ const Wallet = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [amount, setAmount] = useState("");
   const [adminCharges, setAdminCharges] = useState(0);
-  const [tds, setTds] = useState(0);  const [netAmount, setNetAmount] = useState(0);
+  const [tds, setTds] = useState(0); const [netAmount, setNetAmount] = useState(0);
   const [optimisticBalance, setOptimisticBalance] = useState<number | null>(null);
   const [isWithdrawalAllowed, setIsWithdrawalAllowed] = useState<boolean>(true);
   // const [ setLoanStatusMessage] = useState<string>("");
@@ -89,7 +89,7 @@ const Wallet = () => {
 
     const withdrawalAmount = parseFloat(amount);
     const currentBalance = optimisticBalance !== null ? optimisticBalance : parseFloat(walletData?.balance || 0);
-    
+
     if (withdrawalAmount > currentBalance) {
       return;
     }
@@ -139,7 +139,7 @@ const Wallet = () => {
           minHeight: "200px",
         }}
       >
-        <CircularProgress sx={{ color: "#7e22ce" }} />
+        <CircularProgress sx={{ color: "#000831" }} />
       </Card>
     );
   }
@@ -171,7 +171,7 @@ const Wallet = () => {
                     backgroundColor: "#f5f5f5",
                     borderRadius: 2,
                     textAlign: "center",
-                    border: `2px solid ${isWithdrawalAllowed ? "#7e22ce" : "#ff9800"}`,
+                    border: `2px solid ${isWithdrawalAllowed ? "#000831" : "#ff9800"}`,
                     position: "relative",
                     opacity: isWithdrawalAllowed ? 1 : 0.7,
                   }}
@@ -184,7 +184,7 @@ const Wallet = () => {
                         right: 8,
                       }}
                     >
-                      <CircularProgress size={20} sx={{ color: "#7e22ce" }} />
+                      <CircularProgress size={20} sx={{ color: "#000831" }} />
                     </Box>
                   )}
                   <Typography variant="subtitle1" color="textSecondary">
@@ -192,10 +192,10 @@ const Wallet = () => {
                   </Typography>
                   <Typography
                     variant="h4"
-                    sx={{ 
-                      color: isWithdrawalAllowed ? "#7e22ce" : "#ff9800", 
-                      mt: 1, 
-                      fontWeight: "bold" 
+                    sx={{
+                      color: isWithdrawalAllowed ? "#000831" : "#ff9800",
+                      mt: 1,
+                      fontWeight: "bold"
                     }}
                   >
                     ₹{displayBalance.toFixed(2)}
@@ -203,9 +203,9 @@ const Wallet = () => {
                   {!isWithdrawalAllowed && (
                     <Typography
                       variant="caption"
-                      sx={{ 
-                        color: "#ff9800", 
-                        mt: 1, 
+                      sx={{
+                        color: "#ff9800",
+                        mt: 1,
                         display: "block",
                         fontWeight: "bold"
                       }}
@@ -216,7 +216,7 @@ const Wallet = () => {
                   {withdrawMutation.isPending && (
                     <Typography
                       variant="caption"
-                      sx={{ color: "#7e22ce", mt: 1, display: "block" }}
+                      sx={{ color: "#000831", mt: 1, display: "block" }}
                     >
                       Updating...
                     </Typography>
@@ -239,7 +239,7 @@ const Wallet = () => {
                   </Typography>
                   <Typography
                     variant="h4"
-                    sx={{ color: "#7e22ce", mt: 1, fontWeight: "bold" }}
+                    sx={{ color: "#000831", mt: 1, fontWeight: "bold" }}
                   >
                     {walletData?.totalIncome ? `₹${walletData?.totalIncome}` : "₹0.00"}
                   </Typography>
@@ -261,7 +261,7 @@ const Wallet = () => {
                   </Typography>
                   <Typography
                     variant="h4"
-                    sx={{ color: "#7e22ce", mt: 1, fontWeight: "bold" }}
+                    sx={{ color: "#000831", mt: 1, fontWeight: "bold" }}
                   >
                     {walletData?.totalWithdrawal ? `₹${walletData?.totalWithdrawal}` : "₹0.00"}
                   </Typography>
@@ -285,7 +285,7 @@ const Wallet = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800",
+              backgroundColor: isWithdrawalAllowed ? "#000831" : "#ff9800",
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
               minHeight: isMobile ? "48px" : "64px",
@@ -310,8 +310,8 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
                   },
                 }}
               />
@@ -333,12 +333,12 @@ const Wallet = () => {
                     <em>Select Amount</em>
                   </MenuItem>
                   {[500, 1000].map((value) => (
-                    <MenuItem 
-                      key={value} 
+                    <MenuItem
+                      key={value}
                       value={value}
                       disabled={value > displayBalance || !isWithdrawalAllowed}
                     >
-                      ₹{value} 
+                      ₹{value}
                       {value > displayBalance ? " (Insufficient Balance)" : ""}
                       {!isWithdrawalAllowed ? " (Withdrawal Disabled)" : ""}
                     </MenuItem>
@@ -354,12 +354,12 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
                   },
                 }}
               />
-              
+
               <TextField
                 label="TDS (5%)"
                 value={`₹${tds.toFixed(2)}`}
@@ -368,8 +368,8 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
                   },
                 }}
               />
@@ -382,8 +382,8 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#000831" : "#ff9800" },
                   },
                 }}
               />
@@ -412,12 +412,12 @@ const Wallet = () => {
                     </Box>
                   </Box>
                   {!isWithdrawalAllowed && (
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: "#ff9800", 
-                        fontWeight: "bold", 
-                        mt: 1 
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#ff9800",
+                        fontWeight: "bold",
+                        mt: 1
                       }}
                     >
                       • Withdrawal disabled due to unpaid loan from last Saturday
@@ -429,17 +429,17 @@ const Wallet = () => {
                   variant="contained"
                   onClick={handleWithdraw}
                   disabled={
-                    withdrawMutation.isPending || 
-                    !amount || 
-                    amount === "0" || 
+                    withdrawMutation.isPending ||
+                    !amount ||
+                    amount === "0" ||
                     parseFloat(amount) > displayBalance ||
                     !isWithdrawalAllowed
                   }
                   sx={{
-                    backgroundColor: isWithdrawalAllowed ? "#7e22ce" : "#ff9800",
+                    backgroundColor: isWithdrawalAllowed ? "#000831" : "#ff9800",
                     minWidth: "120px",
-                    "&:hover": { 
-                      backgroundColor: isWithdrawalAllowed ? "#581c87" : "#f57c00" 
+                    "&:hover": {
+                      backgroundColor: isWithdrawalAllowed ? "#581c87" : "#f57c00"
                     },
                     "&:disabled": { backgroundColor: "#cccccc" },
                   }}
@@ -469,7 +469,7 @@ const Wallet = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: "#7e22ce",
+              backgroundColor: "#000831",
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
               minHeight: isMobile ? "48px" : "64px",

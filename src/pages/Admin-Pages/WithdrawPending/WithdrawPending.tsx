@@ -26,7 +26,7 @@ import { toast } from 'react-toastify';
 
 const WithdrawPending: React.FC = () => {
   const { data: pending = [], isFetching } = useGetPendingWithdrawals();
-  const {  isPending: isApproving } = useApproveWithdrawal();
+  const { isPending: isApproving } = useApproveWithdrawal();
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } = useCreatePaymentOrder();
   const [repayDialogOpen, setRepayDialogOpen] = useState(false);
   const [selectedTx, setSelectedTx] = useState<any>(null);
@@ -161,7 +161,7 @@ const WithdrawPending: React.FC = () => {
       {/* Repayment Dialog: styled to match LoansList */}
       <Dialog
         open={repayDialogOpen}
-        onClose={() => {!isApproving && !isCreatingOrder && setRepayDialogOpen(false)}}
+        onClose={() => { !isApproving && !isCreatingOrder && setRepayDialogOpen(false) }}
         PaperProps={{
           sx: {
             borderRadius: 3,
@@ -175,7 +175,7 @@ const WithdrawPending: React.FC = () => {
         <DialogTitle
           sx={{
             textAlign: 'center',
-            color: '#7e22ce',
+            color: '#000831',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1,

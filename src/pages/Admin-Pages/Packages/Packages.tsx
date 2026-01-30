@@ -1,4 +1,4 @@
-import  { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   TextField,
   Button,
@@ -34,29 +34,29 @@ interface PackageTableProps {
   title: string;
   summaryTitle: string;
   data: any[];
-  loading ?: boolean
+  loading?: boolean
   columns: any[];
 }
 
-const useGetEpins = (status : "used" | "unUsed" | "total") => {
+const useGetEpins = (status: "used" | "unUsed" | "total") => {
   const { data: epinsData, isLoading, isError, error } = getEpinsSummary();
   useEffect(() => {
-      if (isError) {
-        const err = error as any;
-        toast.error(
-          err?.response.data.message || "Failed to fetch Transaction details"
-        );
-      }
-    }, [isError, error]);
-    let result = {isLoading}
-
-    if(status === "used"){
-      return {...result , epinsData : epinsData?.usedEpins || []}
-    } else if(status === "unUsed") {
-      return {...result , epinsData : epinsData?.activeEpins || []}
-    } else {
-      return {...result, epinsData : epinsData?.totalEpins || []}
+    if (isError) {
+      const err = error as any;
+      toast.error(
+        err?.response.data.message || "Failed to fetch Transaction details"
+      );
     }
+  }, [isError, error]);
+  let result = { isLoading }
+
+  if (status === "used") {
+    return { ...result, epinsData: epinsData?.usedEpins || [] }
+  } else if (status === "unUsed") {
+    return { ...result, epinsData: epinsData?.activeEpins || [] }
+  } else {
+    return { ...result, epinsData: epinsData?.totalEpins || [] }
+  }
 }
 
 export const PackageRequests = () => {
@@ -80,16 +80,16 @@ export const PackageRequests = () => {
       name: 'Action',
       cell: () => (
         <IconButton
-          onClick={() => {}}
+          onClick={() => { }}
           size="medium"
           sx={{
-            color: '#7e22ce',
+            color: '#000831',
             '&:hover': {
               backgroundColor: 'rgba(4, 17, 47, 0.04)'
             }
           }}
         >
-          <VisibilityIcon color='primary' fontSize="medium"/>
+          <VisibilityIcon color='primary' fontSize="medium" />
         </IconButton>
       ),
     },
@@ -112,7 +112,7 @@ export const PackageRequests = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#000831',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -129,7 +129,7 @@ export const PackageRequests = () => {
                 <Button 
                   variant="contained" 
                   sx={{ 
-                    backgroundColor: '#7e22ce',
+                    backgroundColor: '#000831',
                     '&:hover': { backgroundColor: '#581c87' }
                   }}
                 >
@@ -149,9 +149,9 @@ export const PackageRequests = () => {
           </Accordion>
         </CardContent>
       </Card> */}
-      <PackageTable 
-        title="Package Requests" 
-        summaryTitle="List of Package Request" 
+      <PackageTable
+        title="Package Requests"
+        summaryTitle="List of Package Request"
         data={data}
         columns={columns}
       />
@@ -161,12 +161,12 @@ export const PackageRequests = () => {
 
 
 export const UnusedPackages = () => {
-  const {isLoading , epinsData} = useGetEpins("unUsed")
+  const { isLoading, epinsData } = useGetEpins("unUsed")
   return (
     <>
-      <PackageTable 
-        title="Unused Package" 
-        summaryTitle="List of Unused Package" 
+      <PackageTable
+        title="Unused Package"
+        summaryTitle="List of Unused Package"
         data={epinsData}
         loading={isLoading}
         columns={getusedandUnUsedColumns()}
@@ -176,12 +176,12 @@ export const UnusedPackages = () => {
 };
 
 export const UsedPackages = () => {
-  const {isLoading , epinsData} = useGetEpins("used")
+  const { isLoading, epinsData } = useGetEpins("used")
   return (
     <>
-      <PackageTable 
-        title="Used Package" 
-        summaryTitle="List of Used Package" 
+      <PackageTable
+        title="Used Package"
+        summaryTitle="List of Used Package"
         data={epinsData}
         loading={isLoading}
         columns={getusedandUnUsedColumns()}
@@ -191,19 +191,19 @@ export const UsedPackages = () => {
 };
 
 export const PackageHistory = () => {
-  const {isLoading , epinsData} = useGetEpins("total")
+  const { isLoading, epinsData } = useGetEpins("total")
   return (
-    <PackageTable 
-        title="Package History" 
-        summaryTitle="List of Package History" 
-        data={epinsData}
-        loading={isLoading}
-        columns={getAdminPackageHistoryColumns()}
-      />
+    <PackageTable
+      title="Package History"
+      summaryTitle="List of Package History"
+      data={epinsData}
+      loading={isLoading}
+      columns={getAdminPackageHistoryColumns()}
+    />
   )
 }
 
-const PackageTable: React.FC<PackageTableProps> = ({ title, summaryTitle, data , columns  , loading}) => {
+const PackageTable: React.FC<PackageTableProps> = ({ title, summaryTitle, data, columns, loading }) => {
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(data)
   return (
@@ -214,38 +214,38 @@ const PackageTable: React.FC<PackageTableProps> = ({ title, summaryTitle, data ,
       <Card sx={{ margin: '2rem', mt: 2 }}>
         <CardContent>
           <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            sx={{
-              backgroundColor: '#7e22ce',
-              color: '#fff',
-              '& .MuiSvgIcon-root': { color: '#fff' }
-            }}
-          >
-            {summaryTitle}
-          </AccordionSummary>
-          <AccordionDetails>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-              <TextField
-                size="small"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                sx={{ minWidth: 200 }}
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{
+                backgroundColor: '#000831',
+                color: '#fff',
+                '& .MuiSvgIcon-root': { color: '#fff' }
+              }}
+            >
+              {summaryTitle}
+            </AccordionSummary>
+            <AccordionDetails>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                <TextField
+                  size="small"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  sx={{ minWidth: 200 }}
+                />
+              </div>
+              <DataTable
+                columns={columns}
+                data={filteredData}
+                pagination
+                progressPending={loading}
+                progressComponent={<CircularProgress />}
+                paginationPerPage={25}
+                paginationRowsPerPageOptions={[25, 50, 100]}
+                customStyles={DASHBOARD_CUTSOM_STYLE}
               />
-            </div>
-            <DataTable
-              columns={columns}
-              data={filteredData}
-              pagination
-              progressPending={loading}
-              progressComponent={<CircularProgress />}
-              paginationPerPage={25}
-              paginationRowsPerPageOptions={[25, 50, 100]}
-              customStyles={DASHBOARD_CUTSOM_STYLE}
-            />
-          </AccordionDetails>
-        </Accordion>
+            </AccordionDetails>
+          </Accordion>
         </CardContent>
       </Card>
     </>
@@ -253,7 +253,7 @@ const PackageTable: React.FC<PackageTableProps> = ({ title, summaryTitle, data ,
 };
 
 export const GeneratePackages = () => {
-  const {user}= useContext(UserContext)
+  const { user } = useContext(UserContext)
   const [formData, setFormData] = useState({
     spackage: '',
     purchasedby: '',
@@ -287,14 +287,14 @@ export const GeneratePackages = () => {
 
   const totalAmount = formData.amount * formData.quantity;
 
-  const {mutate,isPending} = useGeneratePackage()
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) =>{
+  const { mutate, isPending } = useGeneratePackage()
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      mutate({...formData,generated_by:user.username})
+      mutate({ ...formData, generated_by: user.username })
     } catch (error) {
       console.error("Generate package failed:", error);
-    } finally{
+    } finally {
       setFormData({
         spackage: '',
         purchasedby: '',
@@ -307,7 +307,7 @@ export const GeneratePackages = () => {
   return (
     <Card sx={{ margin: '2rem', mt: 10, boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
       <CardContent>
-        <Accordion 
+        <Accordion
           defaultExpanded
           sx={{
             boxShadow: 'none',
@@ -321,7 +321,7 @@ export const GeneratePackages = () => {
             aria-controls="package-content"
             id="package-header"
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#000831',
               color: '#fff',
               '& .MuiSvgIcon-root': {
                 color: '#fff'
@@ -342,13 +342,13 @@ export const GeneratePackages = () => {
                   label="Package"
                   startAdornment={
                     <InputAdornment position="start">
-                      <LocalOfferIcon sx={{ color: '#7e22ce' }} />
+                      <LocalOfferIcon sx={{ color: '#000831' }} />
                     </InputAdornment>
                   }
                   sx={{
                     '& .MuiOutlinedInput-notchedOutline': {
                       '&:hover': {
-                        borderColor: '#7e22ce',
+                        borderColor: '#000831',
                       }
                     }
                   }}
@@ -375,17 +375,17 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: '#7e22ce' }} />
+                      <PersonIcon sx={{ color: '#000831' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     }
                   }
                 }}
@@ -402,17 +402,17 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <InventoryIcon sx={{ color: '#7e22ce' }} />
+                      <InventoryIcon sx={{ color: '#000831' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#000831',
                     }
                   }
                 }}
@@ -426,7 +426,7 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PaidIcon sx={{ color: '#7e22ce' }} />
+                      <PaidIcon sx={{ color: '#000831' }} />
                     </InputAdornment>
                   ),
                 }}
@@ -441,17 +441,17 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PaidIcon sx={{ color: '#7e22ce' }} />
+                      <PaidIcon sx={{ color: '#000831' }} />
                     </InputAdornment>
                   ),
                 }}
               />
 
               <Button
-              onClick={handleSubmit}
+                onClick={handleSubmit}
                 variant="contained"
                 sx={{
-                  backgroundColor: '#7e22ce',
+                  backgroundColor: '#000831',
                   alignSelf: 'flex-end',
                   '&:hover': {
                     backgroundColor: '#581c87'
@@ -464,7 +464,7 @@ export const GeneratePackages = () => {
           </AccordionDetails>
         </Accordion>
       </CardContent>
-      {isPending && <LoadingComponent/>}
+      {isPending && <LoadingComponent />}
     </Card>
   );
 };

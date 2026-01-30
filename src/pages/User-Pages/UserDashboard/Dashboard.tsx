@@ -23,6 +23,7 @@ import {
 import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
+
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import DashboardCard from '../../../components/common/DashboardCard';
 import { getUserDashboardTableColumns } from '../../../utils/DataTableColumnsProvider';
@@ -422,7 +423,10 @@ const UserDashboard = () => {
         </Box>
       )}
 
-      <div className="h-auto md:h-40 relative w-full overflow-hidden bg-[#6b21a8] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
+      <div
+        className="h-auto md:h-40 relative w-full overflow-hidden flex flex-col items-center justify-center mt-10 py-6 md:py-0"
+        style={{ backgroundColor: 'rgba(0, 8, 49, 0.7)', backdropFilter: 'blur(5px)' }}
+      >
         <div className="absolute inset-0 w-full h-full z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
 
         <div className="flex flex-col md:flex-row justify-evenly items-center w-full px-4 md:px-8 relative z-20 gap-6 md:gap-0">
@@ -482,17 +486,18 @@ const UserDashboard = () => {
           mx: { xs: 2, sm: 3, md: 4 },
           my: 1.5,
           p: 2,
-          backgroundColor: '#f8f5ff',
+          backgroundColor: 'rgba(240, 249, 255, 0.6)',
+          backdropFilter: 'blur(10px)',
           borderRadius: 2,
-          border: '1px solid #e9d5ff',
-          boxShadow: '0 2px 8px rgba(107, 33, 168, 0.1)',
+          border: '1px solid rgba(186, 230, 253, 0.5)',
+          boxShadow: '0 2px 8px rgba(0, 8, 49, 0.1)',
         }}
       >
         <Typography
           variant="h6"
           sx={{
             mb: 1,
-            color: '#7e22ce',
+            color: '#000831',
             fontWeight: 'bold',
             textAlign: 'center'
           }}
@@ -539,7 +544,7 @@ const UserDashboard = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#6b21a8',
+                  color: '#000831',
                   fontWeight: 'medium',
                 }}
               >
@@ -566,10 +571,10 @@ const UserDashboard = () => {
               onClick={handleCopyReferralLink}
               disabled={!memberDetails?.Member_id}
               sx={{
-                backgroundColor: '#6b21a8',
+                backgroundColor: '#000831',
                 color: 'white',
                 '&:hover': {
-                  backgroundColor: '#581c87',
+                  backgroundColor: '#001242',
                 },
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -585,11 +590,11 @@ const UserDashboard = () => {
               onClick={handleShareReferralLink}
               disabled={!memberDetails?.Member_id}
               sx={{
-                borderColor: '#6b21a8',
-                color: '#6b21a8',
+                borderColor: '#000831',
+                color: '#000831',
                 '&:hover': {
-                  backgroundColor: '#f3e8ff',
-                  borderColor: '#581c87',
+                  backgroundColor: '#e0f2fe',
+                  borderColor: '#001242',
                 },
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -607,7 +612,7 @@ const UserDashboard = () => {
             display: 'block',
             textAlign: 'center',
             mt: 1,
-            color: '#6b21a8',
+            color: '#000831',
             opacity: 0.8
           }}
         >
@@ -689,7 +694,7 @@ const UserDashboard = () => {
           id="claim-reward-dialog-title"
           sx={{
             textAlign: 'center',
-            color: '#7e22ce',
+            color: '#000831',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1
@@ -778,7 +783,7 @@ const UserDashboard = () => {
         <DialogTitle
           sx={{
             textAlign: 'center',
-            color: '#7e22ce',
+            color: '#000831',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1
@@ -954,11 +959,11 @@ const UserDashboard = () => {
       </Dialog>
 
       {/* Member Statistics */}
-      <div className='mt-10 p-4 rounded shadow'>
-        <Card className='bg-gray-300'>
+      <div className='mt-10 p-4 rounded shadow' style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(5px)' }}>
+        <Card sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(10px)' }}>
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#7e22ce' }}>Member Statistics</Typography>
+              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#000831' }}>Member Statistics</Typography>
               <MuiDatePicker
                 date={selectedDate}
                 setDate={handleDateChange}

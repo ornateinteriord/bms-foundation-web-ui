@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Grid,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
@@ -27,13 +28,14 @@ import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
+import BMSLogo from "../../assets/bms_logo.png"; // Import the logo
 import "./Register.scss";
 import { useGetSponserRef, useSignupMutation } from "../../api/Auth";
 import { LoadingComponent } from "../../App";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams(); 
+  const [searchParams] = useSearchParams();
   const refCode = searchParams.get("ref") || "";
   const [formData, setFormData] = useState<Record<string, string>>({
     Sponsor_code: "",
@@ -46,22 +48,22 @@ const Register = () => {
     mobileno: "",
     pincode: "",
   });
-  
+
   const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [genderError, setGenderError] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-  const [registrationData, setRegistrationData] = useState<{memberId: string; password: string}>({
+  const [registrationData, setRegistrationData] = useState<{ memberId: string; password: string }>({
     memberId: '',
     password: ''
   });
-  
-  const { 
+
+  const {
     data: sponsorData,
-    isLoading, 
-    isError, 
-    error, 
-    refetch 
+    isLoading,
+    isError,
+    error,
+    refetch
   } = useGetSponserRef(formData.Sponsor_code);
 
   // Auto-populate sponsor code from URL when component mounts
@@ -116,7 +118,7 @@ const Register = () => {
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
-    setErrorMessage(""); 
+    setErrorMessage("");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,18 +141,18 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Validation
     if (!formData.gender) {
       setGenderError(true);
       return;
     }
-    
+
     if (!formData.password || formData.password.length <= 5) {
       setErrorMessage("Password must be at least 6 characters*");
       return;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
@@ -179,7 +181,7 @@ const Register = () => {
         onSuccess: (response) => {
           if (response.success) {
             setRegistrationData({
-              memberId: response.user.Member_id, 
+              memberId: response.user.Member_id,
               password: formData.password
             });
             setSuccessDialogOpen(true);
@@ -207,10 +209,14 @@ const Register = () => {
       component="main"
       maxWidth="md"
       sx={{
+        minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: "66px",
+        mt: 8,
+        // backgroundColor: "#ffff", // consistent with Login
+        paddingTop: "10px",
+        paddingBottom: "10px",
       }}
     >
       <Box
@@ -224,354 +230,368 @@ const Register = () => {
         <Card
           sx={{
             width: "100%",
-            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-            backgroundColor: "#fff",
+            boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+            backgroundColor: "rgba(30, 30, 30, 0.95)", // Dark semi-transparent background
+            borderRadius: "8px",
+            border: "1px solid rgba(255, 255, 255, 0.05)",
           }}
         >
           <CardContent sx={{ padding: "2rem" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
+              <img
+                src={BMSLogo}
+                alt="BMS Logo"
+                style={{ maxWidth: "150px", height: "auto" }}
+              />
+            </Box>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ color: "#7e22ce", mb: 3, textAlign: "center" }}
+              sx={{ color: "#fff", mb: 1, textAlign: "center", fontWeight: "bold" }}
             >
               Create Account
             </Typography>
-            
-            <Typography
-              variant="body1"
-              sx={{ color: "#7e22ce", marginBottom: "15px", width: "50%" }}
-            >
-              Referral details
-            </Typography>
-            
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              className="reg-textfield-container"
-            >
-              <Box className="textfield-content">
-                <TextField
-                  required
-                  name="Sponsor_code"
-                  label="Sponsor Code"
-                  placeholder="Sponsor code"
-                  value={formData.Sponsor_code}
-                  onChange={handleSponsorCodeChange}
-                  onBlur={handleSponsorCodeBlur}
-                  error={(formData.Sponsor_code.length > 0 && formData.Sponsor_code.length < 5) || (formData.Sponsor_code.length >= 5 && !!sponsorError)}
-                  helperText={
-                    formData.Sponsor_code.length > 0 && formData.Sponsor_code.length < 5
-                      ? "Sponsor code must be at least 5 characters."
-                      : formData.Sponsor_code.length >= 5 && sponsorError
-                      ? sponsorError
-                      : ""
-                  }
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                    },
-                  }}
-                />
 
-                <TextField
-                  required
-                  name="Sponsor_name"
-                  label="Sponsor Name"
-                  placeholder="Sponsor Name"
-                  value={formData.Sponsor_name}
-                  onChange={handleChange}
-                  disabled={true} // Make it read-only since it's auto-filled
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: "100%" }}>
+              <Grid container spacing={2}>
+                {/* Sponsor Code */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="Sponsor_code"
+                    placeholder="Sponsor code"
+                    value={formData.Sponsor_code}
+                    onChange={handleSponsorCodeChange}
+                    onBlur={handleSponsorCodeBlur}
+                    error={(formData.Sponsor_code.length > 0 && formData.Sponsor_code.length < 5) || (formData.Sponsor_code.length >= 5 && !!sponsorError)}
+                    helperText={
+                      formData.Sponsor_code.length > 0 && formData.Sponsor_code.length < 5
+                        ? "Sponsor code must be at least 5 characters."
+                        : formData.Sponsor_code.length >= 5 && sponsorError
+                          ? sponsorError
+                          : ""
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Sponsor Name */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="Sponsor_name"
+                    placeholder="Sponsor Name"
+                    value={formData.Sponsor_name}
+                    onChange={handleChange}
+                    disabled={true}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                    },
-                  }}
-                />
-              </Box>
-              
-              <Box className="textfield-content">
-                <TextField
-                  required
-                  id="Name"
-                  label="Full Name"
-                  name="Name"
-                  autoComplete="Name"
-                  autoFocus
-                  placeholder="Enter your full name"
-                  value={formData.Name}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Full Name */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="Name"
+                    name="Name"
+                    autoComplete="Name"
+                    placeholder="Enter your full name"
+                    value={formData.Name}
+                    onChange={handleChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Email */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    name="email"
+                    autoComplete="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <EmailIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                    },
-                  }}
-                />
-                
-                <TextField
-                  required
-                  id="email"
-                  label="Email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <EmailIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Password */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Confirm Password */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirmPassword"
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    error={!!errorMessage}
+                    helperText={errorMessage}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                    },
-                  }}
-                />
-                
-                <TextField
-                  required
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Mobile Number */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="mobileno"
+                    type="tel"
+                    autoComplete="mobileno"
+                    placeholder="Enter your number"
+                    value={formData.mobileno}
+                    onChange={handleChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PhoneIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Pin Code */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="pincode"
+                    autoComplete="pincode"
+                    placeholder="Enter your pincode"
+                    value={formData.pincode}
+                    onChange={handleChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationOnIcon sx={{ color: "#000831" }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
-                    },
-                  }}
-                />
-                
-                <TextField
-                  required
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirmPassword"
-                  placeholder="Confirm your password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  error={!!errorMessage} 
-                  helperText={errorMessage} 
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                    },
-                  }}
-                />
-                
-                <TextField
-                  required
-                  label="Mobile Number"
-                  name="mobileno"
-                  type="tel"
-                  autoComplete="mobileno"
-                  placeholder="Enter your number"
-                  value={formData.mobileno}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PhoneIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                    },
-                  }}
-                />
-                
-                <TextField
-                  required
-                  label="Pin Code"
-                  name="pincode"
-                  autoComplete="pincode"
-                  placeholder="Enter your pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LocationOnIcon sx={{ color: "#7e22ce" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
-                      },
-                    },
-                  }}
-                />
-                
-                <FormControl
-                  error={!!genderError}
-                  className="form-control"
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "20px",
-                    alignItems: "center",
-                  }}
-                >
-                  <FormLabel className="form-label" sx={{ color: "#7e22ce!important" }}>
-                    <WcIcon sx={{ color: "#7e22ce" }} />
-                    Gender:
-                  </FormLabel>
-                  <RadioGroup
-                    row
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleRadioChange}
-                    className="radio-grp"
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                    }}
+                  />
+                </Grid>
+
+                {/* Gender */}
+                <Grid item xs={12}>
+                  <FormControl
+                    error={!!genderError}
+                    component="fieldset"
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 2,
+                      ml: 1
+                    }}
                   >
-                    <FormControlLabel
-                      value="Male"
-                      className="form-control-label"
-                      control={
-                        <Radio sx={{ "&.Mui-checked": { color: "#7e22ce" } }} />
-                      }
-                      label="Male"
-                    />
-                    <FormControlLabel
-                      className="form-control-label"
-                      value="Female"
-                      control={
-                        <Radio sx={{ "&.Mui-checked": { color: "#7e22ce" } }} />
-                      }
-                      label="Female"
-                    />
-                  </RadioGroup>
-                </FormControl> 
-                
-                {genderError && (
-                  <FormHelperText sx={{color:"#d32f2f",marginTop:"-20px"}}>  
-                    Please select your gender*
-                  </FormHelperText>
-                )}
-                
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isChecked}
-                      onChange={handleCheckboxChange}
-                      sx={{ color: "#7e22ce" }}
-                    />
-                  }
-                  label={
-                    <Typography variant="body2" sx={{ color: "#7e22ce" }}>
-                      I accept the Terms and Conditions
-                    </Typography>
-                  }
-                  className="FormControlLabel"
-                />
-                
-                <Box className="btn-container">
+                    <FormLabel component="legend" sx={{ color: "#fff !important", display: 'flex', alignItems: 'center' }}>
+                      <WcIcon sx={{ mr: 1, color: "#fff" }} />
+                      Gender:
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleRadioChange}
+                    >
+                      <FormControlLabel
+                        value="Male"
+                        control={<Radio sx={{ color: "#bbb", "&.Mui-checked": { color: "#fff" } }} />}
+                        label={<span style={{ color: "#fff" }}>Male</span>}
+                      />
+                      <FormControlLabel
+                        value="Female"
+                        control={<Radio sx={{ color: "#bbb", "&.Mui-checked": { color: "#fff" } }} />}
+                        label={<span style={{ color: "#fff" }}>Female</span>}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  {genderError && (
+                    <FormHelperText sx={{ color: "#d32f2f", ml: 1 }}>
+                      Please select your gender*
+                    </FormHelperText>
+                  )}
+                </Grid>
+
+                {/* Terms and Checkbox */}
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                        sx={{ color: "#bbb", "&.Mui-checked": { color: "#fff" } }}
+                      />
+                    }
+                    label={
+                      <Typography variant="body2" sx={{ color: "#fff" }}>
+                        I accept the Terms and Conditions
+                      </Typography>
+                    }
+                  />
+                </Grid>
+
+                {/* Register Button */}
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Button
                     type="submit"
                     variant="contained"
-                    className="signup-btn"
+                    fullWidth
                     disabled={!isChecked || isPending}
                     sx={{
-                      backgroundColor: "#7e22ce",
-                      marginRight: "130px",
+                      background: "linear-gradient(90deg, #3d5a88ff 0%, #d4af37 100%)",
+                      color: "white",
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                      maxWidth: "300px",
+                      py: 1.5,
                       "&:hover": {
-                        backgroundColor: "#581c87",
+                        opacity: 0.9,
                       },
                     }}
                   >
                     {isPending ? "Registering..." : "Register"}
                   </Button>
-                </Box>
-              </Box>
+                </Grid>
+              </Grid>
             </Box>
-            
-            <Typography variant="body2" sx={{ textAlign: "center", mt: 1 }}>
+
+            <Typography variant="body2" sx={{ textAlign: "center", mt: 1, color: "#fff" }}>
               Have an account?{" "}
               <Link
                 to="/login"
                 style={{
-                  color: "#7e22ce",
+                  color: "#22c55e",
                   textDecoration: "none",
                   fontWeight: "bold",
                 }}
@@ -579,12 +599,12 @@ const Register = () => {
                 Login
               </Link>
             </Typography>
-            
+
             <Typography variant="body2" sx={{ textAlign: "center", mt: 1 }}>
-              <Link 
-                to="/recover-password" 
+              <Link
+                to="/recover-password"
                 style={{
-                  color: "#7e22ce",
+                  color: "#5e81f4",
                   textDecoration: "none",
                   fontWeight: "bold",
                 }}
@@ -603,10 +623,10 @@ const Register = () => {
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle 
+          <DialogTitle
             id="registration-success-dialog"
-            sx={{ 
-              backgroundColor: '#7e22ce', 
+            sx={{
+              backgroundColor: '#000831',
               color: 'white',
               textAlign: 'center'
             }}
@@ -617,9 +637,9 @@ const Register = () => {
             <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
               New Member Created Successfully
             </Typography>
-            <div style={{ 
-              backgroundColor: '#f8fafc', 
-              padding: '1.5rem', 
+            <div style={{
+              backgroundColor: '#f8fafc',
+              padding: '1.5rem',
               borderRadius: '8px',
               border: '1px solid #e2e8f0'
             }}>
@@ -630,10 +650,10 @@ const Register = () => {
                 <strong>Password:</strong> {registrationData.password}
               </Typography>
             </div>
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                mt: 2, 
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 2,
                 color: '#64748b'
               }}
             >
@@ -641,14 +661,14 @@ const Register = () => {
             </Typography>
           </DialogContent>
           <DialogActions sx={{ padding: '1rem 2rem 2rem' }}>
-            <Button 
+            <Button
               onClick={handleCloseDialog}
               variant="contained"
               sx={{
                 textTransform: "capitalize",
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#000831',
                 '&:hover': {
-                  backgroundColor: '#581c87'
+                  backgroundColor: '#000831'
                 }
               }}
             >

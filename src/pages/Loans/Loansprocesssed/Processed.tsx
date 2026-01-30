@@ -99,8 +99,8 @@ export default function Processed() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: '#7e22ce',
-              '&:hover': { backgroundColor: '#7e22ce' }
+              backgroundColor: '#000831',
+              '&:hover': { backgroundColor: '#000831' }
             }}
           >
             Search
@@ -114,7 +114,7 @@ export default function Processed() {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#000831',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -142,11 +142,11 @@ export default function Processed() {
               <TableContainer component={Paper} elevation={1}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: '#7e22ce' }}>
+                    <TableRow sx={{ backgroundColor: '#000831' }}>
                       {columns.map((column) => (
-                        <TableCell 
+                        <TableCell
                           key={column.name}
-                          sx={{ 
+                          sx={{
                             color: 'white',
                             fontWeight: 'bold',
                             fontSize: '14px'
@@ -160,9 +160,9 @@ export default function Processed() {
                   <TableBody>
                     {paginatedData.length > 0 ? (
                       paginatedData.map((row: any) => (
-                        <TableRow 
+                        <TableRow
                           key={row.id || row._id}
-                          sx={{ 
+                          sx={{
                             '&:nth-of-type(odd)': { backgroundColor: 'action.hover' },
                             '&:hover': { backgroundColor: 'action.selected' }
                           }}
@@ -170,8 +170,8 @@ export default function Processed() {
                           {columns.map((column) => (
                             <TableCell key={`${row.id || row._id}-${column.name}`}>
                               {column.name === 'Status' ? (
-                                <Chip 
-                                  label={row.status} 
+                                <Chip
+                                  label={row.status}
                                   color={getStatusChipColor(row.status)}
                                   size="small"
                                 />

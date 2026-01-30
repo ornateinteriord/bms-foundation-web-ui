@@ -12,9 +12,9 @@ import { LoadingComponent } from "../../../App";
 import { useParams } from "react-router-dom";
 
 const MembersUpdateForm: React.FC = () => {
-  const {memberId} = useParams()
+  const { memberId } = useParams()
   const [formData, setFormData] = useState<Record<string, string>>({
-    gender: "", 
+    gender: "",
   });
   const {
     data: member,
@@ -31,7 +31,7 @@ const MembersUpdateForm: React.FC = () => {
 
   useEffect(() => {
     if (member) {
-      setFormData((prev) => ({ ...prev, ...member,gender: member.gender || "", }));
+      setFormData((prev) => ({ ...prev, ...member, gender: member.gender || "", }));
     }
   }, [member]);
 
@@ -48,7 +48,7 @@ const MembersUpdateForm: React.FC = () => {
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
-      gender:e.target.value,
+      gender: e.target.value,
     }));
   };
 
@@ -58,9 +58,9 @@ const MembersUpdateForm: React.FC = () => {
     updateMember.mutate({ memberId, data: formData });
   };
 
-  const routes : breadcrumbsProp[] = [
+  const routes: breadcrumbsProp[] = [
     { path: "/admin/members", breadcrumb: "Members" },
-    { path:  `/admin/members/${memberId}`, breadcrumb: "Update Member" },
+    { path: `/admin/members/${memberId}`, breadcrumb: "Update Member" },
   ];
 
   return (
@@ -108,7 +108,7 @@ const MembersUpdateForm: React.FC = () => {
             variant="contained"
             onClick={handleSubmit}
             sx={{
-              backgroundColor: "#7e22ce",
+              backgroundColor: "#000831",
               alignSelf: "flex-end",
               "&:hover": { backgroundColor: "#581c87" },
             }}

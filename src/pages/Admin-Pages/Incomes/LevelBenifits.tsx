@@ -26,8 +26,8 @@ const LevelBenifits = () => {
   const { data: allTransactions, isLoading, isError } = useGetAllTransactionDetails();
 
   // Filter transactions to get only level benefits
-  const levelBenefits = allTransactions?.filter((transaction: any) => 
-    transaction.type === 'level_benefit' || 
+  const levelBenefits = allTransactions?.filter((transaction: any) =>
+    transaction.type === 'level_benefit' ||
     transaction.transactionType === 'level' ||
     transaction.category === 'level_benefits' ||
     // Add other conditions that identify level benefits in your data
@@ -36,8 +36,8 @@ const LevelBenifits = () => {
 
   const filteredData = levelBenefits?.filter((benefit: any) =>
     Object.values(benefit).some(
-      value => 
-        value && 
+      value =>
+        value &&
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   ) || [];
@@ -67,7 +67,7 @@ const LevelBenifits = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
