@@ -13,6 +13,7 @@ interface DashboardCardProps {
   isRepayEnabled?: boolean;
   alreadyRepaidToday?: boolean;
   renewalDays?: number;
+  isNewUser?: boolean;
   onRenew?: () => void;
   isRenewEnabled?: boolean;
 }
@@ -28,6 +29,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   isRepayEnabled = false,
   alreadyRepaidToday = false,
   renewalDays,
+  isNewUser = false,
   onRenew,
   isRenewEnabled = false
 }) => {
@@ -217,7 +219,23 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            {renewalDays !== undefined && renewalDays > 0 ? (
+            {isNewUser ? (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#fbbf24', // Amber/Yellow for action needed
+                  fontWeight: 'bold',
+                  fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                  background: 'rgba(255,255,255,0.1)',
+                  px: 1,
+                  py: 0.5,
+                  borderRadius: 1,
+                  display: 'inline-block'
+                }}
+              >
+                Select Package
+              </Typography>
+            ) : renewalDays !== undefined && renewalDays > 0 ? (
               <Typography
                 variant="body2"
                 sx={{
@@ -286,7 +304,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               minWidth: '120px'
             }}
           >
-            Renew Package
+            {isNewUser ? 'Select Package' : 'Renew Package'}
           </Button>
         </CardContent>
       </Card >
