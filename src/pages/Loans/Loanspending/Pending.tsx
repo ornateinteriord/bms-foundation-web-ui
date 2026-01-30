@@ -35,11 +35,11 @@ export default function PendingLoans() {
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
 
-  const { 
-    data: pendingLoansData, 
-    isLoading, 
+  const {
+    data: pendingLoansData,
+    isLoading,
     error,
-    refetch 
+    refetch
   } = useGetRewardLoansByStatus("Processing");
   console.log("processing loan:", pendingLoansData);
 
@@ -50,9 +50,9 @@ export default function PendingLoans() {
 
   const handleProcessLoan = async (memberId: string, action: 'approve' | 'reject') => {
     try {
-      await updateLoanMutation.mutateAsync({ 
-        memberId, 
-        action 
+      await updateLoanMutation.mutateAsync({
+        memberId,
+        action
       });
       toast.success(`Loan ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
       refetch();
@@ -78,17 +78,17 @@ export default function PendingLoans() {
     if (column.cell) {
       return column.cell(row);
     }
-    
+
     if (column.selector) {
       const value = column.selector(row);
-      
+
       if (column.name === 'Loan Amount') {
         return `₹${(value || 0).toLocaleString()}`;
       }
-      
+
       return value || '-';
     }
-    
+
     return '-';
   };
 
@@ -128,7 +128,7 @@ export default function PendingLoans() {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#000831',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -156,11 +156,11 @@ export default function PendingLoans() {
               <TableContainer component={Paper} elevation={1}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: '#7e22ce' }}>
+                    <TableRow sx={{ backgroundColor: '#000831' }}>
                       {columns.map((column) => (
-                        <TableCell 
+                        <TableCell
                           key={column.name}
-                          sx={{ 
+                          sx={{
                             color: 'white',
                             fontWeight: 'bold',
                             fontSize: '14px'
@@ -173,10 +173,10 @@ export default function PendingLoans() {
                   </TableHead>
                   <TableBody>
                     {paginatedData.length > 0 ? (
-                      paginatedData.map((row:any) => (
-                        <TableRow 
+                      paginatedData.map((row: any) => (
+                        <TableRow
                           key={row._id}
-                          sx={{ 
+                          sx={{
                             '&:nth-of-type(odd)': { backgroundColor: 'action.hover' },
                             '&:hover': { backgroundColor: 'action.selected' }
                           }}

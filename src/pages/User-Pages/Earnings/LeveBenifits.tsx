@@ -13,17 +13,17 @@ const LevelBenifits = () => {
   } = useGetTransactionDetails();
 
   // Ensure transactions is always an array
-  const transactions = Array.isArray(transactionsData?.data) 
-    ? transactionsData.data 
-    : Array.isArray(transactionsData) 
-      ? transactionsData 
+  const transactions = Array.isArray(transactionsData?.data)
+    ? transactionsData.data
+    : Array.isArray(transactionsData)
+      ? transactionsData
       : [];
 
   const levelBenefitsData = transactions
     .filter((transaction: any) => {
       if (!transaction || typeof transaction !== 'object') return false;
-      
-      const matchesLevel = 
+
+      const matchesLevel =
         transaction.benefit_type?.toLowerCase()?.includes('level') ||
         transaction.transaction_type?.toLowerCase()?.includes('level') ||
         transaction.transaction_type?.toLowerCase()?.includes('commission') ||
@@ -31,7 +31,7 @@ const LevelBenifits = () => {
         transaction.transaction_type?.toLowerCase()?.includes('benefit') ||
         (transaction.level !== null && transaction.level !== undefined);
 
-      return matchesLevel; 
+      return matchesLevel;
     })
     .map((transaction: any) => ({
       id: transaction._id || transaction.transaction_id,
@@ -46,7 +46,7 @@ const LevelBenifits = () => {
 
   const noDataComponent = (
     <div style={{ padding: '24px' }}>
-     No level benefits data available
+      No level benefits data available
     </div>
   );
 
@@ -69,7 +69,7 @@ const LevelBenifits = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#000831',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' }
             }}

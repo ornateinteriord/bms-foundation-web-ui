@@ -40,7 +40,7 @@ const Transactions = () => {
   }, [isError, error]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transactions)
-  
+
   return (
     <TransactionDataTable
       title="Transactions"
@@ -72,7 +72,7 @@ export const TransactionDataTable = ({
   columns: any;
   isLoading?: boolean;
   searchQuery?: string;
-  setSearchQuery?: React.Dispatch<React.SetStateAction<string>> ;
+  setSearchQuery?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
@@ -87,7 +87,7 @@ export const TransactionDataTable = ({
         sx={{ margin: "2rem", mt: 12 }}
       >
         <Typography variant="h4">{title}</Typography>
-        <Grid  className="transaction-content">
+        <Grid className="transaction-content">
           <TextField
             size="small"
             placeholder="Member Id"
@@ -98,8 +98,8 @@ export const TransactionDataTable = ({
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#7e22ce",
-              "&:hover": { backgroundColor: "#7e22ce" },
+              backgroundColor: "#000831",
+              "&:hover": { backgroundColor: "#000831" },
             }}
           >
             Search
@@ -112,7 +112,7 @@ export const TransactionDataTable = ({
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
@@ -144,7 +144,7 @@ export const TransactionDataTable = ({
                 paginationPerPage={25}
                 progressPending={isLoading}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }}/>
+                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover

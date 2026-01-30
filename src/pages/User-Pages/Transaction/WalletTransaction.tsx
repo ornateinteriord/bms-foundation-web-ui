@@ -43,7 +43,7 @@ const WalletTransaction = () => {
   useEffect(() => {
     // Extract transactions from the response object
     const transactions = transactionsResponse?.data || [];
-    
+
     console.log("Wallet Transactions Response:", transactionsResponse);
     console.log("Extracted transactions:", transactions);
     console.log("Is array?", Array.isArray(transactions));
@@ -54,7 +54,7 @@ const WalletTransaction = () => {
         const transactionType = tx.transaction_type?.toLowerCase() || '';
         const description = tx.description?.toLowerCase() || '';
         const benefitType = tx.benefit_type?.toLowerCase() || '';
-        
+
         return !(
           transactionType.includes('loan') ||
           description.includes('loan') ||
@@ -94,7 +94,7 @@ const WalletTransaction = () => {
   if (isLoading) {
     return (
       <Card sx={{ margin: "2rem", mt: 10, textAlign: "center", p: 3 }}>
-        <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+        <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
       </Card>
     );
   }
@@ -106,7 +106,7 @@ const WalletTransaction = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: "#7e22ce",
+              backgroundColor: "#000831",
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
             }}
@@ -126,11 +126,11 @@ const WalletTransaction = () => {
               noDataComponent={noDataComponent}
               subHeader
               subHeaderComponent={
-                <Box sx={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
+                <Box sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  width: "100%", 
+                  width: "100%",
                   p: 1,
                 }}>
                   <Typography variant="body2" color="textSecondary">

@@ -10,15 +10,15 @@ import useSearch from '../../../hooks/SearchQuery';
 import TokenService from '../../../api/token/tokenService';
 
 const Direct = () => {
-const memberId = TokenService.getMemberId(); 
-   const { data: sponsers, isLoading, isError, error } = useGetSponsers(memberId);
+  const memberId = TokenService.getMemberId();
+  const { data: sponsers, isLoading, isError, error } = useGetSponsers(memberId);
 
-   useEffect(() => {
-       if (isError) toast.error(error.message);
-     }, [isError, error]);
+  useEffect(() => {
+    if (isError) toast.error(error.message);
+  }, [isError, error]);
 
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(sponsers?.sponsoredUsers|| [])
-    
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(sponsers?.sponsoredUsers || [])
+
 
   return (
     <Card sx={{ margin: '2rem', mt: 10 }}>
@@ -27,10 +27,10 @@ const memberId = TokenService.getMemberId();
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-                backgroundColor: '#7e22ce',
-                color: '#fff',
-                '& .MuiSvgIcon-root': { color: '#fff' }
-              }}
+              backgroundColor: '#000831',
+              color: '#fff',
+              '& .MuiSvgIcon-root': { color: '#fff' }
+            }}
           >
             {!isLoading && `List of Direct (${sponsers?.sponsoredUsers?.length})`}
           </AccordionSummary>
@@ -41,7 +41,7 @@ const memberId = TokenService.getMemberId();
               pagination
               progressPending={isLoading}
               progressComponent={
-                <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+                <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
               }
               paginationPerPage={25}
               paginationRowsPerPageOptions={[25, 50, 100]}

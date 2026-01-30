@@ -43,7 +43,7 @@ const LoanTransaction = () => {
   useEffect(() => {
     // Extract transactions from the response object
     const transactions = transactionsResponse?.data || [];
-    
+
     console.log("Loan Transactions Response:", transactionsResponse);
     console.log("Extracted transactions:", transactions);
     console.log("Is array?", Array.isArray(transactions));
@@ -55,7 +55,7 @@ const LoanTransaction = () => {
         const description = tx.description?.toLowerCase() || '';
         const benefitType = tx.benefit_type?.toLowerCase() || '';
         const status = tx.status?.toLowerCase() || '';
-        
+
         // Check if it's a loan transaction but NOT "Approved" status
         const isLoanTransaction = (
           transactionType.includes('loan') ||
@@ -64,10 +64,10 @@ const LoanTransaction = () => {
           description.includes('repayment') ||
           benefitType.includes('loan')
         );
-        
+
         // Exclude transactions with "Approved" status
         const isNotApproved = status !== 'approved';
-        
+
         return isLoanTransaction && isNotApproved;
       });
 
@@ -101,7 +101,7 @@ const LoanTransaction = () => {
   if (isLoading) {
     return (
       <Card sx={{ margin: "2rem", mt: 10, textAlign: "center", p: 3 }}>
-        <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+        <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
       </Card>
     );
   }
@@ -113,7 +113,7 @@ const LoanTransaction = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: "#7e22ce",
+              backgroundColor: "#000831",
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
             }}
@@ -133,12 +133,12 @@ const LoanTransaction = () => {
               noDataComponent={noDataComponent}
               subHeader
               subHeaderComponent={
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  width: '100%', 
-                  p: 1 
+                <Box sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                  p: 1
                 }}>
                   <Typography variant="body2" color="textSecondary">
                     Showing {filteredData.length} loan transactions (excluding Approved status)

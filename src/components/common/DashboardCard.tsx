@@ -5,7 +5,7 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 interface DashboardCardProps {
   amount: string | number;
   title: string;
-  subTitle?: string; 
+  subTitle?: string;
   IconComponent?: React.ElementType;
   type?: 'default' | 'loan';
   dueAmount?: string | number;
@@ -14,10 +14,10 @@ interface DashboardCardProps {
   alreadyRepaidToday?: boolean;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ 
-  amount, 
-  title, 
-  subTitle, 
+const DashboardCard: React.FC<DashboardCardProps> = ({
+  amount,
+  title,
+  subTitle,
   IconComponent,
   type = 'default',
   dueAmount = 0,
@@ -25,7 +25,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   isRepayEnabled = false,
   alreadyRepaidToday = false
 }) => {
-  
+
   const getRepayButtonText = () => {
     if (isRepayEnabled) return 'Repay Now';
     if (alreadyRepaidToday) return 'Already Repaid Today';
@@ -36,7 +36,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     return (
       <Card
         sx={{
-          background: 'linear-gradient(to right, #4f9de8, #a67bd5)',
+          background: 'linear-gradient(135deg, rgba(77, 42, 190, 0.5) 0%, rgba(17, 27, 49, 0.6) 100%)',
+          backdropFilter: 'blur(5px)',
           color: '#fff',
           borderRadius: '10px',
           padding: { xs: '6px', sm: '8px' },
@@ -51,15 +52,15 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           position: 'relative',
         }}
       >
-        <CardContent sx={{ 
-          textAlign: 'center', 
+        <CardContent sx={{
+          textAlign: 'center',
           p: { xs: '8px', sm: '12px' },
           width: '100%',
           '&:last-child': { paddingBottom: { xs: '8px', sm: '12px' } }
         }}>
-          <Typography 
-            variant="h6" 
-            sx={{ 
+          <Typography
+            variant="h6"
+            sx={{
               fontWeight: 'bold',
               mb: 1.5,
               fontSize: { xs: '0.9rem', sm: '1rem' }
@@ -67,18 +68,18 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           >
             {title}
           </Typography>
-          
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            gap: { xs: 1, sm: 2 }, 
-            mb: 2 
+
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: { xs: 1, sm: 2 },
+            mb: 2
           }}>
             <Box sx={{ flex: 1, textAlign: 'center' }}>
-              <Typography 
-                variant="h4" 
-                sx={{ 
+              <Typography
+                variant="h4"
+                sx={{
                   fontWeight: 'bold',
                   fontSize: { xs: '1.3rem', sm: '1.5rem' },
                   textShadow: '0 2px 4px rgba(0,0,0,0.2)'
@@ -87,11 +88,11 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 ₹{amount}
               </Typography>
             </Box>
-            
+
             <Box sx={{ flex: 1, textAlign: 'center' }}>
-              <Typography 
-                variant="body2" 
-                sx={{ 
+              <Typography
+                variant="body2"
+                sx={{
                   fontWeight: 'bold',
                   fontSize: { xs: '0.75rem', sm: '1rem' },
                   mb: 0.5,
@@ -100,9 +101,9 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               >
                 Due Amount
               </Typography>
-              <Typography 
-                variant="h6" 
-                sx={{ 
+              <Typography
+                variant="h6"
+                sx={{
                   fontWeight: 'bold',
                   fontSize: { xs: '1rem', sm: '1.1rem' },
                   textShadow: '0 2px 4px rgba(0,0,0,0.2)'
@@ -112,23 +113,23 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               </Typography>
             </Box>
           </Box>
-          
+
           <Button
             variant="contained"
             onClick={onRepay}
             disabled={!isRepayEnabled}
             sx={{
-              background: isRepayEnabled 
+              background: isRepayEnabled
                 ? 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)'
                 : 'rgba(255, 255, 255, 0.1)',
               color: 'white',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.3)',
               '&:hover': {
-                background: isRepayEnabled 
+                background: isRepayEnabled
                   ? 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)'
                   : 'rgba(255, 255, 255, 0.1)',
-                boxShadow: isRepayEnabled 
+                boxShadow: isRepayEnabled
                   ? '0 4px 12px rgba(107, 33, 168, 0.3)'
                   : 'none',
               },
@@ -157,7 +158,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   return (
     <Card
       sx={{
-        background: 'linear-gradient(to right, #4f9de8, #a67bd5)',
+        background: 'linear-gradient(135deg, rgba(94, 59, 214, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%)',
+        backdropFilter: 'blur(5px)',
         color: '#fff',
         borderRadius: '10px',
         padding: { xs: '12px', sm: '16px' },
@@ -182,17 +184,17 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
       >
         {IconComponent ? <IconComponent sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} /> : <CurrencyRupeeIcon sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} />}
       </Box>
-      <CardContent 
-        sx={{ 
+      <CardContent
+        sx={{
           padding: { xs: '8px', sm: '16px' },
           width: '100%',
           '&:last-child': { paddingBottom: { xs: '8px', sm: '16px' } }
         }}
       >
-        <Typography 
-          variant="h4" 
-          sx={{ 
-            fontWeight: 'bold', 
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 'bold',
             textAlign: 'center',
             marginBottom: '5px',
             fontSize: { xs: '1.5rem', sm: '2rem' }
@@ -200,21 +202,21 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         >
           {amount}
         </Typography>
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            textAlign: 'center', 
+        <Typography
+          variant="body2"
+          sx={{
+            textAlign: 'center',
             fontWeight: '500',
             fontSize: { xs: '0.875rem', sm: '1rem' }
           }}
         >
           {title}
         </Typography>
-        {subTitle && ( 
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              textAlign: 'center', 
+        {subTitle && (
+          <Typography
+            variant="body2"
+            sx={{
+              textAlign: 'center',
               fontWeight: '400',
               fontSize: { xs: '0.75rem', sm: '0.875rem' },
               marginTop: '4px'

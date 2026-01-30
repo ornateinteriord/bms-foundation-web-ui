@@ -22,7 +22,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/use-auth";
 import TokenService from "../../api/token/tokenService";
 import { deepOrange } from "@mui/material/colors";
-import {  useState } from "react";
+import { useState } from "react";
 import { useGetMemberDetails } from "../../api/Memeber";
 
 
@@ -68,7 +68,7 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: "#6b21a8",
+          background: "#000831",
         }}
       >
         <Toolbar className="navbar-toolbar">
@@ -83,7 +83,7 @@ const Navbar = ({
             style={{ marginLeft: "12px", cursor: "pointer" }}
             onClick={() => navigate("/")}
           >
-            MSI
+            BMS
           </Typography>
 
           <div style={{ marginLeft: "auto" }}>
@@ -199,7 +199,7 @@ const Navbar = ({
             </MenuItem>
           </div>
         </Menu>
-      </AppBar>
+      </AppBar >
     </>
   );
 };

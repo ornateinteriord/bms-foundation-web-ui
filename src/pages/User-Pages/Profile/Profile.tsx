@@ -20,7 +20,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
 import UserContext from "../../../context/user/userContext";
-import { useUpdateMember , useImageKitUpload } from "../../../api/Memeber";
+import { useUpdateMember, useImageKitUpload } from "../../../api/Memeber";
 import { LoadingComponent } from "../../../App";
 import { toast } from "react-toastify";
 
@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
     email: "",
     mobileno: "",
     profile_image: null as string | null,
-    profile_image_name:"" , 
+    profile_image_name: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
         email: user.email ?? "",
         mobileno: user.mobileno ?? "",
         profile_image: user.profile_image,
-        profile_image_name: "", 
+        profile_image_name: "",
       });
     }
   }, [user]);
@@ -74,7 +74,7 @@ const Profile: React.FC = () => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
-    if(!file) return;
+    if (!file) return;
     setLoading(true)
     try {
       // Pass the file as a parameter to the mutate function
@@ -101,7 +101,7 @@ const Profile: React.FC = () => {
     } finally {
       setLoading(false)
     }
-    
+
   };
 
   const handleSubmit = () => {
@@ -121,7 +121,7 @@ const Profile: React.FC = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: "#7e22ce",
+              backgroundColor: "#000831",
               color: "#fff",
             }}
           >
@@ -140,14 +140,14 @@ const Profile: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: "#7e22ce" }} />
+                      <PersonIcon sx={{ color: "#000831" }} />
                     </InputAdornment>
                   ),
                 }}
               />
               <FormControl>
-                <FormLabel sx={{ color: "#7e22ce" }}>
-                  <WcIcon sx={{ color: "#7e22ce" }} />
+                <FormLabel sx={{ color: "#000831" }}>
+                  <WcIcon sx={{ color: "#000831" }} />
                   Gender
                 </FormLabel>
                 <RadioGroup
@@ -158,12 +158,12 @@ const Profile: React.FC = () => {
                 >
                   <FormControlLabel
                     value="Male"
-                    control={<Radio sx={{ "&.Mui-checked": { color: "#7e22ce" } }} />}
+                    control={<Radio sx={{ "&.Mui-checked": { color: "#000831" } }} />}
                     label="Male"
                   />
                   <FormControlLabel
                     value="Female"
-                    control={<Radio sx={{ "&.Mui-checked": { color: "#7e22ce" } }} />}
+                    control={<Radio sx={{ "&.Mui-checked": { color: "#000831" } }} />}
                     label="Female"
                   />
                 </RadioGroup>
@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailIcon sx={{ color: "#7e22ce" }} />
+                      <EmailIcon sx={{ color: "#000831" }} />
                     </InputAdornment>
                   ),
                 }}
@@ -197,28 +197,28 @@ const Profile: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PhoneIcon sx={{ color: "#7e22ce" }} />
+                      <PhoneIcon sx={{ color: "#000831" }} />
                     </InputAdornment>
                   ),
                 }}
               />
-              
-             
-              
+
+
+
               <FormControl>
-                <FormLabel sx={{ color: "#7e22ce" }}>Profile Image</FormLabel>
+                <FormLabel sx={{ color: "#000831" }}>Profile Image</FormLabel>
                 <Button variant="outlined" component="label" disabled={loading}>
                   Choose File
                   <input type="file" hidden onChange={handleFileChange} />
                 </Button>
-                <span>{formData.profile_image ? formData.profile_image_name: "No file chosen"}</span>
+                <span>{formData.profile_image ? formData.profile_image_name : "No file chosen"}</span>
               </FormControl>
               <Button
                 variant="contained"
                 onClick={handleSubmit}
                 disabled={updateMember.isPending}
                 sx={{
-                  backgroundColor: "#7e22ce",
+                  backgroundColor: "#000831",
                   alignSelf: "flex-end",
                   "&:hover": { backgroundColor: "#581c87" },
                 }}
@@ -229,7 +229,7 @@ const Profile: React.FC = () => {
           </AccordionDetails>
         </Accordion>
       </CardContent>
-      {(updateMember.isPending || loading || imageKit.isPending)&& <LoadingComponent />}
+      {(updateMember.isPending || loading || imageKit.isPending) && <LoadingComponent />}
     </Card>
   );
 };

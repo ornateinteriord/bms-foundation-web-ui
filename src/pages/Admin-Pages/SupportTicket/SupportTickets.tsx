@@ -21,14 +21,14 @@ import { useGetAllTickets, useUpdateTickets } from '../../../api/Admin';
 import { toast } from 'react-toastify';
 import useSearch from '../../../hooks/SearchQuery';
 
-interface Ticket{
-  _id:string;
-  ticket_date:string;
-  ticket_no:string;
-  reference_id:string;
-  type_of_ticket:string;
-  SUBJECT:string;
-  ticket_status:"pending" | "solved";
+interface Ticket {
+  _id: string;
+  ticket_date: string;
+  ticket_no: string;
+  reference_id: string;
+  type_of_ticket: string;
+  SUBJECT: string;
+  ticket_status: "pending" | "solved";
 
 }
 
@@ -37,7 +37,7 @@ const SupportTickets = () => {
   const [isReplyDialogOpen, setIsReplyDialogOpen] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const {data:tickets,isLoading,isError,error} = useGetAllTickets()
+  const { data: tickets, isLoading, isError, error } = useGetAllTickets()
 
   const handleReplyClick = (ticket: any) => {
     setSelectedTicket(ticket);
@@ -48,37 +48,37 @@ const SupportTickets = () => {
     setIsReplyDialogOpen(false);
     setReplyText('');
   };
-  
+
   const replyTicketMutation = useUpdateTickets()
   const handleSubmitReply = (e: React.FormEvent) => {
     try {
       e.preventDefault();
       if (!selectedTicket) return;
       const replyTicket = {
-        id:selectedTicket._id,
-        reply_details:replyText,
-        
+        id: selectedTicket._id,
+        reply_details: replyText,
+
       }
-     replyTicketMutation.mutate(replyTicket)
+      replyTicketMutation.mutate(replyTicket)
     } catch (error) {
       console.error("Failed to update ticket", error);
     } finally {
       handleCloseDialog();
     }
-    
+
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (isError) {
-        toast.error(
-          error.message
-        );
-      }
-    }, [isError, error]);
-    
+      toast.error(
+        error.message
+      );
+    }
+  }, [isError, error]);
+
   const { searchQuery, setSearchQuery, filteredData } = useSearch(tickets)
-  
-    
+
+
 
   return (
     <>
@@ -91,7 +91,7 @@ const SupportTickets = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#000831',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -105,7 +105,7 @@ const SupportTickets = () => {
                   placeholder="Search..."
                   sx={{ minWidth: 200 }}
                   value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <DataTable
@@ -116,7 +116,7 @@ const SupportTickets = () => {
                 paginationPerPage={25}
                 progressPending={isLoading}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }}  />
+                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover
@@ -127,7 +127,7 @@ const SupportTickets = () => {
       </Card>
 
       <Dialog open={isReplyDialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ backgroundColor: '#7e22ce', color: '#fff' }}>
+        <DialogTitle sx={{ backgroundColor: '#000831', color: '#fff' }}>
           Reply to Ticket #{selectedTicket?.ticket_no}
         </DialogTitle>
         <DialogContent sx={{ mt: 2 }}>
@@ -156,10 +156,10 @@ const SupportTickets = () => {
               mt: 1,
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
-                  borderColor: '#7e22ce',
+                  borderColor: '#000831',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#7e22ce',
+                  borderColor: '#000831',
                 }
               }
             }}
@@ -169,19 +169,19 @@ const SupportTickets = () => {
           <Button onClick={handleCloseDialog} variant="outlined" color="error">
             Cancel
           </Button>
-         
-         <Button
-         onClick={handleSubmitReply}
-         variant="contained"
-         sx={{
-           backgroundColor: '#7e22ce',
-           '&:hover': { backgroundColor: '#581c87' }
-         }}
-         disabled={!selectedTicket}
-       >
-         Reply
-       </Button>
-      
+
+          <Button
+            onClick={handleSubmitReply}
+            variant="contained"
+            sx={{
+              backgroundColor: '#000831',
+              '&:hover': { backgroundColor: '#581c87' }
+            }}
+            disabled={!selectedTicket}
+          >
+            Reply
+          </Button>
+
         </DialogActions>
       </Dialog>
     </>

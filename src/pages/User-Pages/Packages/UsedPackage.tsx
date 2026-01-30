@@ -10,11 +10,11 @@ import UserContext from '../../../context/user/userContext';
 import useSearch from '../../../hooks/SearchQuery';
 
 const UsedPackage = () => {
-  
-  const memberId = TokenService.getMemberId();
-  const { user} = useContext(UserContext);
 
-  const { data: usedPackage, isLoading, error , isError} = getUsedandUnusedPackages({
+  const memberId = TokenService.getMemberId();
+  const { user } = useContext(UserContext);
+
+  const { data: usedPackage, isLoading, error, isError } = getUsedandUnusedPackages({
     memberId: memberId,
     status: 'used'
   });
@@ -30,7 +30,7 @@ const UsedPackage = () => {
 
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(usedPackage)
-   
+
 
 
   return (
@@ -40,10 +40,10 @@ const UsedPackage = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-                backgroundColor: '#7e22ce',
-                color: '#fff',
-                '& .MuiSvgIcon-root': { color: '#fff' }
-              }}
+              backgroundColor: '#000831',
+              color: '#fff',
+              '& .MuiSvgIcon-root': { color: '#fff' }
+            }}
           >
             List of Used Package
           </AccordionSummary>

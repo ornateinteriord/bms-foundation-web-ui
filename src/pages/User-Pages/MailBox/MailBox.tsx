@@ -56,8 +56,8 @@ const MailBox = () => {
     }
   }, [isError, error]);
 
-  const { searchQuery, setSearchQuery, filteredData} = useSearch(tickets)
-     
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(tickets)
+
 
   const [formData, setFormData] = useState({
     ticketType: "",
@@ -140,7 +140,7 @@ const MailBox = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
                 minHeight: "64px",
@@ -169,11 +169,11 @@ const MailBox = () => {
                     sx={{
                       "& .MuiOutlinedInput-notchedOutline": {
                         "&:hover": {
-                          borderColor: "#7e22ce",
+                          borderColor: "#000831",
                         },
                       },
                       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#000831",
                       },
                     }}
                   >
@@ -198,10 +198,10 @@ const MailBox = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#000831",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#000831",
                       },
                     },
                   }}
@@ -220,10 +220,10 @@ const MailBox = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#000831",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#000831",
                       },
                     },
                   }}
@@ -234,7 +234,7 @@ const MailBox = () => {
                   variant="contained"
                   size="medium"
                   sx={{
-                    backgroundColor: "#7e22ce",
+                    backgroundColor: "#000831",
                     alignSelf: "flex-end",
                     "&:hover": {
                       backgroundColor: "#581c87",
@@ -252,7 +252,7 @@ const MailBox = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
                 minHeight: "64px",
@@ -263,13 +263,13 @@ const MailBox = () => {
             <AccordionDetails>
               <DataTable
                 columns={getMailBoxColumns(handleOpenDialog)}
-                data={filteredData }
+                data={filteredData}
                 pagination
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}
                 progressPending={isLoading || createTicketMutation.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover
@@ -309,7 +309,7 @@ const MailBox = () => {
       >
         <DialogTitle
           sx={{
-            backgroundColor: "#7e22ce",
+            backgroundColor: "#000831",
             color: "#fff",
             display: "flex",
             justifyContent: "space-between",
@@ -330,7 +330,7 @@ const MailBox = () => {
           {selectedTicket && (
             <>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Typography variant="h6" sx={{ color: "#7e22ce" }}>
+                <Typography variant="h6" sx={{ color: "#000831" }}>
                   Ticket Information
                 </Typography>
                 <Box
@@ -358,10 +358,10 @@ const MailBox = () => {
                     sx={{
                       color:
                         selectedTicket?.ticket_status?.trim().toLowerCase() ===
-                        "pending"
+                          "pending"
                           ? "#fb741a"
                           : "#569f35",
-                    
+
                       padding: "4px 8px",
                       borderRadius: "4px",
                       width: "fit-content",
@@ -374,7 +374,7 @@ const MailBox = () => {
 
                 <Divider sx={{ my: 2 }} />
 
-                <Typography variant="h6" sx={{ color: "#7e22ce" }}>
+                <Typography variant="h6" sx={{ color: "#000831" }}>
                   Reply Details
                 </Typography>
                 <Box

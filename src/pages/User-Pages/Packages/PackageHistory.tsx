@@ -11,24 +11,24 @@ import useSearch from '../../../hooks/SearchQuery';
 
 const PackageHistory = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
-  const {data : historyData , isLoading , isError , error} = useGetPackagehistory();
-  const {filteredData , searchQuery , setSearchQuery} = useSearch(historyData);
+  const { data: historyData, isLoading, isError, error } = useGetPackagehistory();
+  const { filteredData, searchQuery, setSearchQuery } = useSearch(historyData);
 
-  useEffect(()=>{
+  useEffect(() => {
     const err = error as any;
-    if(isError){
+    if (isError) {
       toast.error(err?.response?.data?.message || 'Something went wrong');
     }
-  },[isError,error]);
+  }, [isError, error]);
 
   return (
-    <Card sx={{ 
+    <Card sx={{
       margin: isMobile ? '1rem' : '2rem',
-      backgroundColor: '#fff', 
-      mt: 10 
+      backgroundColor: '#fff',
+      mt: 10
     }}>
       <CardContent sx={{ padding: isMobile ? '12px' : '24px' }}>
-        <Accordion 
+        <Accordion
           defaultExpanded
           sx={{
             boxShadow: 'none',
@@ -40,7 +40,7 @@ const PackageHistory = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#000831',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' },
               minHeight: isMobile ? '48px' : '64px',

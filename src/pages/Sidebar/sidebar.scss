@@ -1,7 +1,8 @@
 .sidebar {
   width: 250px;
   height: 100%;
-  background-color: #7e22ce;
+  background-color: #000831;
+  /* Dark Blue */
   color: #fff;
   position: fixed;
   transition: transform 0.3s ease-in-out;
@@ -9,13 +10,14 @@
 
 .sidebar.open {
   transform: translateX(0);
-  transition: transform 0.3s ease-in-out; 
+  transition: transform 0.3s ease-in-out;
 }
 
 .sidebar.closed {
   transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out; 
+  transition: transform 0.3s ease-in-out;
 }
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -36,7 +38,8 @@
   padding-left: 20px;
   margin-top: 5px;
   overflow: hidden;
-  background-color: #9333ea;
+  background-color: #00041a;
+  /* Darker Blue for sub-items */
 }
 
 .sub-items a {
@@ -49,10 +52,11 @@
   transition: color 0.3s ease;
 
   &:hover {
-    color: #99f6e4;
+    color: #00c6ff;
   }
+
   &.selected {
-    color: #99f6e4;
+    color: #00c6ff;
   }
 }
 
@@ -77,12 +81,14 @@
 }
 
 .menu-item:hover {
-  color: #99f6e4;
+  color: #00c6ff;
 }
 
 .menu-item.selected {
-  background-color: #c084fc  ;
+  background: linear-gradient(90deg, #0052d4 0%, #4364f7 50%, #6fb1fc 100%);
   color: #fff;
+  border-radius: 5px;
+  /* Revert to simple slight rounded corners or 0 for box */
 }
 
 .menu-item svg {

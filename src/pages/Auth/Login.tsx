@@ -8,10 +8,11 @@ import {
   Container,
   Card,
   CardContent,
-  InputAdornment,
+  Checkbox,
+  FormControlLabel,
+  Link as MuiLink,
 } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import LockIcon from "@mui/icons-material/Lock";
+import BMSLogo from "../../assets/bms_logo.png"; // Import the logo
 import { LoadingComponent } from "../../App";
 import { useLoginMutation } from "../../api/Auth";
 
@@ -20,6 +21,7 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,7 +32,7 @@ const Login = () => {
   };
 
   const loginMutation = useLoginMutation()
-  const { mutate, isPending} = loginMutation
+  const { mutate, isPending } = loginMutation
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,65 +40,207 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-        <Card sx={{ width: "100%", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", backgroundColor: "#fff" }}>
-          <CardContent sx={{ padding: "2rem" }}>
-            <Typography component="h1" variant="h5" sx={{ color: "#7e22ce", mb: 3, textAlign: "center" }}>
-              Sign In
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-              <TextField
-                required
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                autoFocus
-                placeholder="Enter your username"
-                value={formData.username}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonIcon sx={{ color: "#7e22ce" }} />
-                    </InputAdornment>
-                  ),
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#ffff", // distinct plain dark color
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            mt: 5
+          }}
+        >
+          <Card
+            sx={{
+              width: "100%",
+              boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+              backgroundColor: "rgba(30, 30, 30, 0.95)", // Dark semi-transparent background
+              borderRadius: "8px",
+              border: "1px solid rgba(255, 255, 255, 0.05)",
+            }}
+          >
+            <CardContent sx={{ padding: "1rem" }}>
+              <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
+                <img
+                  src={BMSLogo}
+                  alt="BMS Logo"
+                  style={{ maxWidth: "180px", height: "auto" }}
+                />
+              </Box>
+              <Typography
+                component="h1"
+                variant="h5"
+                sx={{
+                  color: "#fff",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  mb: 1,
                 }}
-              />
-              <TextField
-                required
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon sx={{ color: "#7e22ce" }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Button type="submit" fullWidth variant="contained" disabled={isPending} sx={{ backgroundColor: "#7e22ce", "&:hover": { backgroundColor: "#581c87" } }}>
-                Sign In
-              </Button>
-              <Typography variant="body2" sx={{ textAlign: "center", mt: 1 }}>
-                Don't have an account?{" "}
-                <Link to="/register" style={{ color: "#7e22ce", textDecoration: "none", fontWeight: "bold" }}>
-                  Register
-                </Link>
+              >
+                Sign Into Your Account
               </Typography>
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
+              <Typography
+                variant="body2"
+                sx={{ color: "#aaa", textAlign: "center", mb: 3 }}
+              >
+                Enter your credentials to access your account
+              </Typography>
+
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                sx={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}
+              >
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#bbb", mb: 0.5, display: "block" }}
+                  >
+                    User ID
+                  </Typography>
+                  <TextField
+                    required
+                    fullWidth
+                    id="username"
+                    name="username"
+                    autoComplete="username"
+                    autoFocus
+                    placeholder="User ID"
+                    value={formData.username}
+                    onChange={handleChange}
+                    variant="outlined"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5", // Light gray input background
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
+                      },
+                      "& input": {
+                        padding: "10px 14px",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#bbb", mb: 0.5, display: "block" }}
+                  >
+                    Password
+                  </Typography>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    variant="outlined"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "#e5e5e5", // Light gray input background
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
+                      },
+                      "& input": {
+                        padding: "10px 14px",
+                      },
+                    }}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        sx={{
+                          color: "#666",
+                          "&.Mui-checked": {
+                            color: "#666",
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography variant="body2" sx={{ color: "#888" }}>
+                        Remember me
+                      </Typography>
+                    }
+                  />
+                  <MuiLink
+                    href="#"
+                    underline="hover"
+                    sx={{ color: "#5e81f4", fontSize: "0.875rem" }}
+                  >
+                    Forgot password?
+                  </MuiLink>
+                </Box>
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isPending}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #374151 0%, #d4af37 100%)", // Gradient
+                    color: "white",
+                    fontWeight: "bold",
+                    padding: "10px",
+                    textTransform: "uppercase",
+                    "&:hover": {
+                      opacity: 0.9,
+                    },
+                  }}
+                >
+                  LOG IN
+                </Button>
+
+                <Typography
+                  variant="body2"
+                  sx={{ textAlign: "center", mt: 2, color: "#888" }}
+                >
+                  New user? Register here{" "}
+                  <Link
+                    to="/register"
+                    style={{
+                      color: "#22c55e",
+                      textDecoration: "none",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    Register Now
+                  </Link>
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      </Container>
       {isPending && <LoadingComponent />}
-    </Container>
+    </Box>
   );
 };
 

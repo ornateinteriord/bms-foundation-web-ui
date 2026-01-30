@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserSideBarMenuItems, AdminSideBarMenuItems } from './SidebarUtils'
-import { Avatar, Toolbar, Typography } from '@mui/material';
+import { Avatar, Toolbar, Typography, } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons';
 import { deepOrange } from '@mui/material/colors';
@@ -11,8 +11,9 @@ import { useGetMemberDetails } from '../../api/Memeber';
 import { LoadingComponent } from '../../App';
 import { toast } from 'react-toastify';
 import TokenService from '../../api/token/tokenService';
+// import BMSLogo from '../../assets/bms_logo.png'; 
 
-const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => void, role: string | null}) => {
+const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => void, role: string | null }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>('Dashboard');
   const [closingItem, setClosingItem] = useState<string | null>(null);
@@ -45,16 +46,16 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
   const menuItems = role === "ADMIN" ? AdminSideBarMenuItems : UserSideBarMenuItems;
   const userId = TokenService.getUserId()
   const memberMutatation = useGetMemberDetails(userId!)
-  const {data : fethedUser , isLoading , isError , error} = memberMutatation
+  const { data: fethedUser, isLoading, isError, error } = memberMutatation
   const name = fethedUser?.Name || fethedUser?.username
 
-  useEffect(()=>{
-    if(isError){
-     toast.error(error?.message || 'Failed to fetch user details')
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.message || 'Failed to fetch user details')
     }
-  },[isError , error])
+  }, [isError, error])
   return (
-    <motion.div 
+    <motion.div
       className={`sidebar ${isOpen ? 'open' : 'closed'}`}
       initial={{ width: 0 }}
       animate={{ width: isOpen ? 250 : 0 }}
@@ -64,23 +65,29 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       <Toolbar className="navbar-toolbar" />
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             className="sidebar-header"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
+            style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}
           >
-            <Avatar
-              alt="User Avatar"
-              src={fethedUser?.profile_image || ''}
-              sx={{ width: 50, height: 50, background: deepOrange[500] }}
-            >
-              {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
-            </Avatar>
-            <div className="welcome-text" style={{padding: '10px', color: '#fff'}}>
-              <Typography>Welcome,</Typography>
-              <Typography style={{fontWeight: 'bold'}}>{fethedUser?.Name}</Typography>
+            {/* <div style={{ padding: '0 15px', marginBottom: '10px' }}>
+              <Box component="img" src={BMSLogo} alt="BMS Logo" sx={{ width: '150px', height: { xs: '40px', sm: '60px' } }} />
+            </div> */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Avatar
+                alt="User Avatar"
+                src={fethedUser?.profile_image || ''}
+                sx={{ width: 50, height: 50, background: deepOrange[500] }}
+              >
+                {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
+              </Avatar>
+              <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
+                <Typography>Welcome,</Typography>
+                <Typography style={{ fontWeight: 'bold' }}>{fethedUser?.Name}</Typography>
+              </div>
             </div>
           </motion.div>
         )}
@@ -88,14 +95,14 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       <div style={{ height: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '80px' }}>
         <AnimatePresence>
           {menuItems.map((item: SideBarMenuItemType) => (
-            <motion.div 
+            <motion.div
               key={item.name}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
             >
-              <div 
+              <div
                 onClick={() => {
                   if (item.isExpandable) {
                     handleToggle(item.name);
@@ -103,7 +110,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                     navigate(item.path!);
                     handleSelect(item.name);
                   }
-                }} 
+                }}
                 className={`menu-item ${selectedItem === item.name ? 'selected' : ''}`}
               >
                 {item.icon} {item.name}
@@ -117,10 +124,10 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                 )}
               </div>
               {item.isExpandable && (
-                <motion.div 
+                <motion.div
                   className="sub-items"
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ 
+                  animate={{
                     height: (expandedItem === item.name || closingItem === item.name) ? 'auto' : 0,
                     opacity: expandedItem === item.name ? 1 : 0
                   }}
@@ -136,8 +143,8 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Link 
-                          to={subItem.path ?? '#'} 
+                        <Link
+                          to={subItem.path ?? '#'}
                           className={`sub-item ${location.pathname === subItem.path ? 'selected' : ''}`}
                           onClick={() => {
                             handleSelect(item.name);

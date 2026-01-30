@@ -43,13 +43,13 @@ const Holidays = () => {
     }
   }, [isError, error]);
 
-    const { searchQuery, setSearchQuery, filteredData } = useSearch(holidays)
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(holidays)
 
-    const updateHoliday = useAddHoliday()
+  const updateHoliday = useAddHoliday()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateHoliday.mutate({holiday_desc : newHoliday.description,holiday_date:getFormattedDate(newHoliday.date!)})
+    updateHoliday.mutate({ holiday_desc: newHoliday.description, holiday_date: getFormattedDate(newHoliday.date!) })
     setIsModalOpen(false);
     console.log(newHoliday)
   };
@@ -67,8 +67,8 @@ const Holidays = () => {
           variant="contained"
           onClick={() => setIsModalOpen(true)}
           sx={{
-            backgroundColor: "#7e22ce",
-            "&:hover": { backgroundColor: "#7e22ce" },
+            backgroundColor: "#000831",
+            "&:hover": { backgroundColor: "#000831" },
           }}
         >
           Add Holiday
@@ -81,7 +81,7 @@ const Holidays = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
@@ -111,7 +111,7 @@ const Holidays = () => {
                 pagination
                 progressPending={isLoading || updateHoliday.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
                 }
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}

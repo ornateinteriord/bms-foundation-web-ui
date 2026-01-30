@@ -1,6 +1,6 @@
 import { Button, IconButton } from "@mui/material";
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
-import {  Edit } from "lucide-react";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Edit } from "lucide-react";
 import { getFormattedDate } from './common';
 import { MemberDetails } from "../store/store";
 
@@ -28,19 +28,19 @@ export const getUserDashboardTableColumns = () => [
   },
 ];
 
-export const getUsedPackageColumns = (user : MemberDetails) => {
+export const getUsedPackageColumns = (user: MemberDetails) => {
   return [
     {
       name: "Date",
       selector: (row: any) => getFormattedDate(row.date),
       sortable: true,
-      width : "10%"
+      width: "10%"
     },
     {
       name: "Member Code",
       selector: (row: any) => `${user.Name} (${row.purchasedby})`,
       sortable: true,
-      width : "20%"
+      width: "20%"
     },
     {
       name: "Package Code",
@@ -49,14 +49,14 @@ export const getUsedPackageColumns = (user : MemberDetails) => {
     },
     {
       name: "Amount",
-      selector: (row: any) => `₹ ${row.amount.toLocaleString()}` ,
+      selector: (row: any) => `₹ ${row.amount.toLocaleString()}`,
       sortable: true,
     },
     {
       name: "Used For",
       selector: (row: any) => row.used_for,
       sortable: true,
-      width : "20%"
+      width: "20%"
     },
     {
       name: "Used Date",
@@ -65,18 +65,18 @@ export const getUsedPackageColumns = (user : MemberDetails) => {
     },
     {
       name: "Status",
-      selector: (row: any) =>  row.status.charAt(0).toUpperCase() + row.status.slice(1),
+      selector: (row: any) => row.status.charAt(0).toUpperCase() + row.status.slice(1),
       sortable: true,
     },
   ];
 };
 
-export const getUnUsedPackageColumns = (user : MemberDetails) => [
+export const getUnUsedPackageColumns = (user: MemberDetails) => [
   {
     name: "Date",
     selector: (row: any) => getFormattedDate(row.date),
     sortable: true,
-    width : "12%"
+    width: "12%"
   },
   {
     name: "Code",
@@ -127,12 +127,12 @@ export const getUserPackageHistoryColumns = () => [
 export const getDirectColumns = () => [
   {
     name: "S No",
-    cell: (_: any,index: number) => index + 1,
+    cell: (_: any, index: number) => index + 1,
     sortable: true,
   },
   {
     name: "Member",
-    selector: (row: any) =>`${row.Name} - ${row.Member_id}`,
+    selector: (row: any) => `${row.Name} - ${row.Member_id}`,
     sortable: true,
   },
   {
@@ -155,7 +155,7 @@ export const getDirectColumns = () => [
 export const getLevelBenifitsColumns = () => [
   {
     name: "Date",
-    selector: (row: any) =>  getFormattedDate(row.date),
+    selector: (row: any) => getFormattedDate(row.date),
     sortable: true,
   },
   {
@@ -250,26 +250,26 @@ export const getTransactionColumns = () => [
 export const getWalletColumns = () => [
   {
     name: "Date",
-    selector: (row: any) => row.transaction_date, 
+    selector: (row: any) => row.transaction_date,
     sortable: true,
-    cell: (row : any) => new Date(row.transaction_date).toLocaleDateString()
+    cell: (row: any) => new Date(row.transaction_date).toLocaleDateString()
   },
   {
     name: "Transaction ID",
-    selector: (row: any) => row.transaction_id, 
+    selector: (row: any) => row.transaction_id,
     sortable: true,
   },
   {
     name: "Type",
-    selector: (row: any) => row.transaction_type, 
+    selector: (row: any) => row.transaction_type,
     sortable: true,
   },
   {
     name: "Amount",
-    selector: (row: any) => row.ew_debit, 
+    selector: (row: any) => row.ew_debit,
     sortable: true,
     cell: (row: any) => {
-     
+
       if (parseFloat(row.ew_debit) > 0) {
         return `-₹${parseFloat(row.ew_debit).toFixed(2)}`;
       } else {
@@ -281,11 +281,11 @@ export const getWalletColumns = () => [
     name: "Status",
     selector: (row: any) => row.status,
     sortable: true,
-    cell: (row: any) => row.status.charAt(0).toUpperCase() + row.status.slice(1) 
+    cell: (row: any) => row.status.charAt(0).toUpperCase() + row.status.slice(1)
   }
 ];
 
-export const getAdminDashboardTableColumns : any = () => [
+export const getAdminDashboardTableColumns: any = () => [
   {
     name: "Date",
     selector: (row: any) => {
@@ -310,7 +310,7 @@ export const getAdminDashboardTableColumns : any = () => [
 ];
 
 
-export const getMembersColumns = (showEdit : boolean , handleEditClick: (memberId: string) => void) => [
+export const getMembersColumns = (showEdit: boolean, handleEditClick: (memberId: string) => void) => [
   {
     name: "SNo",
     selector: (row: any) => row.sNo,
@@ -354,7 +354,7 @@ export const getMembersColumns = (showEdit : boolean , handleEditClick: (memberI
       <div
         style={{
           color: row.status === 'active' ? 'green' : row.status.toLowerCase() === 'pending' ? '#ffd700' : 'red',
-          
+
           padding: '5px 10px',
           borderRadius: '4px',
           fontSize: '14px',
@@ -366,102 +366,102 @@ export const getMembersColumns = (showEdit : boolean , handleEditClick: (memberI
   },
   {
     name: 'Modify',
-    omit : !showEdit,
-    cell: (row:any) => (
-      <IconButton onClick={()=> handleEditClick(row.Member_id)} style={{ color: '#000', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}>
+    omit: !showEdit,
+    cell: (row: any) => (
+      <IconButton onClick={() => handleEditClick(row.Member_id)} style={{ color: '#000', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}>
         <Edit />
       </IconButton>
     ),
-    
+
   }
 ];
 
 export const getPendingMembersColumns = (
-    handleActivateClick: (memberId: string) => void,
+  handleActivateClick: (memberId: string) => void,
   isActivating: boolean
 ) => [
-  {
-    name: "SNo",
-    selector: (row: any) => row.sNo,
-    sortable: true,
-  },
-  {
-    name: "Member",
-    selector: (row: any) => row.Member_id,
-    sortable: true,
-  },
-  {
-    name: "Approved On",
-    selector: (row: any) => getFormattedDate(row.Date_of_joining),
-    sortable: true,
-  },
-  {
-    name: "Password",
-    selector: (row: any) => row.password,
-    sortable: true,
-  },
-  {
-    name: "Sponsor",
-    selector: (row: any) => row.Sponsor_name ?? "-",
-    sortable: true,
-  },
-  {
-    name: "MobileNo",
-    selector: (row: any) => row.mobileno,
-    sortable: true,
-  },
-  {
-    name: "Status",
-    selector: (row: any) => row.status,
-    sortable: true,
-    cell: (row: any) => (
-      <div
-        style={{
-          color:
-            row.status.toLowerCase() === "active"
-              ? "green"
-              : row.status.toLowerCase() === "pending"
-              ? "#ffd700"
-              : "red",
-          padding: "5px 10px",
-          borderRadius: "4px",
-          fontSize: "14px",
-        }}
-      >
-        {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
-      </div>
-    ),
-  },
-  {
-    name: "Action",
-    omit: false,
-    cell: (row: any) =>
-      row.status.toLowerCase() === "inactive" ? (
-        <div style={{ color: "red", fontWeight: 500 }}>
-          Cannot Activate
-        </div>
-      ) : (
-        <Button
-          onClick={() => handleActivateClick(row.Member_id)}
-          disabled={isActivating}
-          variant="contained"
-          sx={{
-            backgroundColor: "#51cf66",
-            "&:hover": { backgroundColor: "#3bcf57" },
-            color: "#000",
-            padding: "2px",
-            cursor: "pointer",
-            textTransform:"capitalize"
+    {
+      name: "SNo",
+      selector: (row: any) => row.sNo,
+      sortable: true,
+    },
+    {
+      name: "Member",
+      selector: (row: any) => row.Member_id,
+      sortable: true,
+    },
+    {
+      name: "Approved On",
+      selector: (row: any) => getFormattedDate(row.Date_of_joining),
+      sortable: true,
+    },
+    {
+      name: "Password",
+      selector: (row: any) => row.password,
+      sortable: true,
+    },
+    {
+      name: "Sponsor",
+      selector: (row: any) => row.Sponsor_name ?? "-",
+      sortable: true,
+    },
+    {
+      name: "MobileNo",
+      selector: (row: any) => row.mobileno,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row: any) => row.status,
+      sortable: true,
+      cell: (row: any) => (
+        <div
+          style={{
+            color:
+              row.status.toLowerCase() === "active"
+                ? "green"
+                : row.status.toLowerCase() === "pending"
+                  ? "#ffd700"
+                  : "red",
+            padding: "5px 10px",
+            borderRadius: "4px",
+            fontSize: "14px",
           }}
         >
-          Active
-        </Button>
+          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+        </div>
       ),
-  },
-];
+    },
+    {
+      name: "Action",
+      omit: false,
+      cell: (row: any) =>
+        row.status.toLowerCase() === "inactive" ? (
+          <div style={{ color: "red", fontWeight: 500 }}>
+            Cannot Activate
+          </div>
+        ) : (
+          <Button
+            onClick={() => handleActivateClick(row.Member_id)}
+            disabled={isActivating}
+            variant="contained"
+            sx={{
+              backgroundColor: "#51cf66",
+              "&:hover": { backgroundColor: "#3bcf57" },
+              color: "#000",
+              padding: "2px",
+              cursor: "pointer",
+              textTransform: "capitalize"
+            }}
+          >
+            Active
+          </Button>
+        ),
+    },
+  ];
 
 
-export const getSupportTicketColumns = (handleOpenDialog : any) =>  [
+export const getSupportTicketColumns = (handleOpenDialog: any) => [
   {
     name: 'Member',
     selector: (row: any) => row.reference_id,
@@ -477,7 +477,7 @@ export const getSupportTicketColumns = (handleOpenDialog : any) =>  [
     selector: (row: any) => row.ticket_no,
     sortable: true,
   },
-  
+
   {
     name: 'Type of ticket',
     selector: (row: any) => row.type_of_ticket,
@@ -497,7 +497,7 @@ export const getSupportTicketColumns = (handleOpenDialog : any) =>  [
           color: row.ticket_status === 'pending' ? '#CC5500' : '#008000',
           padding: '0.5rem',
           borderRadius: '4px',
-          
+
         }}
       >
         {row.ticket_status?.charAt(0).toUpperCase() + row.ticket_status?.slice(1)}
@@ -512,7 +512,7 @@ export const getSupportTicketColumns = (handleOpenDialog : any) =>  [
         variant="contained"
         onClick={() => handleOpenDialog(row)}
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#000831',
           '&:hover': { backgroundColor: '#581c87' }
         }}
       >
@@ -542,22 +542,22 @@ export const getusedandUnUsedColumns = () => [
 
 export const getAdminPackageHistoryColumns = () => [
   {
-    name : "Date",
+    name: "Date",
     selector: (row: any) => getFormattedDate(row.date),
     sortable: true,
   },
   {
-    name : "Member",
+    name: "Member",
     selector: (row: any) => row.memberCode,
   },
   {
-    name : "Quantity",
+    name: "Quantity",
     selector: (row: any) => row.totalQuantity,
   }
 
 ]
 
-export const getMailBoxColumns = (handleOpenDialog : any) => [
+export const getMailBoxColumns = (handleOpenDialog: any) => [
   {
     name: 'Ticket Date',
     selector: (row: any) => getFormattedDate(row.ticket_date),
@@ -598,7 +598,7 @@ export const getMailBoxColumns = (handleOpenDialog : any) => [
     cell: (row: any) => (
       <div
         style={{
-         color: row.ticket_status?.toLowerCase() === 'pending' ? '#fb741a' : '#569f35',
+          color: row.ticket_status?.toLowerCase() === 'pending' ? '#fb741a' : '#569f35',
           padding: '5px 10px',
           borderRadius: '4px',
           fontSize: '14px',
@@ -615,13 +615,13 @@ export const getMailBoxColumns = (handleOpenDialog : any) => [
         onClick={() => handleOpenDialog(row)}
         size="medium"
         sx={{
-          color: '#7e22ce',
+          color: '#000831',
           '&:hover': {
             backgroundColor: 'rgba(4, 17, 47, 0.04)'
           }
         }}
       >
-        <VisibilityIcon color='primary' fontSize="medium"/>
+        <VisibilityIcon color='primary' fontSize="medium" />
       </IconButton>
     ),
     sortable: false,
@@ -631,7 +631,7 @@ export const getMailBoxColumns = (handleOpenDialog : any) => [
 export const getAdminPageTransactionColumns = () => [
   {
     name: "Date",
-    selector: (row: any) =>getFormattedDate(row.transaction_date),
+    selector: (row: any) => getFormattedDate(row.transaction_date),
     sortable: true,
   },
   {
@@ -757,7 +757,7 @@ export const getHolidaysColumns = () => [
   },
 ];
 
-export const getRequestColumns = (approveTrasaction: (id : any) => void) =>[
+export const getRequestColumns = (approveTrasaction: (id: any) => void) => [
   {
     name: "Date",
     selector: (row: any) => getFormattedDate(row.transaction_date) || "-",
@@ -770,12 +770,12 @@ export const getRequestColumns = (approveTrasaction: (id : any) => void) =>[
   },
   {
     name: "Mobile No.",
-    selector: (row: any) =>row.memberDetails.mobileno || "-",
+    selector: (row: any) => row.memberDetails.mobileno || "-",
     sortable: true,
   },
   {
     name: "Account No.",
-    selector: (row: any) => row.memberDetails.account_number|| "-",
+    selector: (row: any) => row.memberDetails.account_number || "-",
     sortable: true,
   },
   {
@@ -803,7 +803,7 @@ export const getRequestColumns = (approveTrasaction: (id : any) => void) =>[
     selector: (_row: any) => {
       return (
         <>
-        <Button variant="contained" onClick={()=>approveTrasaction(_row.transaction_id)}>Approve</Button> 
+          <Button variant="contained" onClick={() => approveTrasaction(_row.transaction_id)}>Approve</Button>
         </>
       )
     },
@@ -811,7 +811,7 @@ export const getRequestColumns = (approveTrasaction: (id : any) => void) =>[
   },
 ]
 
-export const getProccessedColumns = () =>[
+export const getProccessedColumns = () => [
   {
     name: "Date",
     selector: (row: any) => getFormattedDate(row.transaction_date) || "-",
@@ -824,7 +824,7 @@ export const getProccessedColumns = () =>[
   },
   {
     name: "Mobile No.",
-    selector: (row: any) =>row.memberDetails?.mobileno || "-",
+    selector: (row: any) => row.memberDetails?.mobileno || "-",
     sortable: true,
   },
   {
@@ -847,10 +847,10 @@ export const getProccessedColumns = () =>[
     selector: (row: any) => row.deduction || "-",
     sortable: true,
   },
-  
+
 ]
 
-export const getPayblesColumns = () =>[
+export const getPayblesColumns = () => [
   {
     name: "Date",
     selector: (row: any) => getFormattedDate(row.date),
@@ -863,7 +863,7 @@ export const getPayblesColumns = () =>[
   },
   {
     name: "Mobile No.",
-    selector: (row: any) =>row.mobileno,
+    selector: (row: any) => row.mobileno,
     sortable: true,
   },
   {
@@ -886,10 +886,10 @@ export const getPayblesColumns = () =>[
     selector: (row: any) => row.action,
     sortable: true,
   },
-  
+
 ]
 
-export const getCashBackColumns = () =>[
+export const getCashBackColumns = () => [
   {
     name: "Date",
     selector: (row: any) => getFormattedDate(row.date),
@@ -973,7 +973,7 @@ export const getAdminDailyBenifitsColumns = () => [
     sortable: true,
     format: (row: any) => `₹${parseFloat(row.gross_profit || 0).toFixed(2)}`,
   },
- 
+
 ];
 
 
@@ -993,7 +993,7 @@ export const getAdminLevelBenifitsColumns = () => [
     selector: (row: any) => row.member_id || row.memberName || row.userId || row.user?.name || "N/A",
     sortable: true,
   },
-   {
+  {
     name: "memberId",
     selector: (row: any) => row.related_member_id || row.memberName || row.userId || row.user?.name || "N/A",
     sortable: true,
@@ -1020,7 +1020,7 @@ export const DASHBOARD_CUTSOM_STYLE = {
     style: {
       fontSize: "16px",
       fontWeight: "Bogle-Bold",
-      backgroundColor: "#7e22ce",
+      backgroundColor: "#000831",
       color: "#fff",
       border: "none",
     },
@@ -1073,8 +1073,8 @@ export const getPendingLoansColumns = (processLoan: (memberId: string, action: '
     name: "Action",
     cell: (row: any) => (
       <div className="action-buttons">
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           color="success"
           size="small"
           onClick={() => processLoan(row.member_id, 'approve')}
@@ -1082,8 +1082,8 @@ export const getPendingLoansColumns = (processLoan: (memberId: string, action: '
         >
           Approve
         </Button>
-        <Button 
-          variant="outlined" 
+        <Button
+          variant="outlined"
           color="error"
           size="small"
           onClick={() => processLoan(row.member_id, 'reject')}
@@ -1258,7 +1258,7 @@ export const getLoansListColumns = (onRepayClick: (row: any) => void) => [
       <button
         onClick={() => onRepayClick(row)}
         style={{
-          background: "#7e22ce",
+          background: "#000831",
           color: "white",
           padding: "5px 12px",
           border: "none",

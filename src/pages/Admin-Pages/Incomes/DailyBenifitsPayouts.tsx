@@ -22,7 +22,7 @@ import { useGetAllDailyPayouts } from '../../../api/Admin';
 
 const DailyBenifitsPayouts = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Properly destructure the useQuery return values
   const { data: dailyBenefits, isLoading, isError } = useGetAllDailyPayouts();
   console.log(dailyBenefits);
@@ -30,8 +30,8 @@ const DailyBenifitsPayouts = () => {
   // Handle the data structure from API
   const filteredData = dailyBenefits?.filter((benefit: any) =>
     Object.values(benefit).some(
-      value => 
-        value && 
+      value =>
+        value &&
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   ) || [];
@@ -61,7 +61,7 @@ const DailyBenifitsPayouts = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#000831",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}

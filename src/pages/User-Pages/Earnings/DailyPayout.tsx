@@ -6,11 +6,11 @@ import TokenService from '../../../api/token/tokenService';
 import { useGetDailyPayout } from '../../../api/Memeber';
 
 const DailyPayout = () => {
-  
-const memberId = TokenService.getMemberId();
-const { data = [] } = useGetDailyPayout(memberId);
 
-    console.log('Daily Payout Data:', data);
+  const memberId = TokenService.getMemberId();
+  const { data = [] } = useGetDailyPayout(memberId);
+
+  console.log('Daily Payout Data:', data);
 
   const noDataComponent = <div style={{ padding: '24px' }}>No data available in table</div>;
 
@@ -21,7 +21,7 @@ const { data = [] } = useGetDailyPayout(memberId);
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#000831',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' }
             }}
