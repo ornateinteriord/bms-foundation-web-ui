@@ -23,6 +23,7 @@ import {
 import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
+import BMSLoanChart from './BMSLoanChart';
 
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import DashboardCard from '../../../components/common/DashboardCard';
@@ -34,10 +35,11 @@ import {
   useGetSponsers,
   useGetMemberDetails,
   useClimeLoan,
-  useGetTransactionDetails,
   useRepayLoan,
   useVerifyPayment,
-  parsePaymentRedirectParams
+  parsePaymentRedirectParams,
+  useCreatePaymentOrder,
+  useGetTransactionDetails
 } from '../../../api/Memeber';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
@@ -57,7 +59,65 @@ const UserDashboard = () => {
   useGetWalletOverview(memberId);
   const { data: sponsersData } = useGetSponsers(memberId);
   const { data: memberDetails, } = useGetMemberDetails(memberId);
+
   const { mutate: climeLoan, isPending: isClaiming } = useClimeLoan();
+  const createPaymentOrder = useCreatePaymentOrder();
+
+  // Renewal Logic
+  const [renewalDays, setRenewalDays] = useState<number | undefined>(undefined);
+  const [isRenewEnabled, setIsRenewEnabled] = useState(false);
+
+  useEffect(() => {
+    if (memberDetails?.Date_of_joining) {
+      const joiningDate = new Date(memberDetails.Date_of_joining);
+      const renewalDate = new Date(joiningDate);
+      // Logic: Same date of next month
+      renewalDate.setMonth(joiningDate.getMonth() + 1);
+
+      // TESTING: Set renewal date to today found in memberDetails or just now
+      // Actually simply setting it to current date makes diff ~0
+      // renewalDate.setTime(new Date().getTime());
+
+      const today = new Date();
+      const diffTime = renewalDate.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      setRenewalDays(diffDays);
+      // Uncomment next line to revert to real logic after testing
+      setIsRenewEnabled(diffDays <= 0);
+    }
+  }, [memberDetails?.Date_of_joining]);
+
+  const handleRenewPackage = async () => {
+    if (!memberDetails) return;
+
+    try {
+      console.log("Initiating Package Renewal Payment...");
+
+      await createPaymentOrder.mutateAsync({
+        amount: memberDetails.package_value || 0,
+        currency: "INR",
+        customer: {
+          customer_id: memberId!,
+          customer_email: memberDetails.email,
+          customer_phone: memberDetails.mobileno,
+          customer_name: memberDetails.Name
+        },
+        notes: {
+          isLoanRepayment: false,
+          note: `Renewal for ${memberDetails.spackage}`,
+          meta: {
+            type: "package_renewal",
+            package: memberDetails.spackage
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error("Renewal Payment Failed:", error);
+      // Toast/Error handling is done inside the hook
+    }
+  };
 
   // Use the enhanced repay loan hook
   const { mutate: repayLoan, isPending: isRepaying } = useRepayLoan();
@@ -480,6 +540,9 @@ const UserDashboard = () => {
           ) : null}        </div>
       </div>
 
+      {/* BMS Loan Chart */}
+      <BMSLoanChart />
+
       {/* Referral Link Box */}
       <Box
         sx={{
@@ -627,7 +690,7 @@ const UserDashboard = () => {
         sx={{
           mx: { xs: 1, sm: 2 },
           my: 2,
-          pt: 3,
+          pt: 1,
           pr: 7,
           width: 'auto',
           '& .MuiGrid-item': {
@@ -644,29 +707,34 @@ const UserDashboard = () => {
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
             amount={
-              memberDetails?.spackage
-                ? `${memberDetails.spackage} - ₹${memberDetails.package_value || 0}`
-                : "No Package"
+              memberDetails?.package_value
+                ? `₹${memberDetails.package_value}`
+                : "0.00"
             }
             title="RD Deposit"
           />
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
-        </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
+          <DashboardCard
+            amount={
+              memberDetails?.package_value
+                ? `₹${memberDetails.package_value}`
+                : "0.00"
+            }
+            title="RD Purchase"
+            type="renewal"
+            renewalDays={renewalDays}
+            onRenew={handleRenewPackage}
+            isRenewEnabled={isRenewEnabled}
+          />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
-        </Grid> */}
 
         {isLoanApproved && (
           <Grid item xs={12} sm={6} md={4}>
             <DashboardCard
               amount={initialLoanAmount}
               dueAmount={dueAmount}
-              title="Loan Amount"
+              title="Loan Repayment"
               type="loan"
               onRepay={handleRepayClick}
               isRepayEnabled={isRepayEnabled}
