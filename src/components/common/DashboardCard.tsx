@@ -249,7 +249,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                   display: 'inline-block'
                 }}
               >
-                Renewal closes in {renewalDays} days
+                Next RD Deposit in {renewalDays} days
               </Typography>
             ) : (
               <Typography
@@ -304,7 +304,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               minWidth: '120px'
             }}
           >
-            {isNewUser ? 'Select Package' : 'Renew Package'}
+            {isNewUser ? 'Select RD Package' : 'Deposit Amount'}
           </Button>
         </CardContent>
       </Card >

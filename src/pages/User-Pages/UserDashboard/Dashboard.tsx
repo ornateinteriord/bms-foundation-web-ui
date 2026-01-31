@@ -777,7 +777,7 @@ const UserDashboard = () => {
                 ? `₹${memberDetails.package_value}`
                 : "0.00"
             }
-            title="RD Purchase"
+            title="RD Deposits"
             type="renewal"
             renewalDays={renewalDays}
             onRenew={isNewUser ? () => setPackageSelectionDialogOpen(true) : handleRenewPackage}

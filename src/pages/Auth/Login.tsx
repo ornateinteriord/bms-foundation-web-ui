@@ -71,11 +71,11 @@ const Login = () => {
             }}
           >
             <CardContent sx={{ padding: "1rem" }}>
-              <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <img
                   src={BMSLogo}
                   alt="BMS Logo"
-                  style={{ maxWidth: "180px", height: "auto" }}
+                  style={{ maxWidth: "180px", height: "80px" }}
                 />
               </Box>
               <Typography
