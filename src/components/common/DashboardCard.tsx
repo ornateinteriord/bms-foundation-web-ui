@@ -16,6 +16,9 @@ interface DashboardCardProps {
   isNewUser?: boolean;
   onRenew?: () => void;
   isRenewEnabled?: boolean;
+  onClaim?: () => void;
+  isClaimEligible?: boolean;
+  loanStatus?: string | null;
 }
 
 const DashboardCard: React.FC<DashboardCardProps> = ({
@@ -31,13 +34,50 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   renewalDays,
   isNewUser = false,
   onRenew,
-  isRenewEnabled = false
+  isRenewEnabled = false,
+  onClaim,
+  isClaimEligible = false,
+  loanStatus = null
 }) => {
 
   const getRepayButtonText = () => {
     if (isRepayEnabled) return 'Repay Now';
     if (alreadyRepaidToday) return 'Already Repaid Today';
     return 'Available Saturday';
+  };
+
+  const getButtonStyle = (status: string) => {
+    const baseStyle = {
+      textTransform: 'capitalize' as const,
+      fontWeight: 'bold',
+      mt: 2,
+      width: '100%',
+    };
+
+    switch (status?.toLowerCase()) {
+      case 'processing':
+        return {
+          ...baseStyle,
+          background: '#FFA500', // Orange
+          color: '#fff',
+          '&:hover': { background: '#FF8C00' },
+        };
+      case 'approved':
+        return {
+          ...baseStyle,
+          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)', // Purple
+          color: 'white',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
+          },
+          '&.Mui-disabled': {
+            color: 'white',
+            background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
+          }
+        };
+      default:
+        return baseStyle;
+    }
   };
 
   if (type === 'loan') {
@@ -381,6 +421,34 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             {subTitle}
           </Typography>
         )}
+
+        {loanStatus ? (
+          <Button
+            variant="contained"
+            disabled={loanStatus.toLowerCase() === 'approved'} // Optional: keep approved disabled if desired
+            sx={getButtonStyle(loanStatus)}
+          >
+            {loanStatus.toLowerCase() === 'approved' ? 'Approved' : loanStatus}
+          </Button>
+        ) : isClaimEligible && onClaim ? (
+          <Button
+            variant="contained"
+            onClick={onClaim}
+            sx={{
+              marginTop: '10px',
+              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)', // Gold gradient
+              color: '#000',
+              fontWeight: 'bold',
+              textTransform: 'none',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #FFC700 0%, #FF9500 100%)',
+              },
+              width: '100%'
+            }}
+          >
+            Claim Loan
+          </Button>
+        ) : null}
       </CardContent>
     </Card>
   );

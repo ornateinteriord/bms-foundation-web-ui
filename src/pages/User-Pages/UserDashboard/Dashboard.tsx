@@ -463,57 +463,7 @@ const UserDashboard = () => {
     }
   };
 
-  // Get button style based on status
-  const getButtonStyle = (status: string, isDisabled: boolean = false) => {
-    const baseStyle = {
-      textTransform: 'capitalize' as const,
-      fontWeight: 'bold',
-      px: 4,
-      py: 1,
-    };
-
-    if (isDisabled) {
-      return {
-        ...baseStyle,
-        background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
-        color: 'white',
-        '&:hover': {
-          background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
-        },
-        '&.Mui-disabled': {
-          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
-          color: 'white',
-        }
-      };
-    }
-
-    switch (status?.toLowerCase()) {
-      case 'processing':
-        return {
-          ...baseStyle,
-          backgroundColor: '#FFA500',
-          '&:hover': { backgroundColor: '#FF8C00' },
-        };
-      case 'approved':
-        return {
-          ...baseStyle,
-          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
-          color: 'white',
-          '&:hover': {
-            background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
-          },
-        };
-      default:
-        return {
-          ...baseStyle,
-          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
-          color: 'white',
-          '&:hover': {
-            background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
-          },
-        };
-    }
-  }; return (
+  return (
     <>
       {/* Payment verification loading overlay */}
       {isVerifyingPayment && (
@@ -573,27 +523,8 @@ const UserDashboard = () => {
           </div>
 
           {/* Show status message when Processing or Approved, otherwise show Claim Reward if eligible */}
-          {hasProcessingOrApprovedStatus ? (
-            <div className="flex justify-center mt-4">
-              <Button
-                variant="contained"
-                sx={getButtonStyle(statusButtonText, true)}
-                disabled
-              >
-                {statusButtonText?.toLowerCase() === 'approved' ? 'Reward Approved' : statusButtonText}
-              </Button>
-            </div>
-          ) : sponsorRewardData?.isEligibleForReward ? (
-            <div className="flex justify-center mt-4">
-              <Button
-                variant="contained"
-                onClick={handleClaimReward}
-                sx={getButtonStyle('claim', false)}
-              >
-                Claim Reward
-              </Button>
-            </div>
-          ) : null}        </div>
+          {/* Processing/Approved message removed from here and moved to DashboardCard */}
+        </div>
       </div>
 
       {/* BMS Loan Chart */}
@@ -758,6 +689,9 @@ const UserDashboard = () => {
           <DashboardCard
             amount={initialLoanAmount > 0 ? initialLoanAmount : "0.00"}
             title="Loan Amount"
+            onClaim={handleClaimReward}
+            isClaimEligible={sponsorRewardData?.isEligibleForReward && !hasProcessingOrApprovedStatus}
+            loanStatus={statusButtonText}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -799,6 +733,101 @@ const UserDashboard = () => {
             />
           </Grid>
         )}
+      </Grid>
+
+      {/* External Links Section */}
+      <Grid
+        container
+        spacing={{ xs: 2, sm: 3 }}
+        sx={{
+          mx: { xs: 1, sm: 2 },
+          my: 2,
+          pr: 7,
+          width: 'auto',
+          '& .MuiGrid-item': {
+            display: 'flex',
+          }
+        }}
+      >
+        {/* BMS FOUNDATION */}
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              background: 'linear-gradient(135deg, rgba(77, 42, 190, 0.5) 0%, rgba(17, 27, 49, 0.6) 100%)',
+              backdropFilter: 'blur(5px)',
+              color: '#fff',
+              borderRadius: '10px',
+              padding: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow: 3,
+              width: '100%',
+              minHeight: '100px', // Reduced height
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1rem', mb: 1 }}>
+              BMS FOUNDATION
+            </Typography>
+            <Link
+              href="https://bmsfoundations.com/auth"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: '#FFD700',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' },
+                wordBreak: 'break-all',
+                textAlign: 'center',
+                fontSize: '0.9rem'
+              }}
+            >
+              https://bmsfoundations.com/auth
+            </Link>
+          </Box>
+        </Grid>
+
+        {/* PIGMY Open Account */}
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              background: 'linear-gradient(135deg, rgba(77, 42, 190, 0.5) 0%, rgba(17, 27, 49, 0.6) 100%)',
+              backdropFilter: 'blur(5px)',
+              color: '#fff',
+              borderRadius: '10px',
+              padding: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow: 3,
+              width: '100%',
+              minHeight: '100px', // Reduced height
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1rem', mb: 1 }}>
+              PIGMY Open Account
+            </Typography>
+            <Link
+              href="https://www.manipalsociety.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: '#FFD700',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' },
+                wordBreak: 'break-all',
+                textAlign: 'center',
+                fontSize: '0.9rem'
+              }}
+            >
+              https://www.manipalsociety.in/
+            </Link>
+          </Box>
+        </Grid>
       </Grid>
 
       {/* Claim Reward Dialog */}
