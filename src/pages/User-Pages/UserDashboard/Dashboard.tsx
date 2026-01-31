@@ -371,7 +371,7 @@ const UserDashboard = () => {
   const handleCopyReferralLink = () => {
     if (!memberDetails?.Member_id) return;
 
-    const referralLink = `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}`;
+    const referralLink = `${window.location.origin}/register?ref=${memberDetails.Member_id}`;
 
     navigator.clipboard.writeText(referralLink)
       .then(() => {
@@ -385,7 +385,7 @@ const UserDashboard = () => {
   const handleShareReferralLink = () => {
     if (!memberDetails?.Member_id) return;
 
-    const referralLink = `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}`;
+    const referralLink = `${window.location.origin}/register?ref=${memberDetails.Member_id}`;
 
     if (navigator.share) {
       navigator.share({
@@ -572,7 +572,7 @@ const UserDashboard = () => {
             }}
           >
             <Link
-              href={memberDetails?.Member_id ? `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}` : '#'}
+              href={memberDetails?.Member_id ? `${window.location.origin}/register?ref=${memberDetails.Member_id}` : '#'}
               target="_blank"
               rel="noopener noreferrer"
               sx={{
@@ -599,7 +599,7 @@ const UserDashboard = () => {
                 }}
               >
                 {memberDetails?.Member_id ?
-                  `https://www.manipalsociety.com/register?ref=${memberDetails.Member_id}` :
+                  `${window.location.origin}/register?ref=${memberDetails.Member_id}` :
                   'Loading...'
                 }
               </Typography>
@@ -735,7 +735,7 @@ const UserDashboard = () => {
         )}
       </Grid>
 
-    <Grid
+      <Grid
         container
         spacing={{ xs: 2, sm: 3 }}
         sx={{
