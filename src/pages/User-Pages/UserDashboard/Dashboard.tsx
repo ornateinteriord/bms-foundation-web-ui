@@ -735,8 +735,7 @@ const UserDashboard = () => {
         )}
       </Grid>
 
-      {/* External Links Section */}
-      <Grid
+    <Grid
         container
         spacing={{ xs: 2, sm: 3 }}
         sx={{
@@ -764,28 +763,34 @@ const UserDashboard = () => {
               alignItems: 'center',
               boxShadow: 3,
               width: '100%',
-              minHeight: '100px', // Reduced height
+              minHeight: '120px',
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}
           >
-            <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1rem', mb: 1 }}>
+            <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1rem', mb: 2 }}>
               BMS FOUNDATION
             </Typography>
-            <Link
+            <Button
+              variant="contained"
               href="https://bmsfoundations.com/auth"
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: '#FFD700',
-                textDecoration: 'none',
-                '&:hover': { textDecoration: 'underline' },
-                wordBreak: 'break-all',
-                textAlign: 'center',
-                fontSize: '0.9rem'
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+                color: '#000',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #FFC700 0%, #FF9500 100%)',
+                },
+                px: 3,
+                py: 0.5,
+                borderRadius: '20px',
+                minWidth: '120px'
               }}
             >
-              https://bmsfoundations.com/auth
-            </Link>
+              Click Here
+            </Button>
           </Box>
         </Grid>
 
@@ -804,28 +809,34 @@ const UserDashboard = () => {
               alignItems: 'center',
               boxShadow: 3,
               width: '100%',
-              minHeight: '100px', // Reduced height
+              minHeight: '120px',
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}
           >
-            <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1rem', mb: 1 }}>
+            <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1rem', mb: 2 }}>
               PIGMY Open Account
             </Typography>
-            <Link
+            <Button
+              variant="contained"
               href="https://www.manipalsociety.in/"
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: '#FFD700',
-                textDecoration: 'none',
-                '&:hover': { textDecoration: 'underline' },
-                wordBreak: 'break-all',
-                textAlign: 'center',
-                fontSize: '0.9rem'
+                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+                color: '#000',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #FFC700 0%, #FF9500 100%)',
+                },
+                px: 3,
+                py: 0.5,
+                borderRadius: '20px',
+                minWidth: '120px'
               }}
             >
-              https://www.manipalsociety.in/
-            </Link>
+              Click Here
+            </Button>
           </Box>
         </Grid>
       </Grid>
