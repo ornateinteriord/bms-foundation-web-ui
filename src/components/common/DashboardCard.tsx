@@ -233,7 +233,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                   display: 'inline-block'
                 }}
               >
-                Select Package
+                Select RD Package
               </Typography>
             ) : renewalDays !== undefined && renewalDays > 0 ? (
               <Typography
