@@ -6,6 +6,7 @@ import { useGetMemberDetails, useUpdateMemberbyId } from "../../../api/Admin";
 import { toast } from "react-toastify";
 import { BasicDetails } from "./updated-forms/BasicDetails";
 import { BankDetails } from "./updated-forms/BankDetails";
+import { KYCDocuments } from "./updated-forms/KYCDocuments";
 import { NomineeDetails } from "./updated-forms/NomineeDetails";
 import { JoiningDetails } from "./updated-forms/JoiningDetails";
 import { LoadingComponent } from "../../../App";
@@ -89,6 +90,10 @@ const MembersUpdateForm: React.FC = () => {
           formData={formData}
           handleInputChange={handleInputChange}
         />
+
+        {/* KYC Documents ----------------------------------- */}
+
+        <KYCDocuments formData={formData} />
 
         {/* Nominee details----------------------------------------- */}
 
