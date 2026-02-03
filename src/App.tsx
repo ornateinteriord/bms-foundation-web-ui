@@ -398,7 +398,7 @@ const RoutesProvider = ({
               </Route>
             </Route>
           </Routes>
-           {isDashboard && <Footer />}
+           {shouldHide && <Footer />}
         </div>
       </div>
     </>
