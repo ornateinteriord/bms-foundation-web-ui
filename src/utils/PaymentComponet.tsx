@@ -54,10 +54,10 @@ const PaymentComponent: React.FC<PaymentComponentProps> = ({
     };
 
     createOrder(paymentData, {
-      onSuccess: (data:any) => {
+      onSuccess: (data: any) => {
         if (onSuccess) onSuccess(data);
       },
-      onError: (error:any) => {
+      onError: (error: any) => {
         if (onError) onError(error);
       }
     });
@@ -78,14 +78,14 @@ const PaymentComponent: React.FC<PaymentComponentProps> = ({
           variant="outlined"
         />
       </Box>
-      
+
       <Button
         fullWidth
         variant="contained"
         onClick={handlePayment}
         disabled={isPending}
         sx={{
-          background: 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)',
+          background: 'linear-gradient(135deg, #000831 0%, #a855f7 100%)',
           '&:hover': {
             background: 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)',
             boxShadow: '0 4px 12px rgba(107, 33, 168, 0.3)',

@@ -310,71 +310,90 @@ export const getAdminDashboardTableColumns: any = () => [
 ];
 
 
-export const getMembersColumns = (showEdit: boolean, handleEditClick: (memberId: string) => void) => [
-  {
-    name: "SNo",
-    selector: (row: any) => row.sNo,
-    sortable: true,
-  },
-  {
-    name: "Member",
-    selector: (row: any) => row.Member_id,
-    sortable: true,
-  },
-  {
-    name: "Approved On",
-    selector: (row: any) => getFormattedDate(row.Date_of_joining),
-    sortable: true,
-  },
-  {
-    name: "Password",
-    selector: (row: any) => row.password,
-    sortable: true,
-  },
-  {
-    name: "Sponsor",
-    selector: (row: any) => row.Sponsor_name ?? '-',
-    sortable: true,
-  },
-  {
-    name: "Package",
-    selector: (row: any) => row.spackage,
-    sortable: true,
-  },
-  {
-    name: "MobileNo",
-    selector: (row: any) => row.mobileno,
-    sortable: true,
-  },
-  {
-    name: "Status",
-    selector: (row: any) => row.status,
-    sortable: true,
-    cell: (row: any) => (
-      <div
-        style={{
-          color: row.status === 'active' ? 'green' : row.status.toLowerCase() === 'pending' ? '#ffd700' : 'red',
+export const getMembersColumns = (
+  showEdit: boolean,
+  handleEditClick: (memberId: string) => void,
+  handleViewClick?: (memberId: string) => void
+) => [
+    {
+      name: "SNo",
+      selector: (row: any) => row.sNo,
+      sortable: true,
+    },
+    {
+      name: "Member",
+      selector: (row: any) => row.Member_id,
+      sortable: true,
+    },
+    {
+      name: "Approved On",
+      selector: (row: any) => getFormattedDate(row.Date_of_joining),
+      sortable: true,
+    },
+    {
+      name: "Password",
+      selector: (row: any) => row.password,
+      sortable: true,
+    },
+    {
+      name: "Sponsor",
+      selector: (row: any) => row.Sponsor_name ?? '-',
+      sortable: true,
+    },
+    {
+      name: "Package",
+      selector: (row: any) => row.spackage,
+      sortable: true,
+    },
+    {
+      name: "MobileNo",
+      selector: (row: any) => row.mobileno,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row: any) => row.status,
+      sortable: true,
+      cell: (row: any) => (
+        <div
+          style={{
+            color: row.status === 'active' ? 'green' : row.status.toLowerCase() === 'pending' ? '#ffd700' : 'red',
 
-          padding: '5px 10px',
-          borderRadius: '4px',
-          fontSize: '14px',
-        }}
-      >
-        {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
-      </div>
-    ),
-  },
-  {
-    name: 'Modify',
-    omit: !showEdit,
-    cell: (row: any) => (
-      <IconButton onClick={() => handleEditClick(row.Member_id)} style={{ color: '#000', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}>
-        <Edit />
-      </IconButton>
-    ),
-
-  }
-];
+            padding: '5px 10px',
+            borderRadius: '4px',
+            fontSize: '14px',
+          }}
+        >
+          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+        </div>
+      ),
+    },
+    {
+      name: 'Actions',
+      cell: (row: any) => (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {handleViewClick && (
+            <IconButton
+              onClick={() => handleViewClick(row.Member_id)}
+              style={{ color: '#581c87', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+              title="View Details"
+            >
+              <VisibilityIcon />
+            </IconButton>
+          )}
+          {showEdit && (
+            <IconButton
+              onClick={() => handleEditClick(row.Member_id)}
+              style={{ color: '#000', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+              title="Edit Member"
+            >
+              <Edit />
+            </IconButton>
+          )}
+        </div>
+      ),
+    }
+  ];
 
 export const getPendingMembersColumns = (
   handleActivateClick: (memberId: string) => void,

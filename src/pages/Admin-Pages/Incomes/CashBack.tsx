@@ -51,7 +51,7 @@ const CashBack = () => {
             variant="contained"
             sx={{
               backgroundColor: "#000831",
-              "&:hover": { backgroundColor: "#6b21a8" },
+              "&:hover": { backgroundColor: "#000831" },
             }}
           >
             Search

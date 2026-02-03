@@ -165,7 +165,7 @@ const ActivatePackage: React.FC = () => {
     if (e.key === 'Enter') handleSearchMember();
   };
 
-  const primaryColor = '#6b21a8';
+  const primaryColor = '#000831';
   const backgroundColor = '#ffff';
 
   return (

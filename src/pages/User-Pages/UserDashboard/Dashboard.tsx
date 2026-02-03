@@ -576,7 +576,7 @@ const UserDashboard = () => {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: '#6b21a8',
+                color: '#000831',
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'underline',
@@ -1099,7 +1099,7 @@ const UserDashboard = () => {
                   borderColor: '#d1d5db',
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#6b21a8',
+                  borderColor: '#000831',
                 },
               }}
             >
@@ -1127,7 +1127,7 @@ const UserDashboard = () => {
 
           {isRepaying && (
             <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <CircularProgress size={20} sx={{ color: '#6b21a8' }} />
+              <CircularProgress size={20} sx={{ color: '#000831' }} />
               <Typography variant="body2" sx={{ color: '#6b7280', mt: 1 }}>
                 Initializing payment...
               </Typography>
@@ -1165,7 +1165,7 @@ const UserDashboard = () => {
             variant="contained"
             disabled={isRepaying || selectedRepayAmount === 0}
             sx={{
-              background: 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)',
+              background: 'linear-gradient(135deg, #000831 0%, #a855f7 100%)',
               '&:hover': {
                 background: 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)',
                 boxShadow: '0 4px 12px rgba(107, 33, 168, 0.3)',

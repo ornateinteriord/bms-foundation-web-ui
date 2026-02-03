@@ -9,7 +9,7 @@ import {
   Accordion,
   ClickAwayListener,
 } from "@mui/material";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useGetSponsers } from "../../../api/Memeber";
 import { toast } from "react-toastify";
@@ -25,22 +25,22 @@ import TokenService from "../../../api/token/tokenService";
 
 const Tree = () => {
   const navigate = useNavigate();
-  
+
   const [searchParams] = useSearchParams();
   const [hoveredSponsor, setHoveredSponsor] = useState<{
     Name: string;
-    status:string;
-    Date_of_joining:string;
+    status: string;
+    Date_of_joining: string;
   } | null>(null);
 
   const memberId = searchParams.get("memberId") || TokenService.getMemberId()
 
   const { data: sponsers, isLoading, isError, error } = useGetSponsers(memberId);
- 
-  const parentUser = sponsers?.parentUser ;
+
+  const parentUser = sponsers?.parentUser;
 
   const handleSponsorClick = (sponsorId: string) => {
-    navigate(`?memberId=${sponsorId}`,{ replace: true });
+    navigate(`?memberId=${sponsorId}`, { replace: true });
   };
   useEffect(() => {
     if (isError) toast.error(error.message);
@@ -53,7 +53,7 @@ const Tree = () => {
     { selector: (row: any) => row.field, sortable: true },
     { selector: (row: any) => row.value },
   ];
-  const data = hoveredSponsor? [
+  const data = hoveredSponsor ? [
     { field: "Member Name", value: hoveredSponsor.Name },
     { field: "Status", value: hoveredSponsor.status },
     { field: "Direct", value: "0/0" },
@@ -61,68 +61,68 @@ const Tree = () => {
     { field: "Activation Date", value: getFormattedDate(hoveredSponsor.Date_of_joining) },
     { field: "Club", value: "2K" },
     { field: "Earnings", value: "Rs. 0" },
-  ]:[]
+  ] : []
 
   // Get avatar background color based on status
   const getAvatarBackgroundColor = (status: string) => {
     const statusLower = status?.toLowerCase();
     if (statusLower === 'inactive') {
-      return '#ff6b6b'; 
+      return '#ff6b6b';
     } else if (statusLower === 'active') {
-      return '#51cf66'; 
+      return '#51cf66';
     }
-    return '#6b21a8'; 
+    return '#000831';
   };
 
   // Main user profile component
   const UserProfile = ({ userDetails }: { userDetails: any }) => (
-    
-   <Box
-  className="sponsor-container"
-  onClick={() => handleSponsorClick(userDetails.Member_id)}
-  onMouseEnter={() => setHoveredSponsor(userDetails)}
->
-  <>
+
     <Box
-      className="sponsor-avatar"
-      sx={{
-        width: 40,
-        height: 40,
-        borderRadius: '50%',
-        backgroundColor: getAvatarBackgroundColor(userDetails?.status),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: '1rem',
-        backgroundImage: userDetails?.profile_image ? `url(${userDetails.profile_image})` : 'none',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      className="sponsor-container"
+      onClick={() => handleSponsorClick(userDetails.Member_id)}
+      onMouseEnter={() => setHoveredSponsor(userDetails)}
     >
-      {!userDetails?.profile_image && userDetails?.Name?.charAt(0).toUpperCase()}
+      <>
+        <Box
+          className="sponsor-avatar"
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            backgroundColor: getAvatarBackgroundColor(userDetails?.status),
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            backgroundImage: userDetails?.profile_image ? `url(${userDetails.profile_image})` : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {!userDetails?.profile_image && userDetails?.Name?.charAt(0).toUpperCase()}
+        </Box>
+        <Typography variant="body2" fontWeight="bold">
+          {userDetails?.Name}
+        </Typography>
+        <Typography variant="caption" color="textSecondary">
+          {userDetails?.Member_id}
+        </Typography>
+      </>
     </Box>
-    <Typography variant="body2" fontWeight="bold">
-      {userDetails?.Name}
-    </Typography>
-    <Typography variant="caption" color="textSecondary">
-      {userDetails?.Member_id}
-    </Typography>
-  </>
-</Box>
   );
 
   // Sponsored user component
   const SponsoredProfile = ({ user }: { user: any }) => (
     <Box
       className="sponsor-container"
-       onClick={() => handleSponsorClick(user.Member_id)}
+      onClick={() => handleSponsorClick(user.Member_id)}
       onMouseEnter={() => setHoveredSponsor(user)}
     >
       <>
-        <Avatar 
-          className="sponsor-avatar" 
+        <Avatar
+          className="sponsor-avatar"
           src={user.profile_image || ""}
           sx={{
             backgroundColor: getAvatarBackgroundColor(user?.status),
@@ -140,16 +140,16 @@ const Tree = () => {
     </Box>
   );
 
- const routes : breadcrumbsProp[] = [
-  { path: "/user/team/tree", breadcrumb: "Tree" },
-  { path: `/user/team/tree?memberId=${memberId}`, breadcrumb: "Sponsores" },
+  const routes: breadcrumbsProp[] = [
+    { path: "/user/team/tree", breadcrumb: "Tree" },
+    { path: `/user/team/tree?memberId=${memberId}`, breadcrumb: "Sponsores" },
   ];
- 
+
 
   return (
     <Card sx={{ margin: "2rem", mt: 10 }}>
       <CardContent>
-        <CustomBreadcrumbs routes={routes}/>
+        <CustomBreadcrumbs routes={routes} />
         <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -163,16 +163,16 @@ const Tree = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  gap:4
+                  gap: 4
                 }}
               >
                 <UserProfile userDetails={parentUser} />
-              
+
 
                 {sponsored.length > 0 && (
-                  <Box 
-                  className="SponsoredProfile"
-                    
+                  <Box
+                    className="SponsoredProfile"
+
                   >
                     {sponsored.map((user: any) => (
                       <SponsoredProfile key={user.Member_id} user={user} />
@@ -182,30 +182,30 @@ const Tree = () => {
               </Box>
               {!isLoading && hoveredSponsor && (
                 <ClickAwayListener onClickAway={() => setHoveredSponsor(null)}>
-                  <Box  className="sponsor-popup-container">
-                  <Box
-                    className="sponsor-popup"
-              
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{ textAlign: "center", mb: 0 }}
+                  <Box className="sponsor-popup-container">
+                    <Box
+                      className="sponsor-popup"
+
                     >
-                      {hoveredSponsor.Name}'s Details
-                    </Typography>
-                    <DataTable
-                      columns={columns}
-                      data={data}
-                      dense 
-                      customStyles={{
-                        cells: {
-                          style: {
-                            padding: "4px", 
+                      <Typography
+                        variant="h6"
+                        sx={{ textAlign: "center", mb: 0 }}
+                      >
+                        {hoveredSponsor.Name}'s Details
+                      </Typography>
+                      <DataTable
+                        columns={columns}
+                        data={data}
+                        dense
+                        customStyles={{
+                          cells: {
+                            style: {
+                              padding: "4px",
+                            },
                           },
-                        },
-                      }}
-                    />
-                  </Box>
+                        }}
+                      />
+                    </Box>
                   </Box>
                 </ClickAwayListener>
               )}
