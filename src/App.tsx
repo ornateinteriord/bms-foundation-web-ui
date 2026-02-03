@@ -398,7 +398,7 @@ const RoutesProvider = ({
               </Route>
             </Route>
           </Routes>
-          {userRole !== "ADMIN" && <Footer />}
+           {isDashboard && <Footer />}
         </div>
       </div>
     </>
