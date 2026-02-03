@@ -168,7 +168,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             disabled={!isRepayEnabled}
             sx={{
               background: isRepayEnabled
-                ? 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)'
+                ? 'linear-gradient(135deg, #000831 0%, #a855f7 100%)'
                 : 'rgba(255, 255, 255, 0.1)',
               color: 'white',
               backdropFilter: 'blur(10px)',

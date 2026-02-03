@@ -15,6 +15,7 @@ interface MemberTableProps {
   summaryTitle: string;
   data: any[];
   showEdit?: boolean;
+  showView?: boolean;
   showActivate?: boolean;
   isLoading?: boolean;
   onActivate?: (memberId: string) => void;
@@ -26,6 +27,7 @@ const MemberTable = ({
   summaryTitle,
   data,
   showEdit = false,
+  showView = false,
   showActivate = false,
   isLoading = false,
   onActivate,
@@ -42,6 +44,10 @@ const MemberTable = ({
   const handleEditClick = (memberId: string) => {
     setIsEdit(true);
     setSelectedMemberId(memberId);
+  };
+
+  const handleViewClick = (memberId: string) => {
+    navigate(`/admin/members/${memberId}`);
   };
 
   const handleActivateClick = (memberId: string) => {
@@ -61,7 +67,7 @@ const MemberTable = ({
     if (showActivate && onActivate) {
       return getPendingMembersColumns(handleActivateClick, isActivating);
     } else {
-      return getMembersColumns(showEdit, handleEditClick);
+      return getMembersColumns(showEdit, handleEditClick, showView ? handleViewClick : undefined);
     }
   };
 
@@ -171,6 +177,7 @@ export const Members = () => {
       title="Members"
       summaryTitle="List of All Members"
       showEdit
+      showView
       data={memberdata}
       isLoading={isLoading}
     />
@@ -183,6 +190,7 @@ export const ActiveMembers = () => {
     <MemberTable
       title="Active Members"
       summaryTitle="List of Active Members"
+      showView
       data={memberdata}
       isLoading={isLoading}
     />
@@ -195,6 +203,7 @@ export const InActiveMembers = () => {
     <MemberTable
       title="Inactive Members"
       summaryTitle="List of Inactive Members"
+      showView
       data={memberdata}
       isLoading={isLoading}
     />

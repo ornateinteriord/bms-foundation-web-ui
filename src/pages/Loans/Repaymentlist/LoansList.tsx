@@ -242,7 +242,7 @@ export default function LoansList() {
             sx={{
               textTransform: 'capitalize',
               backgroundColor: '#000831',
-              '&:hover': { backgroundColor: '#6b21a8' },
+              '&:hover': { backgroundColor: '#000831' },
             }}
           >
             Search
@@ -455,7 +455,7 @@ export default function LoansList() {
                     borderColor: '#d1d5db',
                   },
                   '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#6b21a8',
+                    borderColor: '#000831',
                   },
                 }}
               >
@@ -497,7 +497,7 @@ export default function LoansList() {
 
           {isCreatingOrder && (
             <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <CircularProgress size={20} sx={{ color: '#6b21a8' }} />
+              <CircularProgress size={20} sx={{ color: '#000831' }} />
               <Typography variant="body2" sx={{ color: '#6b7280', mt: 1 }}>
                 Processing your payment...
               </Typography>
@@ -535,7 +535,7 @@ export default function LoansList() {
             variant="contained"
             disabled={isCreatingOrder || getFinalRepayAmount() === 0 || getFinalRepayAmount() < 500}
             sx={{
-              background: 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)',
+              background: 'linear-gradient(135deg, #000831 0%, #a855f7 100%)',
               '&:hover': {
                 background: 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)',
                 boxShadow: '0 4px 12px rgba(107, 33, 168, 0.3)',

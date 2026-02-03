@@ -45,6 +45,12 @@ const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"))
 const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
 const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
+const Footer = lazy(() => import("./components/Footer/Footer"));
+const About = lazy(() => import("./pages/About/About"));
+const Contact = lazy(() => import("./pages/Contact/Contact"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy/PrivacyPolicy"));
+const Terms = lazy(() => import("./pages/Terms/Terms"));
+const RefundPolicy = lazy(() => import("./pages/RefundPolicy/RefundPolicy"));
 
 // admin pages
 const UpdatePassword = lazy(() => import("./pages/Admin-Pages/admin-panel/UpdatePassword"));
@@ -139,8 +145,25 @@ export const LoadingComponent = () => {
 
 const ShouldHideSidebarComponent = () => {
   const location = useLocation();
-  const publicPaths = ["/", "/login", "/register", "/recover-password", "/reset-password"];
+  const publicPaths = [
+    "/",
+    "/login",
+    "/register",
+    "/recover-password",
+    "/reset-password",
+    "/about",
+    "/contact",
+    "/privacy-policy",
+    "/terms",
+    "/refund-policy"
+  ];
   return publicPaths.includes(location.pathname);
+};
+
+const IsDashboardPage = () => {
+  const location = useLocation();
+  const dashboardPaths = ["/user/dashboard", "/admin/dashboard"];
+  return dashboardPaths.includes(location.pathname);
 };
 
 function App() {
@@ -183,6 +206,7 @@ const RoutesProvider = ({
   toggelSideBar: () => void;
 }) => {
   const shouldHide = ShouldHideSidebarComponent();
+  const isDashboard = IsDashboardPage();
   const { userRole } = useAuth()
 
   return (
@@ -209,7 +233,8 @@ const RoutesProvider = ({
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",
-            backgroundImage: `url(${DashboardBg})`,
+            backgroundImage: isDashboard ? `url(${DashboardBg})` : "none",
+            backgroundColor: isDashboard ? "transparent" : "#ffffff",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -226,6 +251,12 @@ const RoutesProvider = ({
               <Route path="/recover-password" element={<RecoverPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
+            {/* policy and info pages - accessible to all */}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
             {/* admin routes */}
 
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -367,6 +398,7 @@ const RoutesProvider = ({
               </Route>
             </Route>
           </Routes>
+          {userRole !== "ADMIN" && <Footer />}
         </div>
       </div>
     </>
