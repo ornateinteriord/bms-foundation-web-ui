@@ -25,11 +25,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-          localStorage.removeItem("token"); // Remove token
-          window.location.href = "/login"; // Redirect to login
-      }
-      return Promise.reject(error);
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      localStorage.removeItem("token"); // Remove token
+      window.location.href = "/login"; // Redirect to login
+    }
+    return Promise.reject(error);
   }
 );
 
@@ -50,9 +50,18 @@ export const get = async (path: string, params?: Record<string, any>) => {
     throw error;
   }
 };
-export const put = async (path: string, data ?: any) => {
+export const put = async (path: string, data?: any) => {
   try {
     const response = await api.put(path, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const patch = async (path: string, data?: any) => {
+  try {
+    const response = await api.patch(path, data);
     return response.data;
   } catch (error) {
     throw error;

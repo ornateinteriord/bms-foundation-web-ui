@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserSideBarMenuItems, AdminSideBarMenuItems } from './SidebarUtils'
-import { Avatar, Toolbar, Typography, } from '@mui/material';
+import { Avatar, Toolbar, Typography, Badge } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons';
 import { deepOrange } from '@mui/material/colors';
@@ -11,12 +11,15 @@ import { useGetMemberDetails } from '../../api/Memeber';
 import { LoadingComponent } from '../../App';
 import { toast } from 'react-toastify';
 import TokenService from '../../api/token/tokenService';
+import { get } from '../../api/Api';
 // import BMSLogo from '../../assets/bms_logo.png'; 
 
 const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => void, role: string | null }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>('Dashboard');
   const [closingItem, setClosingItem] = useState<string | null>(null);
+  const [chatUnreadCount, setChatUnreadCount] = useState<number>(0);
+  const [supportUnreadCount, setSupportUnreadCount] = useState<number>(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,6 +57,41 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
       toast.error(error?.message || 'Failed to fetch user details')
     }
   }, [isError, error])
+
+  // Fetch unread chat counts
+  useEffect(() => {
+    const fetchUnreadCounts = async () => {
+      try {
+        const response = await get('/chat/rooms');
+        if (response.success && response.data) {
+          const rooms = response.data;
+          let chatCount = 0;
+          let supportCount = 0;
+
+          rooms.forEach((room: any) => {
+            const unread = room.unreadCount || 0;
+            // Check if it's a support chat (has ADMIN_ in roomId)
+            if (room.roomId?.includes('ADMIN_')) {
+              supportCount += unread;
+            } else {
+              chatCount += unread;
+            }
+          });
+
+          setChatUnreadCount(chatCount);
+          setSupportUnreadCount(supportCount);
+        }
+      } catch (error) {
+        console.error('Failed to fetch unread counts:', error);
+      }
+    };
+
+    fetchUnreadCounts();
+    // Poll every 30 seconds for new messages
+    const interval = setInterval(fetchUnreadCounts, 30000);
+    return () => clearInterval(interval);
+  }, [location.pathname]); // Refetch when route changes
+
   return (
     <motion.div
       className={`sidebar ${isOpen ? 'open' : 'closed'}`}
@@ -114,6 +152,24 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                 className={`menu-item ${selectedItem === item.name ? 'selected' : ''}`}
               >
                 {item.icon} {item.name}
+                {/* Show unread badge for Chat */}
+                {item.name === 'Chat' && chatUnreadCount > 0 && (
+                  <Badge
+                    badgeContent={chatUnreadCount}
+                    color="error"
+                    sx={{ ml: 1 }}
+                    max={99}
+                  />
+                )}
+                {/* Show unread badge for Support Chat */}
+                {item.name === 'Support Chat' && supportUnreadCount > 0 && (
+                  <Badge
+                    badgeContent={supportUnreadCount}
+                    color="error"
+                    sx={{ ml: 1 }}
+                    max={99}
+                  />
+                )}
                 {item.isExpandable && (
                   <span style={{ marginLeft: 'auto' }} onClick={(e) => {
                     e.stopPropagation();

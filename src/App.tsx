@@ -84,7 +84,7 @@ const AdminHolidays = lazy(
 const WithdrawPending = lazy(() => import("./pages/Admin-Pages/WithdrawPending/WithdrawPending"));
 const Activate = lazy(() => import("./pages/Admin-Pages/Activate/Activate"));
 const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
-
+const AdminChat = lazy(() => import("./pages/Admin-Pages/AdminChat/AdminChat"));
 // user pages
 const UserDashboard = lazy(
   () => import("./pages/User-Pages/UserDashboard/Dashboard")
@@ -125,7 +125,8 @@ const UserDailyPayout = lazy(
   () => import("./pages/User-Pages/Earnings/DailyPayout")
 );
 const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
-
+const UserChat = lazy(() => import("./pages/User-Pages/Chat/Chat"));
+const SupportChat = lazy(() => import("./pages/User-Pages/SupportChat/SupportChat"));
 
 
 const LoansMemberPending = lazy(() => import("./pages/Loans/Loanspending/Pending"));
@@ -328,6 +329,7 @@ const RoutesProvider = ({
               <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
               <Route path="/admin/kyc-approval" element={<KYCApproval />} />
               <Route path="/admin/withdraw-pending" element={<WithdrawPending />} />
+              <Route path="/admin/chat" element={<AdminChat />} />
 
             </Route>
             <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
@@ -384,6 +386,8 @@ const RoutesProvider = ({
               <Route path="/user/loantransactions" element={<UserLoanTransaction />} />
               <Route path="/user/mailbox" element={<UserMailBox />} />
               <Route path="/user/wallet" element={<UserWallet />} />
+              <Route path="/user/chat" element={<UserChat />} />
+              <Route path="/user/support-chat" element={<SupportChat />} />
 
             </Route>
 
@@ -398,7 +402,7 @@ const RoutesProvider = ({
               </Route>
             </Route>
           </Routes>
-           {shouldHide && <Footer />}
+          {shouldHide && <Footer />}
         </div>
       </div>
     </>

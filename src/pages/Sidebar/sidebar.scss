@@ -96,3 +96,17 @@
   font-size: 20px;
   color: inherit;
 }
+
+// Unread badge styling
+.menu-item .MuiBadge-root {
+  margin-left: auto;
+  
+  .MuiBadge-badge {
+    position: relative;
+    transform: none;
+    font-size: 11px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 10px;
+  }
+}

@@ -1,4 +1,4 @@
-import { PackageIcon } from "lucide-react";
+import { PackageIcon, MessageCircle } from "lucide-react";
 import { SideBarMenuItemType } from "../../store/store";
 import {
   DashboardIcon,
@@ -106,7 +106,20 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     path: "/user/mailbox",
     isExpandable: false,
   },
+  {
+    name: "Chat",
+    icon: <MessageCircle className="w-5 h-5" />,
+    path: "/user/chat",
+    isExpandable: false,
+  },
+  {
+    name: "Support Chat",
+    icon: <SupportIcon />,
+    path: "/user/support-chat",
+    isExpandable: false,
+  },
 ];
+
 
 export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -297,4 +310,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <EventIcon />,
     isExpandable: false,
   },
+  {
+    name: "Chat",
+    icon: <MessageCircle className="w-5 h-5" />,
+    path: "/admin/chat",
+    isExpandable: false,
+  },
 ];
+
