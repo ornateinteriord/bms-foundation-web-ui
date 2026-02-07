@@ -120,7 +120,7 @@ const AdminChat: React.FC = () => {
         setShowChatWindow(true);
     };
 
-    const handleSendMessage = (text: string) => {
+    const handleSendMessage = (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => {
         sendMessage(text);
     };
 

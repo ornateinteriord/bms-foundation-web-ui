@@ -119,8 +119,8 @@ const Chat: React.FC = () => {
         setShowChatWindow(true);
     };
 
-    const handleSendMessage = (text: string) => {
-        sendMessage(text);
+    const handleSendMessage = (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => {
+        sendMessage(text /*, attachment */);
     };
 
     const handleBack = () => {

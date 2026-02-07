@@ -9,8 +9,11 @@ export interface Message {
     senderId: string;
     senderName: string;
     senderRole: string;
+    messageType?: 'text' | 'image' | 'file';
     text: string;
     imageUrl?: string;
+    fileName?: string;
+    fileSize?: number;
     isRead: boolean;
     createdAt: Date | string;
 }
@@ -123,9 +126,9 @@ export const useChatSocket = (roomId?: string) => {
         };
     }, [roomId]);
 
-    // Send message using REST API (works on Vercel)
+    // Send message using REST API - text only (image/file attachment commented out)
     const sendMessage = useCallback(
-        async (text: string) => {
+        async (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => {
             if (!roomId || !text.trim() || isSending) return;
 
             console.log('sendMessage - Sending to roomId:', roomId, 'text:', text.trim());
@@ -135,6 +138,11 @@ export const useChatSocket = (roomId?: string) => {
                 const response = await post('/chat/message/send', {
                     roomId,
                     text: text.trim(),
+                    // Image/file fields commented out
+                    // imageUrl: attachment?.imageUrl || '',
+                    // messageType: attachment?.messageType || 'text',
+                    // fileName: attachment?.fileName || '',
+                    // fileSize: attachment?.fileSize || 0,
                 });
 
                 console.log('sendMessage - Response:', response);
