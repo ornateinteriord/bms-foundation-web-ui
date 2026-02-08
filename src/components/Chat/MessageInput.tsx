@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Box, TextField, IconButton, CircularProgress, Popover, Typography } from '@mui/material';
-import { Send, EmojiEmotions /*, AttachFile */ } from '@mui/icons-material';
+import { Send, EmojiEmotions, AttachFile } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { toast } from 'react-toastify';
-// import FilePreview from './FilePreview';
+import FilePreview from './FilePreview';
 
 interface MessageInputProps {
-    onSendMessage: (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => void;
+    onSendMessage: (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => void;
     onTyping?: (isTyping: boolean) => void;
     disabled?: boolean;
     placeholder?: string;
@@ -36,9 +36,9 @@ const EMOJI_CATEGORIES = [
     }
 ];
 
-// const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-// const ALLOWED_FILE_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-// const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const ALLOWED_FILE_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     '& .MuiOutlinedInput-root': {
@@ -83,13 +83,13 @@ const MessageInput: React.FC<MessageInputProps> = ({
 }) => {
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
-    // const [isUploading, setIsUploading] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [emojiAnchor, setEmojiAnchor] = useState<HTMLButtonElement | null>(null);
-    // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const typingTimeoutRef = useRef<NodeJS.Timeout>();
     const inputRef = useRef<HTMLInputElement>(null);
-    // const fileInputRef = useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value);
@@ -110,87 +110,89 @@ const MessageInput: React.FC<MessageInputProps> = ({
         }
     };
 
-    // Image upload functionality commented out
-    // const uploadToImageKit = async (file: File): Promise<{ url: string; fileName: string; fileSize: number }> => {
-    //     try {
-    //         const apiUrl = import.meta.env.VITE_MLM_API_URL || 'http://localhost:5051';
-    //         const authResponse = await fetch(`${apiUrl}/image-kit-auth`);
-    //         if (!authResponse.ok) throw new Error('Failed to get upload credentials');
-    //         const authParams = await authResponse.json();
-    //         const formData = new FormData();
-    //         formData.append('file', file);
-    //         formData.append('fileName', file.name);
-    //         formData.append('publicKey', import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
-    //         formData.append('signature', authParams.signature);
-    //         formData.append('expire', authParams.expire);
-    //         formData.append('token', authParams.token);
-    //         formData.append('folder', '/chat-attachments');
-    //         const uploadResponse = await fetch('https://upload.imagekit.io/api/v1/files/upload', { method: 'POST', body: formData });
-    //         if (!uploadResponse.ok) throw new Error('Failed to upload file');
-    //         const uploadResult = await uploadResponse.json();
-    //         return { url: uploadResult.url, fileName: file.name, fileSize: file.size };
-    //     } catch (error) {
-    //         console.error('Upload error:', error);
-    //         throw error;
-    //     }
-    // };
+    const uploadToImageKit = async (file: File): Promise<{ url: string; fileName: string; fileSize: number }> => {
+        try {
+            const apiUrl = import.meta.env.VITE_MLM_API_URL || 'http://localhost:5051';
+            const authResponse = await fetch(`${apiUrl}/image-kit-auth`);
+            if (!authResponse.ok) throw new Error('Failed to get upload credentials');
+            const authParams = await authResponse.json();
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('fileName', file.name);
+            formData.append('publicKey', import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
+            formData.append('signature', authParams.signature);
+            formData.append('expire', authParams.expire);
+            formData.append('token', authParams.token);
+            formData.append('folder', '/chat-attachments');
+            const uploadResponse = await fetch('https://upload.imagekit.io/api/v1/files/upload', { method: 'POST', body: formData });
+            if (!uploadResponse.ok) throw new Error('Failed to upload file');
+            const uploadResult = await uploadResponse.json();
+            return { url: uploadResult.url, fileName: file.name, fileSize: file.size };
+        } catch (error) {
+            console.error('Upload error:', error);
+            throw error;
+        }
+    };
 
-    // File select functionality commented out
-    // const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (!file) return;
-    //     const isImage = ALLOWED_IMAGE_TYPES.includes(file.type);
-    //     const isDocument = ALLOWED_FILE_TYPES.includes(file.type);
-    //     if (!isImage && !isDocument) {
-    //         toast.error('Please select an image (JPG, PNG, GIF, WebP) or document (PDF, DOC, DOCX)');
-    //         return;
-    //     }
-    //     if (file.size > MAX_FILE_SIZE) {
-    //         toast.error('File size must be less than 5MB');
-    //         return;
-    //     }
-    //     setSelectedFile(file);
-    //     if (isImage) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => setPreviewUrl(reader.result as string);
-    //         reader.readAsDataURL(file);
-    //     } else {
-    //         setPreviewUrl(null);
-    //     }
-    //     e.target.value = '';
-    // };
-    // const handleRemoveFile = () => {
-    //     setSelectedFile(null);
-    //     setPreviewUrl(null);
-    // };
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const isImage = ALLOWED_IMAGE_TYPES.includes(file.type);
+        const isDocument = ALLOWED_FILE_TYPES.includes(file.type);
+        if (!isImage && !isDocument) {
+            toast.error('Please select an image (JPG, PNG, GIF, WebP) or document (PDF, DOC, DOCX)');
+            return;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+            toast.error('File size must be less than 25MB');
+            return;
+        }
+        setSelectedFile(file);
+        if (isImage) {
+            const reader = new FileReader();
+            reader.onloadend = () => setPreviewUrl(reader.result as string);
+            reader.readAsDataURL(file);
+        } else {
+            setPreviewUrl(null);
+        }
+        e.target.value = '';
+    };
+    const handleRemoveFile = () => {
+        setSelectedFile(null);
+        setPreviewUrl(null);
+    };
 
     const handleSend = async () => {
-        if (!message.trim() || disabled || isSending) return;
+        if ((!message.trim() && !selectedFile) || disabled || isSending) return;
 
         setIsSending(true);
 
         try {
-            // Image/file upload commented out - only text messages
-            // let attachment: { imageUrl: string; messageType: string; fileName: string; fileSize: number } | undefined;
-            // if (selectedFile) {
-            //     try {
-            //         const uploadResult = await uploadToImageKit(selectedFile);
-            //         const isImage = ALLOWED_IMAGE_TYPES.includes(selectedFile.type);
-            //         attachment = {
-            //             imageUrl: uploadResult.url,
-            //             messageType: isImage ? 'image' : 'file',
-            //             fileName: uploadResult.fileName,
-            //             fileSize: uploadResult.fileSize,
-            //         };
-            //     } catch (error) {
-            //         toast.error('Failed to upload file. Please try again.');
-            //         setIsSending(false);
-            //         return;
-            //     }
-            // }
+            let attachment: { imageUrl: string; messageType: string; fileName: string; fileSize: number } | undefined;
+            if (selectedFile) {
+                setIsUploading(true);
+                try {
+                    const uploadResult = await uploadToImageKit(selectedFile);
+                    const isImage = ALLOWED_IMAGE_TYPES.includes(selectedFile.type);
+                    attachment = {
+                        imageUrl: uploadResult.url,
+                        messageType: isImage ? 'image' : 'file',
+                        fileName: uploadResult.fileName,
+                        fileSize: uploadResult.fileSize,
+                    };
+                } catch (error) {
+                    toast.error('Failed to upload file. Please try again.');
+                    setIsSending(false);
+                    setIsUploading(false);
+                    return;
+                }
+                setIsUploading(false);
+            }
 
-            await onSendMessage(message.trim());
+            await onSendMessage(message.trim(), attachment);
             setMessage('');
+            setSelectedFile(null);
+            setPreviewUrl(null);
 
             // Stop typing indicator
             if (onTyping) {
@@ -201,6 +203,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             toast.error('Failed to send message');
         } finally {
             setIsSending(false);
+            setIsUploading(false);
         }
     };
 
@@ -225,12 +228,12 @@ const MessageInput: React.FC<MessageInputProps> = ({
         inputRef.current?.focus();
     };
 
-    // const handleAttachClick = () => {
-    //     fileInputRef.current?.click();
-    // };
+    const handleAttachClick = () => {
+        fileInputRef.current?.click();
+    };
 
     const isEmojiOpen = Boolean(emojiAnchor);
-    const canSend = message.trim() && !disabled && !isSending;
+    const canSend = (message.trim() || selectedFile) && !disabled && !isSending;
 
     return (
         <Box
@@ -241,14 +244,14 @@ const MessageInput: React.FC<MessageInputProps> = ({
                 borderColor: 'divider',
             }}
         >
-            {/* File Preview - Commented out */}
-            {/* {selectedFile && (
+            {/* File Preview */}
+            {selectedFile && (
                 <FilePreview
                     file={selectedFile}
                     previewUrl={previewUrl}
                     onRemove={handleRemoveFile}
                 />
-            )} */}
+            )}
 
             <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.5 }}>
                 {/* Emoji Button */}
@@ -267,8 +270,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
                     <EmojiEmotions />
                 </IconButton>
 
-                {/* Attachment Button - Commented out */}
-                {/* <IconButton
+                {/* Attachment Button */}
+                <IconButton
                     size="medium"
                     onClick={handleAttachClick}
                     disabled={disabled || isUploading}
@@ -286,16 +289,16 @@ const MessageInput: React.FC<MessageInputProps> = ({
                     ) : (
                         <AttachFile />
                     )}
-                </IconButton> */}
+                </IconButton>
 
-                {/* Hidden File Input - Commented out */}
-                {/* <input
+                {/* Hidden File Input */}
+                <input
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileSelect}
                     accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx"
                     style={{ display: 'none' }}
-                /> */}
+                />
 
                 {/* Emoji Picker Popover */}
                 <Popover

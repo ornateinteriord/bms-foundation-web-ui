@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ChatList from '../../../components/Chat/ChatList';
 import ChatWindow from '../../../components/Chat/ChatWindow';
 // import NewChatDialog from '../../../components/Chat/NewChatDialog';
@@ -7,11 +8,12 @@ import { initializeSocket } from '../../../utils/socket';
 import { get, patch } from '../../../api/Api';
 import { jwtDecode } from 'jwt-decode';
 import TokenService from '../../../api/token/tokenService';
-import { Box, Paper, Typography } from '@mui/material';
-import { Search } from 'lucide-react';
+import { Box, Paper, Typography, Button } from '@mui/material';
+import { Search, LayoutDashboard } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const AdminChat: React.FC = () => {
+    const navigate = useNavigate();
     const [rooms, setRooms] = useState<ChatRoom[]>([]);
     const [selectedRoomId, setSelectedRoomId] = useState<string>('');
     const [currentUserId, setCurrentUserId] = useState<string>('');
@@ -120,8 +122,8 @@ const AdminChat: React.FC = () => {
         setShowChatWindow(true);
     };
 
-    const handleSendMessage = (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => {
-        sendMessage(text);
+    const handleSendMessage = (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => {
+        sendMessage(text, attachment);
     };
 
     const handleBack = () => {
@@ -140,7 +142,7 @@ const AdminChat: React.FC = () => {
     const totalUnread = rooms.reduce((sum, room) => sum + (room.unreadCount || 0), 0);
 
     return (
-        <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column', mt: 8 }}>
+        <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column', mt: 7 }}>
             {/* Connection Status Banner */}
             {/* {!isConnected && (
                 <Alert
@@ -181,13 +183,31 @@ const AdminChat: React.FC = () => {
                                 {rooms.length} conversation{rooms.length !== 1 ? 's' : ''}
                             </Typography>
                         </Box>
-                        <Box sx={{ textAlign: 'right' }}>
-                            <Typography variant="h4" fontWeight={700}>
-                                {totalUnread}
-                            </Typography>
-                            <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                                Unread
-                            </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Box sx={{ textAlign: 'right' }}>
+                                <Typography variant="h4" fontWeight={700}>
+                                    {totalUnread}
+                                </Typography>
+                                <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                                    Unread
+                                </Typography>
+                            </Box>
+                            <Button
+                                variant="contained"
+                                startIcon={<LayoutDashboard size={18} />}
+                                onClick={() => navigate('/admin/dashboard')}
+                                sx={{
+                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                    color: '#fff',
+                                    '&:hover': {
+                                        bgcolor: 'rgba(255,255,255,0.3)',
+                                    },
+                                    textTransform: 'none',
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Go to Dashboard
+                            </Button>
                         </Box>
                     </Box>
 

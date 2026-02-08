@@ -119,8 +119,8 @@ const Chat: React.FC = () => {
         setShowChatWindow(true);
     };
 
-    const handleSendMessage = (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => {
-        sendMessage(text /*, attachment */);
+    const handleSendMessage = (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => {
+        sendMessage(text, attachment);
     };
 
     const handleBack = () => {
@@ -160,7 +160,12 @@ const Chat: React.FC = () => {
     });
 
     return (
-        <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column', mt: 9 }}>
+        <Box sx={{
+            height: 'calc(100vh - 56px)',
+            display: 'flex',
+            flexDirection: 'column',
+            mt: 7,
+        }}>
             {/* Connection Status Banner */}
             {/* {!isConnected && (
                 <Alert

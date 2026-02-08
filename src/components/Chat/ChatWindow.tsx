@@ -8,6 +8,7 @@ import { User } from 'lucide-react';
 import { jwtDecode } from 'jwt-decode';
 import TokenService from '../../api/token/tokenService';
 import { styled } from '@mui/material/styles';
+import chatBg from '../../assets/chatBg.jpg';
 
 interface ChatWindowProps {
     roomId: string;
@@ -32,11 +33,10 @@ const MessagesContainer = styled(Box)(({ theme }) => ({
     flex: 1,
     overflowY: 'auto',
     padding: theme.spacing(3),
-    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.grey[50],
-    backgroundImage: theme.palette.mode === 'dark'
-        ? 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)'
-        : 'linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px)',
-    backgroundSize: '20px 20px',
+    backgroundImage: `url(${chatBg})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
 }));
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -52,6 +52,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 }) => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const currentUserId = useRef<string>('');
+    const containerRef = useRef<HTMLDivElement>(null);
+    const prevMessagesLength = useRef(messages.length);
 
     // Get current user ID from token
     useEffect(() => {
@@ -72,13 +74,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         }
     }, []);
 
-    // Auto-scroll to bottom on new messages
+    // Auto-scroll to bottom only on new messages and when user is near bottom
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        const container = containerRef.current;
+        if (!container) return;
+
+        // Check if user is near bottom (within 150px)
+        const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+
+        // Only auto-scroll if new message arrived and user is near bottom
+        if (messages.length > prevMessagesLength.current && isNearBottom) {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        prevMessagesLength.current = messages.length;
     }, [messages]);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Header */}
             <ChatHeader position="static" elevation={0}>
                 <Toolbar>
@@ -162,7 +175,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             </ChatHeader>
 
             {/* Messages Area */}
-            <MessagesContainer>
+            <MessagesContainer ref={containerRef}>
                 {isLoading ? (
                     <Box
                         sx={{

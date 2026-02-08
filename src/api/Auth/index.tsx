@@ -22,18 +22,18 @@ export const useSignupMutation = () => {
   });
 };
 
-export const useGetSponserRef = (ref?:string) =>{
+export const useGetSponserRef = (ref?: string) => {
   return useQuery({
-    queryKey:["sponsor",ref],
-    queryFn:async () =>{
-      if(!ref) return null;
+    queryKey: ["sponsor", ref],
+    queryFn: async () => {
+      if (!ref) return null;
       try {
         const response = await get(`/auth/get-sponsor/${ref}`);
-        return response.success ? response : null; 
+        return response.success ? response : null;
       } catch (err: any) {
-        
+
         const errorMessage =
-          err.response?.data.message ;
+          err.response?.data.message;
         throw new Error(errorMessage);
       }
     },
@@ -41,36 +41,36 @@ export const useGetSponserRef = (ref?:string) =>{
   })
 }
 
-export const useRecoverpassword = () =>{
+export const useRecoverpassword = () => {
   return useMutation({
-    mutationFn:async(data:any)=>{
-      return await post("/auth/recover-password",data);
+    mutationFn: async (data: any) => {
+      return await post("/auth/recover-password", data);
     },
-    onSuccess:(response)=>{
-      if(response.success){
+    onSuccess: (response) => {
+      if (response.success) {
         toast.success(response.message);
-      }else{
+      } else {
         console.error(response.message)
       }
     },
-    onError:(error:any)=>{
+    onError: (error: any) => {
       toast.error(error.response.data.message)
     }
   })
 }
-export const useResetpassword = () =>{
+export const useResetpassword = () => {
   return useMutation({
-    mutationFn:async(data:any)=>{
-      return await post("/auth/reset-password",data);
+    mutationFn: async (data: any) => {
+      return await post("/auth/reset-password", data);
     },
-    onSuccess:(response)=>{
-      if(response.success){
+    onSuccess: (response) => {
+      if (response.success) {
         toast.success(response.message);
-      }else{
+      } else {
         console.error(response.message)
       }
     },
-    onError:(error:any)=>{
+    onError: (error: any) => {
       toast.error(error.response.data.message)
     }
   })
@@ -85,21 +85,21 @@ export const useLoginMutation = () => {
     },
     onSuccess: (response) => {
       if (response.success && response.token) {
-       TokenService.setToken(response.token)
+        TokenService.setToken(response.token)
 
         window.dispatchEvent(new Event("storage"));
 
         toast.success(response.message);
-          const role = TokenService.getRole()
-          if (role === "USER") {
-            navigate("/user/dashboard");
-          } else if (role === "ADMIN") {
-            navigate("/admin/dashboard");
-          } else {
-            console.error("Invalid role:", role);
-            localStorage.clear()
-            toast.error("Invalid user role");
-          } 
+        const role = TokenService.getRole()
+        if (role === "USER") {
+          navigate("/user/chat");
+        } else if (role === "ADMIN") {
+          navigate("/admin/dashboard");
+        } else {
+          console.error("Invalid role:", role);
+          localStorage.clear()
+          toast.error("Invalid user role");
+        }
       } else {
         console.error("Login failed:", response.message);
         toast.error(response.message);

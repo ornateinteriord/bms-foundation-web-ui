@@ -86,8 +86,8 @@ const SupportChat: React.FC = () => {
         fetchMessages();
     }, [supportRoom?.roomId, setMessages]);
 
-    const handleSendMessage = (text: string) => {
-        sendMessage(text);
+    const handleSendMessage = (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => {
+        sendMessage(text, attachment);
     };
 
     // Get other participant (admin) details
@@ -155,7 +155,7 @@ const SupportChat: React.FC = () => {
     }
 
     return (
-        <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column', mt: 9 }}>
+        <Box sx={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', mt: 7 }}>
             {/* Support Chat Header */}
             <Box
                 sx={{
