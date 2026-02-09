@@ -9,7 +9,7 @@ export interface Message {
     senderId: string;
     senderName: string;
     senderRole: string;
-    messageType?: 'text' | 'image' | 'file';
+    messageType?: 'text' | 'image' | 'file' | 'audio';
     text: string;
     imageUrl?: string;
     fileName?: string;

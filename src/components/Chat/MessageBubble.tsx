@@ -52,7 +52,6 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
     showTimestamp = true,
 }) => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
-    const [audioPlayback, setAudioPlayback] = useState<{ [key: string]: boolean }>({});
 
     const formatTime = (date: Date | string) => {
         try {
@@ -134,35 +133,23 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 1.5,
-                                    p: 1.5,
+                                    gap: 1,
+                                    p: 1,
                                     mb: message.text ? 1 : 0,
                                     borderRadius: 1,
                                     bgcolor: isSent ? 'rgba(255,255,255,0.15)' : 'action.hover',
+                                    minWidth: 200,
                                 }}
                             >
-                                <IconButton
-                                    size="small"
-                                    onClick={() => setAudioPlayback(prev => ({...prev, [message._id!]: !prev[message._id!]}))}
-                                    sx={{
-                                        color: isSent ? 'white' : 'primary.main',
-                                        '&:hover': {
-                                            bgcolor: isSent ? 'rgba(255,255,255,0.2)' : 'action.hover',
-                                        },
+                                <Volume2 size={20} color={isSent ? 'white' : '#1976d2'} />
+                                <audio
+                                    controls
+                                    style={{
+                                        width: '100%',
+                                        height: '32px',
                                     }}
-                                >
-                                    <Volume2 size={20} />
-                                </IconButton>
-                                <Box sx={{ flex: 1 }}>
-                                    <audio
-                                        controls
-                                        style={{
-                                            width: '100%',
-                                            height: '32px',
-                                        }}
-                                        src={message.imageUrl}
-                                    />
-                                </Box>
+                                    src={message.imageUrl}
+                                />
                             </Box>
                         )}
 
