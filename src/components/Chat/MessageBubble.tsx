@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Message } from '../../hooks/useChatSocket';
 import { Box, Typography, Paper, IconButton } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
-import { Check, CheckCheck, Download, FileText } from 'lucide-react';
+import { Check, CheckCheck, Download, FileText, Volume2 } from 'lucide-react';
 import { styled } from '@mui/material/styles';
 import ImageLightbox from './ImageLightbox';
 
@@ -52,6 +52,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
     showTimestamp = true,
 }) => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [audioPlayback, setAudioPlayback] = useState<{ [key: string]: boolean }>({});
 
     const formatTime = (date: Date | string) => {
         try {
@@ -124,6 +125,44 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                                         },
                                     }}
                                 />
+                            </Box>
+                        )}
+
+                        {/* Audio Attachment */}
+                        {message.messageType === 'audio' && message.imageUrl && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1.5,
+                                    p: 1.5,
+                                    mb: message.text ? 1 : 0,
+                                    borderRadius: 1,
+                                    bgcolor: isSent ? 'rgba(255,255,255,0.15)' : 'action.hover',
+                                }}
+                            >
+                                <IconButton
+                                    size="small"
+                                    onClick={() => setAudioPlayback(prev => ({...prev, [message._id!]: !prev[message._id!]}))}
+                                    sx={{
+                                        color: isSent ? 'white' : 'primary.main',
+                                        '&:hover': {
+                                            bgcolor: isSent ? 'rgba(255,255,255,0.2)' : 'action.hover',
+                                        },
+                                    }}
+                                >
+                                    <Volume2 size={20} />
+                                </IconButton>
+                                <Box sx={{ flex: 1 }}>
+                                    <audio
+                                        controls
+                                        style={{
+                                            width: '100%',
+                                            height: '32px',
+                                        }}
+                                        src={message.imageUrl}
+                                    />
+                                </Box>
                             </Box>
                         )}
 
