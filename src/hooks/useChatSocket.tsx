@@ -9,7 +9,7 @@ export interface Message {
     senderId: string;
     senderName: string;
     senderRole: string;
-    messageType?: 'text' | 'image' | 'file';
+    messageType?: 'text' | 'image' | 'file' | 'audio';
     text: string;
     imageUrl?: string;
     fileName?: string;
@@ -126,23 +126,22 @@ export const useChatSocket = (roomId?: string) => {
         };
     }, [roomId]);
 
-    // Send message using REST API - text only (image/file attachment commented out)
+    // Send message using REST API (supports text, image, and file messages)
     const sendMessage = useCallback(
-        async (text: string /*, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number } */) => {
-            if (!roomId || !text.trim() || isSending) return;
+        async (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => {
+            if (!roomId || (!text.trim() && !attachment) || isSending) return;
 
-            console.log('sendMessage - Sending to roomId:', roomId, 'text:', text.trim());
+            console.log('sendMessage - Sending to roomId:', roomId, 'text:', text.trim(), 'attachment:', attachment);
 
             setIsSending(true);
             try {
                 const response = await post('/chat/message/send', {
                     roomId,
                     text: text.trim(),
-                    // Image/file fields commented out
-                    // imageUrl: attachment?.imageUrl || '',
-                    // messageType: attachment?.messageType || 'text',
-                    // fileName: attachment?.fileName || '',
-                    // fileSize: attachment?.fileSize || 0,
+                    imageUrl: attachment?.imageUrl || '',
+                    messageType: attachment?.messageType || 'text',
+                    fileName: attachment?.fileName || '',
+                    fileSize: attachment?.fileSize || 0,
                 });
 
                 console.log('sendMessage - Response:', response);

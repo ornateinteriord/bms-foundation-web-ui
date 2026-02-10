@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Message } from '../../hooks/useChatSocket';
 import { Box, Typography, Paper, IconButton } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
-import { Check, CheckCheck, Download, FileText } from 'lucide-react';
+import { Check, CheckCheck, Download, FileText, Volume2 } from 'lucide-react';
 import { styled } from '@mui/material/styles';
 import ImageLightbox from './ImageLightbox';
 
@@ -123,6 +123,32 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                                             transform: 'scale(1.02)',
                                         },
                                     }}
+                                />
+                            </Box>
+                        )}
+
+                        {/* Audio Attachment */}
+                        {message.messageType === 'audio' && message.imageUrl && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    p: 1,
+                                    mb: message.text ? 1 : 0,
+                                    borderRadius: 1,
+                                    bgcolor: isSent ? 'rgba(255,255,255,0.15)' : 'action.hover',
+                                    minWidth: 200,
+                                }}
+                            >
+                                <Volume2 size={20} color={isSent ? 'white' : '#1976d2'} />
+                                <audio
+                                    controls
+                                    style={{
+                                        width: '100%',
+                                        height: '32px',
+                                    }}
+                                    src={message.imageUrl}
                                 />
                             </Box>
                         )}

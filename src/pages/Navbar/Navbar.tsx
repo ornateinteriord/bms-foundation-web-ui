@@ -1,5 +1,6 @@
 import {
   ChevronDown,
+  LayoutDashboard,
   Lock,
   LogOutIcon,
   MenuIcon,
@@ -61,6 +62,7 @@ const Navbar = ({
 
   const isHomePage = location.pathname === "/";
   const isAdmin = userRole === "ADMIN";
+  const isChatPage = location.pathname === "/user/chat";
 
   return (
     <>
@@ -115,14 +117,36 @@ const Navbar = ({
                 )}
 
                 {!isHomePage && !isAdmin && (
-                  <Button
-                    className="logout-btn"
-                    variant="ghost"
-                    style={{ marginRight: "8px", fontSize: "50px" }}
-                    onClick={handleLogout}
-                  >
-                    <LogOutIcon />
-                  </Button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {isChatPage && (
+                      <Button
+                        className="dashboard-btn"
+                        variant="default"
+                        style={{
+                          marginRight: "8px",
+                          background: "linear-gradient(135deg, #4caf50 0%, #388e3c 100%)",
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          padding: "8px 16px",
+                          borderRadius: "8px",
+                        }}
+                        onClick={() => navigate('/user/dashboard')}
+                      >
+                        <LayoutDashboard size={18} />
+                        Go to Dashboard
+                      </Button>
+                    )}
+                    <Button
+                      className="logout-btn"
+                      variant="ghost"
+                      style={{ marginRight: "8px", fontSize: "50px" }}
+                      onClick={handleLogout}
+                    >
+                      <LogOutIcon />
+                    </Button>
+                  </div>
                 )}
               </div>
             ) : (

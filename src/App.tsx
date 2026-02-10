@@ -156,9 +156,18 @@ const ShouldHideSidebarComponent = () => {
     "/contact",
     "/privacy-policy",
     "/terms",
-    "/refund-policy"
+    "/refund-policy",
+    "/user/chat"
   ];
   return publicPaths.includes(location.pathname);
+};
+
+const ShouldShowFooter = () => {
+  const location = useLocation();
+  const noFooterPaths = [
+    "/user/chat"
+  ];
+  return !noFooterPaths.includes(location.pathname);
 };
 
 const IsDashboardPage = () => {
@@ -208,6 +217,7 @@ const RoutesProvider = ({
 }) => {
   const shouldHide = ShouldHideSidebarComponent();
   const isDashboard = IsDashboardPage();
+  const shouldShowFooter = ShouldShowFooter();
   const { userRole } = useAuth()
 
   return (
@@ -402,7 +412,7 @@ const RoutesProvider = ({
               </Route>
             </Route>
           </Routes>
-          {shouldHide && <Footer />}
+          {shouldHide && shouldShowFooter && <Footer />}
         </div>
       </div>
     </>
