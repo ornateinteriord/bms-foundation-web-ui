@@ -93,7 +93,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Header */}
-            <ChatHeader position="static" elevation={0}>
+            <ChatHeader position="sticky" elevation={0} sx={{ top: 0, zIndex: 10 }}>
                 <Toolbar>
                     {/* Back Button (mobile) */}
                     {onBack && (

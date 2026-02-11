@@ -13,6 +13,7 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import BMSLogo from "../../assets/bms_logo.png"; // Import the logo
+import LogBg from "../../assets/log_bg.jpg";
 import { LoadingComponent } from "../../App";
 import { useLoginMutation } from "../../api/Auth";
 
@@ -65,7 +66,10 @@ const Login = () => {
             sx={{
               width: "100%",
               boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
-              backgroundColor: "rgba(30, 30, 30, 0.95)", // Dark semi-transparent background
+              backgroundImage: `url(${LogBg})`, // Dark semi-transparent background
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
               borderRadius: "8px",
               border: "1px solid rgba(255, 255, 255, 0.05)",
             }}
