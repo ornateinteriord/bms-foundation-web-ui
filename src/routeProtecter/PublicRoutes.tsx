@@ -24,7 +24,8 @@ const PublicRoute = () => {
   // BUT allow access (temporarily while effect runs) if it's a referral registration
   // The effect above will clear userRole, causing a re-render where userRole becomes null
   if (userRole && !isReferralRegister) {
-    return <Navigate to={`/${userRole.toLowerCase()}/dashboard`} replace />;
+    const redirectPath = userRole === "USER" ? "/user/chat" : `/${userRole.toLowerCase()}/dashboard`;
+    return <Navigate to={redirectPath} replace />;
   }
 
   return <Outlet />;

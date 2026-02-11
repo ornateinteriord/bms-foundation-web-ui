@@ -1,6 +1,6 @@
 import {
   ChevronDown,
-  LayoutDashboard,
+  Home,
   Lock,
   LogOutIcon,
   MenuIcon,
@@ -119,24 +119,19 @@ const Navbar = ({
                 {!isHomePage && !isAdmin && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {isChatPage && (
-                      <Button
+                      <IconButton
                         className="dashboard-btn"
-                        variant="default"
                         style={{
-                          marginRight: "8px",
+                          marginRight: "4px",
                           background: "linear-gradient(135deg, #4caf50 0%, #388e3c 100%)",
                           color: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "6px",
-                          padding: "8px 16px",
-                          borderRadius: "8px",
+                          padding: "8px",
                         }}
                         onClick={() => navigate('/user/dashboard')}
+                        title="Go to Dashboard"
                       >
-                        <LayoutDashboard size={18} />
-                        Go to Dashboard
-                      </Button>
+                        <Home size={20} />
+                      </IconButton>
                     )}
                     <Button
                       className="logout-btn"

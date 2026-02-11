@@ -92,14 +92,22 @@ export const useLoginMutation = () => {
         toast.success(response.message);
         const role = TokenService.getRole()
         if (role === "USER") {
-          navigate("/user/chat");
+          navigate("/user/chat", { replace: true });
         } else if (role === "ADMIN") {
-          navigate("/admin/dashboard");
+          navigate("/admin/dashboard", { replace: true });
         } else {
           console.error("Invalid role:", role);
           localStorage.clear()
           toast.error("Invalid user role");
+          return;
         }
+        // Prevent back button from navigating away after login
+        setTimeout(() => {
+          window.history.pushState(null, "", window.location.href);
+          window.addEventListener("popstate", () => {
+            window.history.pushState(null, "", window.location.href);
+          }, { once: true });
+        }, 100);
       } else {
         console.error("Login failed:", response.message);
         toast.error(response.message);
