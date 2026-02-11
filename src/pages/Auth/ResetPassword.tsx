@@ -12,6 +12,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { useState } from "react";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import LogBg from "../../assets/log_bg.jpg"; // Import the logo
 import { useResetpassword } from "../../api/Auth";
 import { LoadingComponent } from "../../App";
 
@@ -92,14 +93,17 @@ const ResetPassword = () => {
           sx={{
             width: "100%",
             boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-            backgroundColor: "#fff",
+            backgroundImage: `url(${LogBg})`, // Dark semi-transparent background
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
         >
           <CardContent sx={{ padding: "2rem" }}>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ color: "#000831", mb: 3, textAlign: "center" }}
+              sx={{ color: "#fff", mb: 3, textAlign: "center", fontWeight: "bold" }}
             >
               Reset Password
             </Typography>
@@ -128,12 +132,9 @@ const ResetPassword = () => {
                   }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#000831",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#000831",
-                      },
+                      backgroundColor: "#e5e5e5",
+                      borderRadius: "4px",
+                      "& fieldset": { border: "none" },
                     },
                   }}
                 />
@@ -149,15 +150,13 @@ const ResetPassword = () => {
                     sx: {
                       "& .MuiOutlinedInput-root": {
                         height: "40px",
+                        backgroundColor: "#e5e5e5",
+                        borderRadius: "4px",
+                        "& fieldset": { border: "none" },
                       },
                       textAlign: "center",
                       "& .MuiInputBase-root": {
-                        "&:hover fieldset": {
-                          borderColor: "#000831",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#000831",
-                        },
+
                       },
                     },
                   }}
@@ -231,8 +230,15 @@ const ResetPassword = () => {
                 fullWidth
                 variant="contained"
                 sx={{
-                  backgroundColor: "#000831",
-                  "&:hover": { backgroundColor: "#581c87" },
+                  background:
+                    "linear-gradient(90deg, #374151 0%, #d4af37 100%)", // Gradient
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: "10px",
+                  textTransform: "uppercase",
+                  "&:hover": {
+                    opacity: 0.9,
+                  },
                 }}
               >
                 {step === 1
