@@ -59,7 +59,7 @@ const Login = () => {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            mt: 5
+            mt: { xs: 3, md: 5 }
           }}
         >
           <Card
@@ -96,7 +96,7 @@ const Login = () => {
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: "#aaa", textAlign: "center", mb: 3 }}
+                sx={{ color: "#ffff", textAlign: "center", mb: 3 }}
               >
                 Enter your credentials to access your account
               </Typography>
@@ -109,7 +109,7 @@ const Login = () => {
                 <Box>
                   <Typography
                     variant="caption"
-                    sx={{ color: "#bbb", mb: 0.5, display: "block" }}
+                    sx={{ color: "#ffff", mb: 0.5, display: "block" }}
                   >
                     User ID
                   </Typography>
@@ -139,7 +139,7 @@ const Login = () => {
                 <Box>
                   <Typography
                     variant="caption"
-                    sx={{ color: "#bbb", mb: 0.5, display: "block" }}
+                    sx={{ color: "#ffff", mb: 0.5, display: "block" }}
                   >
                     Password
                   </Typography>
@@ -188,7 +188,7 @@ const Login = () => {
                       />
                     }
                     label={
-                      <Typography variant="body2" sx={{ color: "#888" }}>
+                      <Typography variant="body2" sx={{ color: "#ffff" }}>
                         Remember me
                       </Typography>
                     }
@@ -224,7 +224,7 @@ const Login = () => {
 
                 <Typography
                   variant="body2"
-                  sx={{ textAlign: "center", mt: 2, color: "#888" }}
+                  sx={{ textAlign: "center", mt: 2, color: "#ffff" }}
                 >
                   New user? Register here{" "}
                   <Link

@@ -29,6 +29,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
 import BMSLogo from "../../assets/bms_logo.png"; // Import the logo
+import LogBg from "../../assets/log_bg.jpg";
 import "./Register.scss";
 import { useGetSponserRef, useSignupMutation } from "../../api/Auth";
 import { LoadingComponent } from "../../App";
@@ -216,7 +217,7 @@ const Register = () => {
         alignItems: "center",
         justifyContent: "center",
         mt: 8,
-        // backgroundColor: "#ffff", // consistent with Login
+        backgroundColor: "#ffff", // consistent with Login
         paddingTop: "10px",
         paddingBottom: "10px",
       }}
@@ -233,7 +234,10 @@ const Register = () => {
           sx={{
             width: "100%",
             boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
-            backgroundColor: "rgba(30, 30, 30, 0.95)", // Dark semi-transparent background
+            backgroundImage: `url(${LogBg})`, // Dark semi-transparent background
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
             borderRadius: "8px",
             border: "1px solid rgba(255, 255, 255, 0.05)",
           }}

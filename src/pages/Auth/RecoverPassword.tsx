@@ -11,6 +11,7 @@ import {
 import EmailIcon from "@mui/icons-material/Email";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import LogBg from "../../assets/log_bg.jpg"; // Import the logo
 import { useRecoverpassword } from "../../api/Auth";
 import { LoadingComponent } from "../../App";
 
@@ -55,21 +56,24 @@ const RecoverPassword = () => {
           sx={{
             width: "100%",
             boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-            backgroundColor: "#fff",
+            backgroundImage: `url(${LogBg})`, // Dark semi-transparent background
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
         >
           <CardContent sx={{ padding: "2rem" }}>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ color: "#000831", mb: 3, textAlign: "center" }}
+              sx={{ color: "#ffff", mb: 3, textAlign: "center", fontWeight: "bold" }}
             >
               Recover Password
             </Typography>
             <Typography
               component="h1"
               variant="body1"
-              sx={{ color: "#000831", mb: 3, textAlign: "center" }}
+              sx={{ color: "#ffff", mb: 3, textAlign: "center" }}
             >
               Forgot your Password?
             </Typography>
@@ -96,12 +100,9 @@ const RecoverPassword = () => {
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": {
-                      borderColor: "#000831",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#000831",
-                    },
+                    backgroundColor: "#e5e5e5",
+                    borderRadius: "4px",
+                    "& fieldset": { border: "none" },
                   },
                 }}
               />
@@ -111,19 +112,26 @@ const RecoverPassword = () => {
                 fullWidth
                 variant="contained"
                 sx={{
-                  backgroundColor: "#000831",
-                  "&:hover": { backgroundColor: "#581c87" },
+                  background:
+                    "linear-gradient(90deg, #374151 0%, #d4af37 100%)", // Gradient
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: "10px",
+                  textTransform: "uppercase",
+                  "&:hover": {
+                    opacity: 0.9,
+                  },
                 }}
               >
                 Recover Password
               </Button>
-              <Typography variant="body2" sx={{ textAlign: "center", mt: -2 }}>
+              <Typography variant="body2" sx={{ textAlign: "center", mt: -2, color: "#ffff" }}>
                 or
               </Typography>
               <Typography variant="body2" sx={{ textAlign: "center", mt: -2 }}>
                 <Link to="/reset-password"
                   style={{
-                    color: "#000831",
+                    color: "#22c55e",
                     textDecoration: "none",
                     fontWeight: "bold",
                   }}>
