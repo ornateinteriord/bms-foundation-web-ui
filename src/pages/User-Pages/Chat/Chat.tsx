@@ -49,6 +49,7 @@ const Chat: React.FC = () => {
             return () => {
                 // Don't disconnect socket on unmount, keep it alive
                 // socket.disconnect();
+                window.dispatchEvent(new CustomEvent('active-chat-room', { detail: null }));
             };
         } catch (error) {
             console.error('Failed to initialize chat:', error);
@@ -117,6 +118,7 @@ const Chat: React.FC = () => {
     const handleSelectRoom = (roomId: string) => {
         setSelectedRoomId(roomId);
         setShowChatWindow(true);
+        window.dispatchEvent(new CustomEvent('active-chat-room', { detail: roomId }));
     };
 
     const handleSendMessage = (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => {
@@ -126,6 +128,7 @@ const Chat: React.FC = () => {
     const handleBack = () => {
         setShowChatWindow(false);
         setSelectedRoomId('');
+        window.dispatchEvent(new CustomEvent('active-chat-room', { detail: null }));
     };
 
     const handleNewChat = () => {
