@@ -1,6 +1,7 @@
 import { Suspense, lazy, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   BrowserRouter as Router,
   Route,
@@ -32,6 +33,7 @@ import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
 import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
+import ChatNotificationListener from "./components/Chat/ChatNotificationListener";
 
 
 
@@ -194,6 +196,7 @@ function App() {
           style={{ width: 'auto', minWidth: '25rem' }} />
         <Router>
           <Suspense fallback={<LoadingComponent />}>
+            <ChatNotificationListener />
             <RoutesProvider
               isOpen={isOpen}
               setIsOpen={setIsOpen}

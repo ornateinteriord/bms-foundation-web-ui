@@ -1,5 +1,13 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
-const UserContext = createContext({ user: null, getUser: null, setUser: null } as { user: any, getUser: any, setUser: any });
+const UserContext = createContext<any>(null);
+
+export const useUser = () => {
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error('useUser must be used within a UserProvider');
+    }
+    return context;
+};
 
 export default UserContext;

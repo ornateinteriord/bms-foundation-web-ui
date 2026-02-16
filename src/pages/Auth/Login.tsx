@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -24,6 +24,19 @@ const Login = () => {
   });
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Load saved credentials on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem("rememberedUser");
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      setFormData({
+        username: parsedUser.username,
+        password: parsedUser.password,
+      });
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -37,6 +50,14 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Handle Remember Me logic
+    if (rememberMe) {
+      localStorage.setItem("rememberedUser", JSON.stringify(formData));
+    } else {
+      localStorage.removeItem("rememberedUser");
+    }
+
     mutate(formData);
   };
 
