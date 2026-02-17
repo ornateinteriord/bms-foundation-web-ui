@@ -26,7 +26,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      localStorage.removeItem("token"); // Remove token
+      TokenService.removeToken(); // Remove token using service
       window.location.href = "/login"; // Redirect to login
     }
     return Promise.reject(error);

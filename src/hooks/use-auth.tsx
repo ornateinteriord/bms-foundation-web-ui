@@ -15,8 +15,9 @@ const useAuth = () => {
     // Update state on render
     handleStorageChange();
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    // Custom event to handle token changes within the same tab (e.g. login/logout)
+    window.addEventListener("token-change", handleStorageChange);
+    return () => window.removeEventListener("token-change", handleStorageChange);
   }, []);
 
   return { isLoggedIn, userRole };
