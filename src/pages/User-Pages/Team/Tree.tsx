@@ -71,7 +71,7 @@ const Tree = () => {
     } else if (statusLower === 'active') {
       return '#51cf66';
     }
-    return '#000831';
+    return '#0a2558';
   };
 
   // Main user profile component

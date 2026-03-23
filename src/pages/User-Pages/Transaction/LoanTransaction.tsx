@@ -101,7 +101,7 @@ const LoanTransaction = () => {
   if (isLoading) {
     return (
       <Card sx={{ margin: "2rem", mt: 10, textAlign: "center", p: 3 }}>
-        <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+        <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
       </Card>
     );
   }
@@ -113,7 +113,7 @@ const LoanTransaction = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: "#000831",
+              backgroundColor: "#0a2558",
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
             }}

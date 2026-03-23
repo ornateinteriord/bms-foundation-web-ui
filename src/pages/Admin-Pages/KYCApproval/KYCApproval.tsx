@@ -108,7 +108,7 @@ const KYCApproval: React.FC = () => {
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#000831' }}>
+              <TableRow sx={{ backgroundColor: '#0a2558' }}>
                 <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Member ID</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Name</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Account Number</TableCell>
@@ -144,7 +144,7 @@ const KYCApproval: React.FC = () => {
                       variant="contained"
                       size="small"
                       sx={{
-                        backgroundColor: '#000831',
+                        backgroundColor: '#0a2558',
                         '&:hover': { backgroundColor: '#581c87' },
                         mr: 1
                       }}
@@ -241,7 +241,7 @@ const KYCApproval: React.FC = () => {
                 onClick={handleApprove}
                 variant="contained"
                 sx={{
-                  backgroundColor: '#000831',
+                  backgroundColor: '#0a2558',
                   '&:hover': { backgroundColor: '#581c87' }
                 }}
               >

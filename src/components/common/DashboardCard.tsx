@@ -52,27 +52,29 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
       fontWeight: 'bold',
       mt: 2,
       width: '100%',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
     };
 
     switch (status?.toLowerCase()) {
       case 'processing':
         return {
           ...baseStyle,
-          background: '#FFA500', // Orange
+          background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', // Amber
           color: '#fff',
-          '&:hover': { background: '#FF8C00' },
+          '&:hover': { background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)' },
         };
       case 'approved':
         return {
           ...baseStyle,
-          background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)', // Purple
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', // Emerald Green
           color: 'white',
           '&:hover': {
-            background: 'linear-gradient(135deg, #8a58b8 0%, #ad7bee 100%)',
+            background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
           },
           '&.Mui-disabled': {
             color: 'white',
-            background: 'linear-gradient(135deg, #9d6bc9 0%, #c08cf9 100%)',
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
           }
         };
       default:
@@ -84,34 +86,40 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     return (
       <Card
         sx={{
-          background: 'linear-gradient(135deg, rgba(77, 42, 190, 0.5) 0%, rgba(17, 27, 49, 0.6) 100%)',
-          backdropFilter: 'blur(5px)',
+          background: 'linear-gradient(135deg, #0a2558 0%, #113278 100%)', // Premium Royal Blue
           color: '#fff',
-          borderRadius: '10px',
-          padding: { xs: '6px', sm: '8px' },
+          borderRadius: '16px',
+          padding: { xs: '12px', sm: '16px' },
           display: 'flex',
           alignItems: 'center',
-          boxShadow: 3,
+          boxShadow: '0 10px 30px -10px rgba(10, 37, 88, 0.5)',
           height: '100%',
-          minHeight: { xs: '120px', sm: '160px' },
+          minHeight: { xs: '140px', sm: '180px' },
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
           position: 'relative',
+          overflow: 'hidden',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
         }}
       >
+        {/* Glow effect */}
+        <Box sx={{ position: 'absolute', top: '-20%', right: '-10%', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(255,192,0,0.15) 0%, rgba(255,192,0,0) 70%)', borderRadius: '50%', filter: 'blur(20px)' }} />
+
         <CardContent sx={{
           textAlign: 'center',
           p: { xs: '8px', sm: '12px' },
           width: '100%',
+          zIndex: 1,
           '&:last-child': { paddingBottom: { xs: '8px', sm: '12px' } }
         }}>
           <Typography
             variant="h6"
             sx={{
-              fontWeight: 'bold',
+              fontWeight: 700,
               mb: 1.5,
-              fontSize: { xs: '0.9rem', sm: '1rem' }
+              fontSize: { xs: '0.9rem', sm: '1.1rem' },
+              color: '#FFC000' // Gold Accent
             }}
           >
             {title}
@@ -122,15 +130,15 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             justifyContent: 'space-between',
             alignItems: 'center',
             gap: { xs: 1, sm: 2 },
-            mb: 2
+            mb: 3
           }}>
             <Box sx={{ flex: 1, textAlign: 'center' }}>
               <Typography
                 variant="h4"
                 sx={{
-                  fontWeight: 'bold',
-                  fontSize: { xs: '1.3rem', sm: '1.5rem' },
-                  textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                  fontWeight: 800,
+                  fontSize: { xs: '1.4rem', sm: '1.8rem' },
+                  textShadow: '0 2px 4px rgba(0,0,0,0.3)'
                 }}
               >
                 ₹{amount}
@@ -141,10 +149,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               <Typography
                 variant="body2"
                 sx={{
-                  fontWeight: 'bold',
-                  fontSize: { xs: '0.75rem', sm: '1rem' },
+                  fontWeight: 600,
+                  fontSize: { xs: '0.75rem', sm: '0.9rem' },
                   mb: 0.5,
-                  opacity: 0.9
+                  color: '#94a3b8'
                 }}
               >
                 Due Amount
@@ -152,9 +160,9 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               <Typography
                 variant="h6"
                 sx={{
-                  fontWeight: 'bold',
-                  fontSize: { xs: '1rem', sm: '1.1rem' },
-                  textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                  fontWeight: 800,
+                  fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                  color: '#ef4444' // Red for due
                 }}
               >
                 ₹{dueAmount}
@@ -168,32 +176,27 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             disabled={!isRepayEnabled}
             sx={{
               background: isRepayEnabled
-                ? 'linear-gradient(135deg, #000831 0%, #a855f7 100%)'
+                ? 'linear-gradient(135deg, #FFC000 0%, #E6A800 100%)'
                 : 'rgba(255, 255, 255, 0.1)',
-              color: 'white',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+              color: isRepayEnabled ? '#0a2558' : 'rgba(255,255,255,0.5)',
+              border: isRepayEnabled ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
               '&:hover': {
                 background: isRepayEnabled
-                  ? 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)'
+                  ? 'linear-gradient(135deg, #FFCE33 0%, #FFC000 100%)'
                   : 'rgba(255, 255, 255, 0.1)',
+                transform: isRepayEnabled ? 'translateY(-2px)' : 'none',
                 boxShadow: isRepayEnabled
-                  ? '0 4px 12px rgba(107, 33, 168, 0.3)'
+                  ? '0 6px 15px rgba(255, 192, 0, 0.4)'
                   : 'none',
               },
-              '&:disabled': {
-                color: 'rgba(255, 255, 255, 0.5)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                background: 'rgba(255, 255, 255, 0.1)',
-              },
-              fontWeight: 'bold',
+              fontWeight: 800,
               textTransform: 'none',
               px: { xs: 2, sm: 3 },
-              py: 0.8,
-              fontSize: { xs: '0.8rem', sm: '0.85rem' },
-              borderRadius: 2,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-              minWidth: '120px'
+              py: 1,
+              fontSize: { xs: '0.85rem', sm: '0.95rem' },
+              borderRadius: '8px',
+              minWidth: '140px',
+              transition: 'all 0.3s ease'
             }}
           >
             {getRepayButtonText()}
@@ -207,16 +210,16 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     return (
       <Card
         sx={{
-          background: 'linear-gradient(135deg, rgba(94, 59, 214, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%)',
-          backdropFilter: 'blur(5px)',
-          color: '#fff',
-          borderRadius: '10px',
-          padding: { xs: '6px', sm: '8px' },
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)', // Pristine White
+          color: '#0a2558', // Deep Navy
+          borderRadius: '16px',
+          padding: { xs: '12px', sm: '16px' },
           display: 'flex',
           alignItems: 'center',
-          boxShadow: 3,
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e2e8f0',
           height: '100%',
-          minHeight: { xs: '120px', sm: '160px' },
+          minHeight: { xs: '140px', sm: '180px' },
           width: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -239,7 +242,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             <Typography
               variant="h6"
               sx={{
-                fontWeight: 'bold',
+                fontWeight: 700,
+                color: '#64748b',
                 fontSize: { xs: '1rem', sm: '1.1rem' }
               }}
             >
@@ -249,27 +253,27 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             <Typography
               variant="h5"
               sx={{
-                fontWeight: 'bold',
-                fontSize: { xs: '1.2rem', sm: '1.3rem' },
-                textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                fontWeight: 800,
+                color: '#0a2558',
+                fontSize: { xs: '1.3rem', sm: '1.6rem' },
               }}
             >
               {amount}
             </Typography>
           </Box>
 
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 3 }}>
             {isNewUser ? (
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#fbbf24', // Amber/Yellow for action needed
-                  fontWeight: 'bold',
+                  color: '#b45309', // Dark Amber
+                  fontWeight: 700,
                   fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                  background: 'rgba(255,255,255,0.1)',
-                  px: 1,
+                  background: '#fef3c7',
+                  px: 1.5,
                   py: 0.5,
-                  borderRadius: 1,
+                  borderRadius: '6px',
                   display: 'inline-block'
                 }}
               >
@@ -279,29 +283,30 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#d1d5db',
-                  fontWeight: 'medium',
+                  color: '#334155',
+                  fontWeight: 600,
                   fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                  background: 'rgba(0,0,0,0.2)',
+                  background: '#f1f5f9',
                   px: 1.5,
                   py: 0.8,
-                  borderRadius: 1,
-                  display: 'inline-block'
+                  borderRadius: '6px',
+                  display: 'inline-block',
+                  border: '1px solid #e2e8f0'
                 }}
               >
-                Next RD Deposit in {renewalDays} days
+                Next RD Deposit in <span style={{ color: '#0a2558', fontWeight: 800 }}>{renewalDays}</span> days
               </Typography>
             ) : (
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#ef4444',
-                  fontWeight: 'bold',
+                  color: '#b91c1c',
+                  fontWeight: 700,
                   fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                  background: 'rgba(255,255,255,0.1)',
-                  px: 1,
+                  background: '#fee2e2',
+                  px: 1.5,
                   py: 0.5,
-                  borderRadius: 1,
+                  borderRadius: '6px',
                   display: 'inline-block'
                 }}
               >
@@ -316,32 +321,30 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             disabled={!isRenewEnabled}
             sx={{
               background: isRenewEnabled
-                ? 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)' // Green for renew
-                : 'rgba(255, 255, 255, 0.1)',
-              color: 'white',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+                ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' // Fresh Emerald Green
+                : '#f1f5f9',
+              color: isRenewEnabled ? 'white' : '#94a3b8',
+              boxShadow: isRenewEnabled ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none',
               '&:hover': {
                 background: isRenewEnabled
-                  ? 'linear-gradient(135deg, #15803d 0%, #166534 100%)'
-                  : 'rgba(255, 255, 255, 0.1)',
-                boxShadow: isRenewEnabled
-                  ? '0 4px 12px rgba(22, 163, 74, 0.3)'
-                  : 'none',
+                  ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
+                  : '#f1f5f9',
+                transform: isRenewEnabled ? 'translateY(-2px)' : 'none',
+                boxShadow: isRenewEnabled ? '0 6px 15px rgba(16, 185, 129, 0.4)' : 'none',
               },
               '&:disabled': {
-                color: 'rgba(255, 255, 255, 0.5)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#94a3b8',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0'
               },
-              fontWeight: 'bold',
+              fontWeight: 800,
               textTransform: 'none',
               px: { xs: 2, sm: 3 },
-              py: 0.8,
-              fontSize: { xs: '0.8rem', sm: '0.85rem' },
-              borderRadius: 2,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-              minWidth: '120px'
+              py: 1,
+              fontSize: { xs: '0.85rem', sm: '0.95rem' },
+              borderRadius: '8px',
+              minWidth: '140px',
+              transition: 'all 0.3s ease'
             }}
           >
             {isNewUser ? 'Select RD Package' : 'Deposit Amount'}
@@ -354,18 +357,23 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   return (
     <Card
       sx={{
-        background: 'linear-gradient(135deg, rgba(94, 59, 214, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%)',
-        backdropFilter: 'blur(5px)',
-        color: '#fff',
-        borderRadius: '10px',
-        padding: { xs: '12px', sm: '16px' },
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)', // Pristine White
+        color: '#0a2558',
+        borderRadius: '16px',
+        padding: { xs: '16px', sm: '20px' },
         display: 'flex',
         alignItems: 'center',
-        boxShadow: 3,
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
+        border: '1px solid #e2e8f0',
         height: '100%',
-        minHeight: { xs: '120px', sm: '160px' },
+        minHeight: { xs: '140px', sm: '180px' },
         width: '100%',
         flexDirection: { xs: 'row', sm: 'row' },
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.1)',
+        }
       }}
     >
       <Box
@@ -374,47 +382,66 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          gap: 2,
           mb: { xs: 1, sm: 0 },
         }}
       >
-        {IconComponent ? <IconComponent sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} /> : <CurrencyRupeeIcon sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }} />}
+        <Box sx={{
+          background: 'rgba(255, 192, 0, 0.15)', // Soft gold circle behind icon
+          borderRadius: '50%',
+          padding: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {IconComponent ? 
+            <IconComponent sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} /> : 
+            <CurrencyRupeeIcon sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} />
+          }
+        </Box>
       </Box>
+
       <CardContent
         sx={{
           padding: { xs: '8px', sm: '16px' },
           width: '100%',
+          textAlign: 'left',
+          pl: { sm: 3 },
           '&:last-child': { paddingBottom: { xs: '8px', sm: '16px' } }
         }}
       >
         <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginBottom: '5px',
-            fontSize: { xs: '1.5rem', sm: '2rem' }
-          }}
-        >
-          {amount}
-        </Typography>
-        <Typography
           variant="body2"
           sx={{
-            textAlign: 'center',
-            fontWeight: '500',
-            fontSize: { xs: '0.875rem', sm: '1rem' }
+            fontWeight: 600,
+            fontSize: { xs: '0.85rem', sm: '1rem' },
+            color: '#64748b',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            mb: 0.5
           }}
         >
           {title}
         </Typography>
+
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 800,
+            fontSize: { xs: '1.6rem', sm: '2.2rem' },
+            color: '#0a2558',
+            letterSpacing: '-0.5px'
+          }}
+        >
+          {amount}
+        </Typography>
+
         {subTitle && (
           <Typography
             variant="body2"
             sx={{
-              textAlign: 'center',
-              fontWeight: '400',
-              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+              fontWeight: 500,
+              fontSize: { xs: '0.75rem', sm: '0.85rem' },
+              color: '#94a3b8',
               marginTop: '4px'
             }}
           >
@@ -425,8 +452,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         {loanStatus ? (
           <Button
             variant="contained"
-            disabled={loanStatus.toLowerCase() === 'approved'} // Optional: keep approved disabled if desired
-            sx={getButtonStyle(loanStatus)}
+            disabled={loanStatus.toLowerCase() === 'approved'}
+            sx={{...getButtonStyle(loanStatus), mt: 2}}
           >
             {loanStatus.toLowerCase() === 'approved' ? 'Approved' : loanStatus}
           </Button>
@@ -435,15 +462,21 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             variant="contained"
             onClick={onClaim}
             sx={{
-              marginTop: '10px',
-              background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)', // Gold gradient
-              color: '#000',
-              fontWeight: 'bold',
+              marginTop: '16px',
+              background: 'linear-gradient(135deg, #0a2558 0%, #153b93 100%)', // Action Navy
+              color: '#fff',
+              fontWeight: 700,
               textTransform: 'none',
+              borderRadius: '8px',
+              padding: '10px 24px',
+              boxShadow: '0 4px 12px rgba(10, 37, 88, 0.2)',
               '&:hover': {
-                background: 'linear-gradient(135deg, #FFC700 0%, #FF9500 100%)',
+                background: 'linear-gradient(135deg, #153b93 0%, #0a2558 100%)',
+                boxShadow: '0 6px 16px rgba(10, 37, 88, 0.3)',
+                transform: 'translateY(-2px)'
               },
-              width: '100%'
+              width: { xs: '100%', sm: 'auto' },
+              transition: 'all 0.3s ease'
             }}
           >
             Claim Loan

@@ -27,7 +27,7 @@ const Direct = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' }
             }}
@@ -41,7 +41,7 @@ const Direct = () => {
               pagination
               progressPending={isLoading}
               progressComponent={
-                <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+                <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
               }
               paginationPerPage={25}
               paginationRowsPerPageOptions={[25, 50, 100]}

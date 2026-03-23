@@ -82,8 +82,8 @@ const News = () => {
           variant="contained"
           onClick={() => setIsModalOpen(true)}
           sx={{
-            backgroundColor: '#000831',
-            '&:hover': { backgroundColor: '#000831' }
+            backgroundColor: '#0a2558',
+            '&:hover': { backgroundColor: '#0a2558' }
           }}
         >
           Add News
@@ -96,7 +96,7 @@ const News = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -119,7 +119,7 @@ const News = () => {
                 pagination
                 progressPending={isLoading || updateNews.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
                 }
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}

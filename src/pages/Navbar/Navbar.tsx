@@ -1,6 +1,5 @@
 import {
   ChevronDown,
-  Home,
   Lock,
   LogOutIcon,
   MenuIcon,
@@ -62,7 +61,6 @@ const Navbar = ({
 
   const isHomePage = location.pathname === "/";
   const isAdmin = userRole === "ADMIN";
-  const isChatPage = location.pathname === "/user/chat";
 
   return (
     <>
@@ -70,7 +68,7 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: "#000831",
+          background: "#0a2558",
         }}
       >
         <Toolbar className="navbar-toolbar">
@@ -118,21 +116,7 @@ const Navbar = ({
 
                 {!isHomePage && !isAdmin && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {isChatPage && (
-                      <IconButton
-                        className="dashboard-btn"
-                        style={{
-                          marginRight: "4px",
-                          background: "linear-gradient(135deg, #4caf50 0%, #388e3c 100%)",
-                          color: "white",
-                          padding: "8px",
-                        }}
-                        onClick={() => navigate('/user/dashboard')}
-                        title="Go to Dashboard"
-                      >
-                        <Home size={20} />
-                      </IconButton>
-                    )}
+
                     <Button
                       className="logout-btn"
                       variant="ghost"

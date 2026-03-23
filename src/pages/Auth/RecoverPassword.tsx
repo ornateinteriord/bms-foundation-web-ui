@@ -94,7 +94,7 @@ const RecoverPassword = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailIcon sx={{ color: "#000831" }} />
+                      <EmailIcon sx={{ color: "#0a2558" }} />
                     </InputAdornment>
                   ),
                 }}

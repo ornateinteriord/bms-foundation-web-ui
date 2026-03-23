@@ -83,7 +83,7 @@ export const PackageRequests = () => {
           onClick={() => { }}
           size="medium"
           sx={{
-            color: '#000831',
+            color: '#0a2558',
             '&:hover': {
               backgroundColor: 'rgba(4, 17, 47, 0.04)'
             }
@@ -112,7 +112,7 @@ export const PackageRequests = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -129,7 +129,7 @@ export const PackageRequests = () => {
                 <Button 
                   variant="contained" 
                   sx={{ 
-                    backgroundColor: '#000831',
+                    backgroundColor: '#0a2558',
                     '&:hover': { backgroundColor: '#581c87' }
                   }}
                 >
@@ -217,7 +217,7 @@ const PackageTable: React.FC<PackageTableProps> = ({ title, summaryTitle, data, 
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -321,7 +321,7 @@ export const GeneratePackages = () => {
             aria-controls="package-content"
             id="package-header"
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: '#fff',
               '& .MuiSvgIcon-root': {
                 color: '#fff'
@@ -342,13 +342,13 @@ export const GeneratePackages = () => {
                   label="Package"
                   startAdornment={
                     <InputAdornment position="start">
-                      <LocalOfferIcon sx={{ color: '#000831' }} />
+                      <LocalOfferIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   }
                   sx={{
                     '& .MuiOutlinedInput-notchedOutline': {
                       '&:hover': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
@@ -375,17 +375,17 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: '#000831' }} />
+                      <PersonIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     }
                   }
                 }}
@@ -402,17 +402,17 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <InventoryIcon sx={{ color: '#000831' }} />
+                      <InventoryIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     }
                   }
                 }}
@@ -426,7 +426,7 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PaidIcon sx={{ color: '#000831' }} />
+                      <PaidIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
@@ -441,7 +441,7 @@ export const GeneratePackages = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PaidIcon sx={{ color: '#000831' }} />
+                      <PaidIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
@@ -451,7 +451,7 @@ export const GeneratePackages = () => {
                 onClick={handleSubmit}
                 variant="contained"
                 sx={{
-                  backgroundColor: '#000831',
+                  backgroundColor: '#0a2558',
                   alignSelf: 'flex-end',
                   '&:hover': {
                     backgroundColor: '#581c87'

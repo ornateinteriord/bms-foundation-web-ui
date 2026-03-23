@@ -1,7 +1,7 @@
 .sidebar {
   width: 250px;
   height: 100%;
-  background-color: #000831;
+  background-color: #0a2558;
   /* Dark Blue */
   color: #fff;
   position: fixed;
@@ -52,11 +52,14 @@
   transition: color 0.3s ease;
 
   &:hover {
-    color: #00c6ff;
+    color: #FFC000;
+    background-color: rgba(255, 192, 0, 0.1);
   }
 
   &.selected {
-    color: #00c6ff;
+    color: #FFC000;
+    font-weight: 700;
+    border-left: 3px solid #FFC000;
   }
 }
 
@@ -81,14 +84,16 @@
 }
 
 .menu-item:hover {
-  color: #00c6ff;
+  background-color: rgba(255, 192, 0, 0.12);
+  color: #FFC000;
 }
 
 .menu-item.selected {
-  background: linear-gradient(90deg, #0052d4 0%, #4364f7 50%, #6fb1fc 100%);
-  color: #fff;
-  border-radius: 5px;
-  /* Revert to simple slight rounded corners or 0 for box */
+  background: rgba(255, 192, 0, 0.18);
+  color: #FFC000;
+  border-left: 4px solid #FFC000;
+  border-radius: 0 8px 8px 0;
+  font-weight: 700;
 }
 
 .menu-item svg {

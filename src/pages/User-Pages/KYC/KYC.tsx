@@ -127,7 +127,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
                   borderStyle: 'dashed',
                   borderWidth: 2,
                   '&:hover': {
-                    borderColor: '#000831',
+                    borderColor: '#0a2558',
                     backgroundColor: 'rgba(0, 8, 49, 0.04)',
                   },
                 }}
@@ -289,12 +289,12 @@ const KYC: React.FC = () => {
   };
 
   const documentConfigs = [
-    { key: 'panImage', label: 'PAN Card', icon: <BadgeIcon sx={{ color: '#000831' }} /> },
-    { key: 'aadhaarImage', label: 'Aadhaar Card', icon: <PersonIcon sx={{ color: '#000831' }} /> },
-    { key: 'checkImage', label: 'Cancelled Cheque', icon: <AccountBalanceWalletIcon sx={{ color: '#000831' }} /> },
-    { key: 'passbookImage', label: 'Bank Passbook', icon: <AccountBalanceIcon sx={{ color: '#000831' }} /> },
-    { key: 'rationCardImage', label: 'Ration Card', icon: <ConfirmationNumberIcon sx={{ color: '#000831' }} /> },
-    { key: 'profileImage', label: 'Profile Photo', icon: <ImageIcon sx={{ color: '#000831' }} /> },
+    { key: 'panImage', label: 'PAN Card', icon: <BadgeIcon sx={{ color: '#0a2558' }} /> },
+    { key: 'aadhaarImage', label: 'Aadhaar Card', icon: <PersonIcon sx={{ color: '#0a2558' }} /> },
+    { key: 'checkImage', label: 'Cancelled Cheque', icon: <AccountBalanceWalletIcon sx={{ color: '#0a2558' }} /> },
+    { key: 'passbookImage', label: 'Bank Passbook', icon: <AccountBalanceIcon sx={{ color: '#0a2558' }} /> },
+    { key: 'rationCardImage', label: 'Ration Card', icon: <ConfirmationNumberIcon sx={{ color: '#0a2558' }} /> },
+    { key: 'profileImage', label: 'Profile Photo', icon: <ImageIcon sx={{ color: '#0a2558' }} /> },
   ];
 
   return (
@@ -314,7 +314,7 @@ const KYC: React.FC = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: '#fff',
               '& .MuiSvgIcon-root': {
                 color: '#fff',
@@ -336,17 +336,17 @@ const KYC: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: '#000831' }} />
+                      <PersonIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                   },
                 }}
@@ -362,17 +362,17 @@ const KYC: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AccountBalanceWalletIcon sx={{ color: '#000831' }} />
+                      <AccountBalanceWalletIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                   },
                 }}
@@ -388,17 +388,17 @@ const KYC: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <ConfirmationNumberIcon sx={{ color: '#000831' }} />
+                      <ConfirmationNumberIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                   },
                 }}
@@ -414,17 +414,17 @@ const KYC: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AccountBalanceIcon sx={{ color: '#000831' }} />
+                      <AccountBalanceIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                   },
                 }}
@@ -440,17 +440,17 @@ const KYC: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <BadgeIcon sx={{ color: '#000831' }} />
+                      <BadgeIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                   },
                 }}
@@ -472,7 +472,7 @@ const KYC: React.FC = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: '#fff',
               '& .MuiSvgIcon-root': {
                 color: '#fff',
@@ -504,7 +504,7 @@ const KYC: React.FC = () => {
                 disabled={submitKYC.isPending}
                 fullWidth
                 sx={{
-                  backgroundColor: '#000831',
+                  backgroundColor: '#0a2558',
                   padding: '12px',
                   '&:hover': {
                     backgroundColor: '#581c87',

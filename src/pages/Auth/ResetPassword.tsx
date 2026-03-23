@@ -126,7 +126,7 @@ const ResetPassword = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon sx={{ color: "#000831" }} />
+                        <EmailIcon sx={{ color: "#0a2558" }} />
                       </InputAdornment>
                     ),
                   }}
@@ -177,17 +177,17 @@ const ResetPassword = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LockIcon sx={{ color: "#000831" }} />
+                          <LockIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         "&:hover fieldset": {
-                          borderColor: "#000831",
+                          borderColor: "#0a2558",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#000831",
+                          borderColor: "#0a2558",
                         },
                       },
                     }}
@@ -208,17 +208,17 @@ const ResetPassword = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LockIcon sx={{ color: "#000831" }} />
+                          <LockIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         "&:hover fieldset": {
-                          borderColor: "#000831",
+                          borderColor: "#0a2558",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#000831",
+                          borderColor: "#0a2558",
                         },
                       },
                     }}

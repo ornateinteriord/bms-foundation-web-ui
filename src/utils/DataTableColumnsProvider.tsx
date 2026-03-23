@@ -357,7 +357,7 @@ export const getMembersColumns = (
       cell: (row: any) => (
         <div
           style={{
-            color: row.status === 'active' ? 'green' : row.status.toLowerCase() === 'pending' ? '#ffd700' : 'red',
+            color: row.status === 'active' ? 'green' : row.status.toLowerCase() === 'pending' ? '#FFC000' : 'red',
 
             padding: '5px 10px',
             borderRadius: '4px',
@@ -440,7 +440,7 @@ export const getPendingMembersColumns = (
               row.status.toLowerCase() === "active"
                 ? "green"
                 : row.status.toLowerCase() === "pending"
-                  ? "#ffd700"
+                  ? "#FFC000"
                   : "red",
             padding: "5px 10px",
             borderRadius: "4px",
@@ -531,7 +531,7 @@ export const getSupportTicketColumns = (handleOpenDialog: any) => [
         variant="contained"
         onClick={() => handleOpenDialog(row)}
         sx={{
-          backgroundColor: '#000831',
+          backgroundColor: '#0a2558',
           '&:hover': { backgroundColor: '#581c87' }
         }}
       >
@@ -634,7 +634,7 @@ export const getMailBoxColumns = (handleOpenDialog: any) => [
         onClick={() => handleOpenDialog(row)}
         size="medium"
         sx={{
-          color: '#000831',
+          color: '#0a2558',
           '&:hover': {
             backgroundColor: 'rgba(4, 17, 47, 0.04)'
           }
@@ -1039,7 +1039,7 @@ export const DASHBOARD_CUTSOM_STYLE = {
     style: {
       fontSize: "16px",
       fontWeight: "Bogle-Bold",
-      backgroundColor: "#000831",
+      backgroundColor: "#0a2558",
       color: "#fff",
       border: "none",
     },
@@ -1277,7 +1277,7 @@ export const getLoansListColumns = (onRepayClick: (row: any) => void) => [
       <button
         onClick={() => onRepayClick(row)}
         style={{
-          background: "#000831",
+          background: "#0a2558",
           color: "white",
           padding: "5px 12px",
           border: "none",

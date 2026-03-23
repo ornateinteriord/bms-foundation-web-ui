@@ -92,7 +92,7 @@ export const useLoginMutation = () => {
         toast.success(response.message);
         const role = TokenService.getRole()
         if (role === "USER") {
-          navigate("/user/chat", { replace: true });
+          navigate("/user/dashboard", { replace: true });
         } else if (role === "ADMIN") {
           navigate("/admin/dashboard", { replace: true });
         } else {
