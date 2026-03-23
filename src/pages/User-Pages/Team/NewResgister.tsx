@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogActions,
   Typography,
+  Autocomplete,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
@@ -75,6 +76,8 @@ const NewResgister: React.FC = () => {
         sponsor_id: user.Member_id,
         Sponsor_code: user.Member_id,
         Sponsor_name: user.Name,
+        spackage: 'BMS Plan',
+        ...(formData.packageAmount ? { package_value: Number(formData.packageAmount) } : {}),
         ...formData
       }, {
         onSuccess: (response) => {
@@ -124,7 +127,7 @@ const NewResgister: React.FC = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -144,17 +147,17 @@ const NewResgister: React.FC = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PersonIcon sx={{ color: '#000831' }} />
+                        <PersonIcon sx={{ color: '#0a2558' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
@@ -170,17 +173,17 @@ const NewResgister: React.FC = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PersonIcon sx={{ color: '#000831' }} />
+                        <PersonIcon sx={{ color: '#0a2558' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
@@ -203,7 +206,7 @@ const NewResgister: React.FC = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -223,24 +226,24 @@ const NewResgister: React.FC = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PersonIcon sx={{ color: '#000831' }} />
+                        <PersonIcon sx={{ color: '#0a2558' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
                 />
                 <FormControl error={!!genderError}>
-                  <FormLabel sx={{ color: '#000831', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <WcIcon sx={{ color: '#000831' }} />
+                  <FormLabel sx={{ color: '#0a2558', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <WcIcon sx={{ color: '#0a2558' }} />
                     Gender
                   </FormLabel>
                   <RadioGroup
@@ -253,7 +256,7 @@ const NewResgister: React.FC = () => {
                       value="Male"
                       control={<Radio sx={{
                         '&.Mui-checked': {
-                          color: '#000831',
+                          color: '#0a2558',
                         }
                       }} />}
                       label="Male"
@@ -262,7 +265,7 @@ const NewResgister: React.FC = () => {
                       value="Female"
                       control={<Radio sx={{
                         '&.Mui-checked': {
-                          color: '#000831',
+                          color: '#0a2558',
                         }
                       }} />}
                       label="Female"
@@ -284,17 +287,17 @@ const NewResgister: React.FC = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon sx={{ color: '#000831' }} />
+                        <EmailIcon sx={{ color: '#0a2558' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
@@ -311,20 +314,42 @@ const NewResgister: React.FC = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PhoneIcon sx={{ color: '#000831' }} />
+                        <PhoneIcon sx={{ color: '#0a2558' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
+                />
+
+                <Autocomplete
+                  freeSolo
+                  options={["1000", "2000", "5000", "10000", "25000", "50000", "100000", "250000", "500000", "1000000", "2500000"]}
+                  value={formData.packageAmount || ''}
+                  onChange={(_, newValue) => setFormData(prev => ({ ...prev, packageAmount: newValue || '' }))}
+                  onInputChange={(_, newInputValue) => setFormData(prev => ({ ...prev, packageAmount: newInputValue }))}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Package Amount"
+                      variant="outlined"
+                      placeholder="e.g. 15000"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': { borderColor: '#0a2558' },
+                          '&.Mui-focused fieldset': { borderColor: '#0a2558' }
+                        }
+                      }}
+                    />
+                  )}
                 />
                 <TextField
                   label="Password"
@@ -340,17 +365,17 @@ const NewResgister: React.FC = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LockIcon sx={{ color: '#000831' }} />
+                        <LockIcon sx={{ color: '#0a2558' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '&:hover fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#000831',
+                        borderColor: '#0a2558',
                       }
                     }
                   }}
@@ -366,7 +391,7 @@ const NewResgister: React.FC = () => {
             disabled={isPending}
             sx={{
               textTransform: "capitalize",
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               margin: '1rem',
               float: 'right',
               '&:hover': {
@@ -394,7 +419,7 @@ const NewResgister: React.FC = () => {
         <DialogTitle
           id="registration-success-dialog"
           sx={{
-            backgroundColor: '#000831',
+            backgroundColor: '#0a2558',
             color: 'white',
             textAlign: 'center'
           }}
@@ -434,7 +459,7 @@ const NewResgister: React.FC = () => {
             variant="contained"
             sx={{
               textTransform: "capitalize",
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               '&:hover': {
                 backgroundColor: '#581c87'
               }

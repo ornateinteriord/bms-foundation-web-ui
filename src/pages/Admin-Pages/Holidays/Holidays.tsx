@@ -67,8 +67,8 @@ const Holidays = () => {
           variant="contained"
           onClick={() => setIsModalOpen(true)}
           sx={{
-            backgroundColor: "#000831",
-            "&:hover": { backgroundColor: "#000831" },
+            backgroundColor: "#0a2558",
+            "&:hover": { backgroundColor: "#0a2558" },
           }}
         >
           Add Holiday
@@ -81,7 +81,7 @@ const Holidays = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#000831",
+                backgroundColor: "#0a2558",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
@@ -111,7 +111,7 @@ const Holidays = () => {
                 pagination
                 progressPending={isLoading || updateHoliday.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
                 }
                 customStyles={DASHBOARD_CUTSOM_STYLE}
                 paginationPerPage={25}

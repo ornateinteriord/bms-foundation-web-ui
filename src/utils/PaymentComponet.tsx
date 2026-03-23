@@ -85,7 +85,7 @@ const PaymentComponent: React.FC<PaymentComponentProps> = ({
         onClick={handlePayment}
         disabled={isPending}
         sx={{
-          background: 'linear-gradient(135deg, #000831 0%, #a855f7 100%)',
+          background: 'linear-gradient(135deg, #0a2558 0%, #a855f7 100%)',
           '&:hover': {
             background: 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)',
             boxShadow: '0 4px 12px rgba(107, 33, 168, 0.3)',

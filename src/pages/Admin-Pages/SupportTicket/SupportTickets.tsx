@@ -91,7 +91,7 @@ const SupportTickets = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -116,7 +116,7 @@ const SupportTickets = () => {
                 paginationPerPage={25}
                 progressPending={isLoading}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover
@@ -127,7 +127,7 @@ const SupportTickets = () => {
       </Card>
 
       <Dialog open={isReplyDialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ backgroundColor: '#000831', color: '#fff' }}>
+        <DialogTitle sx={{ backgroundColor: '#0a2558', color: '#fff' }}>
           Reply to Ticket #{selectedTicket?.ticket_no}
         </DialogTitle>
         <DialogContent sx={{ mt: 2 }}>
@@ -156,10 +156,10 @@ const SupportTickets = () => {
               mt: 1,
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
-                  borderColor: '#000831',
+                  borderColor: '#0a2558',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#000831',
+                  borderColor: '#0a2558',
                 }
               }
             }}
@@ -174,7 +174,7 @@ const SupportTickets = () => {
             onClick={handleSubmitReply}
             variant="contained"
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               '&:hover': { backgroundColor: '#581c87' }
             }}
             disabled={!selectedTicket}

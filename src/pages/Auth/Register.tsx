@@ -281,7 +281,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LockIcon sx={{ color: "#000831" }} />
+                          <LockIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -310,7 +310,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <PersonIcon sx={{ color: "#000831" }} />
+                          <PersonIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -340,7 +340,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <PersonIcon sx={{ color: "#000831" }} />
+                          <PersonIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -370,7 +370,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <EmailIcon sx={{ color: "#000831" }} />
+                          <EmailIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -400,7 +400,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LockIcon sx={{ color: "#000831" }} />
+                          <LockIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -432,7 +432,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LockIcon sx={{ color: "#000831" }} />
+                          <LockIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -462,7 +462,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <PhoneIcon sx={{ color: "#000831" }} />
+                          <PhoneIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -491,7 +491,7 @@ const Register = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LocationOnIcon sx={{ color: "#000831" }} />
+                          <LocationOnIcon sx={{ color: "#0a2558" }} />
                         </InputAdornment>
                       ),
                     }}
@@ -632,7 +632,7 @@ const Register = () => {
           <DialogTitle
             id="registration-success-dialog"
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: 'white',
               textAlign: 'center'
             }}
@@ -675,9 +675,9 @@ const Register = () => {
               variant="contained"
               sx={{
                 textTransform: "capitalize",
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 '&:hover': {
-                  backgroundColor: '#000831'
+                  backgroundColor: '#0a2558'
                 }
               }}
             >

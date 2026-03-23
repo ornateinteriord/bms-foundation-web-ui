@@ -40,7 +40,7 @@ const PackageHistory = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' },
               minHeight: isMobile ? '48px' : '64px',

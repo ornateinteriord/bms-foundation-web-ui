@@ -63,7 +63,7 @@ const ChangePassword: React.FC = () => {
             aria-controls="basic-details-content"
             id="basic-details-header"
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               color: '#fff',
               '& .MuiSvgIcon-root': {
                 color: '#fff'
@@ -86,17 +86,17 @@ const ChangePassword: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <VpnKeyIcon sx={{ color: '#000831' }} />
+                      <VpnKeyIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     }
                   }
                 }}
@@ -113,17 +113,17 @@ const ChangePassword: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LockIcon sx={{ color: '#000831' }} />
+                      <LockIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     }
                   }
                 }}
@@ -140,17 +140,17 @@ const ChangePassword: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <KeyIcon sx={{ color: '#000831' }} />
+                      <KeyIcon sx={{ color: '#0a2558' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#000831',
+                      borderColor: '#0a2558',
                     }
                   }
                 }}
@@ -160,7 +160,7 @@ const ChangePassword: React.FC = () => {
                 onClick={handleSubmit}
                 disabled={!formData.oldPassword || !formData.newPassword || !formData.confirmPassword}
                 sx={{
-                  backgroundColor: '#000831',
+                  backgroundColor: '#0a2558',
                   alignSelf: 'flex-end',
                   '&:hover': {
                     backgroundColor: '#581c87'

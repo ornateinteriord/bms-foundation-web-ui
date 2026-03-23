@@ -140,7 +140,7 @@ const MailBox = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#000831",
+                backgroundColor: "#0a2558",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
                 minHeight: "64px",
@@ -169,11 +169,11 @@ const MailBox = () => {
                     sx={{
                       "& .MuiOutlinedInput-notchedOutline": {
                         "&:hover": {
-                          borderColor: "#000831",
+                          borderColor: "#0a2558",
                         },
                       },
                       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#000831",
+                        borderColor: "#0a2558",
                       },
                     }}
                   >
@@ -198,10 +198,10 @@ const MailBox = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "&:hover fieldset": {
-                        borderColor: "#000831",
+                        borderColor: "#0a2558",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#000831",
+                        borderColor: "#0a2558",
                       },
                     },
                   }}
@@ -220,10 +220,10 @@ const MailBox = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "&:hover fieldset": {
-                        borderColor: "#000831",
+                        borderColor: "#0a2558",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#000831",
+                        borderColor: "#0a2558",
                       },
                     },
                   }}
@@ -234,7 +234,7 @@ const MailBox = () => {
                   variant="contained"
                   size="medium"
                   sx={{
-                    backgroundColor: "#000831",
+                    backgroundColor: "#0a2558",
                     alignSelf: "flex-end",
                     "&:hover": {
                       backgroundColor: "#581c87",
@@ -252,7 +252,7 @@ const MailBox = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#000831",
+                backgroundColor: "#0a2558",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
                 minHeight: "64px",
@@ -269,7 +269,7 @@ const MailBox = () => {
                 paginationPerPage={25}
                 progressPending={isLoading || createTicketMutation.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover
@@ -309,7 +309,7 @@ const MailBox = () => {
       >
         <DialogTitle
           sx={{
-            backgroundColor: "#000831",
+            backgroundColor: "#0a2558",
             color: "#fff",
             display: "flex",
             justifyContent: "space-between",
@@ -330,7 +330,7 @@ const MailBox = () => {
           {selectedTicket && (
             <>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Typography variant="h6" sx={{ color: "#000831" }}>
+                <Typography variant="h6" sx={{ color: "#0a2558" }}>
                   Ticket Information
                 </Typography>
                 <Box
@@ -374,7 +374,7 @@ const MailBox = () => {
 
                 <Divider sx={{ my: 2 }} />
 
-                <Typography variant="h6" sx={{ color: "#000831" }}>
+                <Typography variant="h6" sx={{ color: "#0a2558" }}>
                   Reply Details
                 </Typography>
                 <Box

@@ -83,8 +83,8 @@ const MemberTable = ({
           <Button
             variant="contained"
             sx={{
-              backgroundColor: '#000831',
-              '&:hover': { backgroundColor: '#000831' }
+              backgroundColor: '#0a2558',
+              '&:hover': { backgroundColor: '#0a2558' }
             }}
           >
             Search
@@ -97,7 +97,7 @@ const MemberTable = ({
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -122,7 +122,7 @@ const MemberTable = ({
                 paginationPerPage={25}
                 progressPending={isLoading}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#000831" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover

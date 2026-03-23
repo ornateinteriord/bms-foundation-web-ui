@@ -7,7 +7,6 @@ import {
   Grid,
   Typography,
   Button,
-  Link,
   Box,
   Dialog,
   DialogTitle,
@@ -20,7 +19,6 @@ import {
   MenuItem,
   CircularProgress
 } from '@mui/material';
-import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
 import BMSLoanChart from './BMSLoanChart';
@@ -44,6 +42,7 @@ import {
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
 import { toast } from 'react-toastify';
+
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -489,130 +488,146 @@ const UserDashboard = () => {
         </Box>
       )}
 
-      <div
-        className="h-auto md:h-40 relative w-full overflow-hidden flex flex-col items-center justify-center mt-10 py-6 md:py-0"
-        style={{ backgroundColor: 'rgba(0, 8, 49, 0.7)', backdropFilter: 'blur(5px)' }}
+      <Box
+        sx={{
+          mx: { xs: 2, sm: 3, md: 4 },
+          mt: { xs: 8, md: 12 }, // Increased top margin as requested
+          mb: 3,
+          p: { xs: 3, md: 4 },
+          borderRadius: '16px',
+          background: 'linear-gradient(135deg, #0a2558 0%, #153b93 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px -10px rgba(10, 37, 88, 0.4)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 3
+        }}
       >
-        <div className="absolute inset-0 w-full h-full z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+        {/* Abstract Gold Glow inside Header */}
+        <Box sx={{ position: 'absolute', top: '-50px', left: '-50px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(255,192,0,0.2) 0%, rgba(255,192,0,0) 70%)', borderRadius: '50%', filter: 'blur(30px)', zIndex: 0 }} />
+        <Box sx={{ position: 'absolute', bottom: '-80px', right: '-20px', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', filter: 'blur(40px)', zIndex: 0 }} />
 
-        <div className="flex flex-col md:flex-row justify-evenly items-center w-full px-4 md:px-8 relative z-20 gap-6 md:gap-0">
-          <div className="text-center md:text-left">
-            <h1 className={cn("text-xl md:text-4xl text-white")}>
-              Welcome to Dashboard
-            </h1>
-            <p className="mt-2 text-neutral-300 text-sm md:text-base">
-              Manage your network and track your success
-            </p>
-          </div>
+        <Box sx={{ position: 'relative', zIndex: 1, textAlign: { xs: 'center', md: 'left' } }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, color: '#fff', fontSize: { xs: '1.8rem', md: '2.5rem' }, letterSpacing: '-0.5px', mb: 0.5 }}>
+            Welcome to Dashboard
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#cbd5e1', fontWeight: 500, fontSize: { xs: '0.9rem', md: '1rem' } }}>
+            Manage your foundation network and track your success
+          </Typography>
+        </Box>
 
-          <div className="flex items-center gap-6 md:gap-12 text-white">
-            <div className="text-center">
-              <div className="text-xl md:text-2xl font-bold mb-2">{memberDetails ? `${memberDetails.direct_referrals?.length || 0}/${memberDetails.direct_referrals?.length || 0}` : '—'}</div>
-              <div className="text-xs md:text-sm flex items-center justify-center gap-1">
-                <span className="material-icons text-base md:text-lg">person</span>
-                Direct
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl md:text-2xl font-bold mb-2">{memberDetails ? `${memberDetails.total_team || 0}/${memberDetails.total_team || 0}` : '—'}</div>
-              <div className="text-xs md:text-sm flex items-center justify-center gap-1">
-                <span className="material-icons text-base md:text-lg">groups</span>
-                Team
-              </div>
-            </div>
-          </div>
+        <Box sx={{ display: 'flex', gap: { xs: 2, md: 4 }, position: 'relative', zIndex: 1 }}>
+          <Box sx={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', p: 2, borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', minWidth: '100px' }}>
+            <Typography variant="h4" sx={{ fontWeight: 800, color: '#FFC000', mb: 0.5 }}>
+              {memberDetails ? `${memberDetails.direct_referrals?.length || 0}` : '—'}
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+              <span className="material-icons" style={{ fontSize: '1.2rem' }}>person</span> Direct
+            </Typography>
+          </Box>
+          <Box sx={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', p: 2, borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', minWidth: '100px' }}>
+            <Typography variant="h4" sx={{ fontWeight: 800, color: '#10b981', mb: 0.5 }}>
+              {memberDetails ? `${memberDetails.total_team || 0}` : '—'}
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+              <span className="material-icons" style={{ fontSize: '1.2rem' }}>groups</span> Team
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
 
-          {/* Show status message when Processing or Approved, otherwise show Claim Reward if eligible */}
-          {/* Processing/Approved message removed from here and moved to DashboardCard */}
-        </div>
-      </div>
 
       {/* BMS Loan Chart */}
       <BMSLoanChart />
+
+      <Typography
+        variant="h6"
+        sx={{
+          mx: { xs: 2, sm: 3, md: 4 },
+          color: '#0a2558',
+          fontWeight: 800,
+          mb: 1.5,
+          fontSize: { xs: '1.1rem', md: '1.3rem' }
+        }}
+      >
+        Quick Actions & Overview
+      </Typography>
 
       {/* Referral Link Box */}
       <Box
         sx={{
           mx: { xs: 2, sm: 3, md: 4 },
-          my: 1.5,
-          p: 2,
-          backgroundColor: 'rgba(240, 249, 255, 0.6)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: 2,
-          border: '1px solid rgba(186, 230, 253, 0.5)',
-          boxShadow: '0 2px 8px rgba(0, 8, 49, 0.1)',
+          mb: 3,
+          p: { xs: 2, md: 3 },
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          border: '1px solid #e2e8f0',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
+          transition: 'transform 0.3s ease',
+          '&:hover': {
+            boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.1)',
+          }
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            mb: 1,
-            color: '#000831',
-            fontWeight: 'bold',
-            textAlign: 'center'
-          }}
-        >
-          Your Referral Link
-        </Typography>
-
         <Box
           sx={{
             display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
+            flexDirection: { xs: 'column', md: 'row' },
             alignItems: 'center',
             gap: 2,
-            justifyContent: 'center'
+            justifyContent: 'space-between'
           }}
         >
-          <Box
-            sx={{
-              flexGrow: 1,
-              maxWidth: { sm: '400px', md: '500px' },
-              width: '100%'
-            }}
-          >
-            <Link
-              href={memberDetails?.Member_id ? `${window.location.origin}/register?ref=${memberDetails.Member_id}` : '#'}
-              target="_blank"
-              rel="noopener noreferrer"
+          <Box sx={{ flexGrow: 1, width: '100%' }}>
+            <Typography variant="body1" sx={{ color: '#0a2558', fontWeight: 800, mb: 1 }}>
+              <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '6px', color: '#FFC000' }}>link</span>
+              Your Referral Link
+            </Typography>
+            <Box
               sx={{
-                color: '#000831',
-                textDecoration: 'none',
-                '&:hover': {
-                  textDecoration: 'underline',
-                },
-                display: 'block',
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: '#f8fafc',
+                borderRadius: '8px',
+                border: '1px solid #e2e8f0',
                 p: 1.5,
-                backgroundColor: 'white',
-                borderRadius: 1,
-                border: '1px solid #d8b4fe',
-                wordBreak: 'break-all',
-                textAlign: 'center',
-                fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                width: '100%',
+                overflow: 'hidden'
               }}
             >
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#000831',
-                  fontWeight: 'medium',
+                  color: '#475569',
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  width: '100%'
                 }}
               >
                 {memberDetails?.Member_id ?
                   `${window.location.origin}/register?ref=${memberDetails.Member_id}` :
-                  'Loading...'
+                  'Loading referral link...'
                 }
               </Typography>
-            </Link>
+            </Box>
           </Box>
 
           <Box
             sx={{
               display: 'flex',
-              gap: 1,
-              flexDirection: { xs: 'row', sm: 'column', md: 'row' },
-              width: { xs: '100%', sm: 'auto' },
-              justifyContent: { xs: 'space-between', sm: 'center' }
+              gap: 2,
+              flexDirection: { xs: 'row', sm: 'row' },
+              width: { xs: '100%', md: 'auto' },
+              mt: { xs: 1, md: 0 },
+              alignItems: 'flex-end',
+              height: '100%',
+              pt: { xs: 0, md: 4 }
             }}
           >
             <Button
@@ -621,14 +636,18 @@ const UserDashboard = () => {
               onClick={handleCopyReferralLink}
               disabled={!memberDetails?.Member_id}
               sx={{
-                backgroundColor: '#000831',
-                color: 'white',
+                background: 'linear-gradient(135deg, #0a2558 0%, #153b93 100%)',
+                color: '#fff',
                 '&:hover': {
-                  backgroundColor: '#001242',
+                  background: 'linear-gradient(135deg, #153b93 0%, #0a2558 100%)',
+                  transform: 'translateY(-2px)'
                 },
-                fontWeight: 'bold',
+                fontWeight: 700,
                 textTransform: 'none',
-                minWidth: { xs: '140px', sm: 'auto' }
+                flexGrow: 1,
+                borderRadius: '8px',
+                py: 1.2,
+                boxShadow: '0 4px 12px rgba(10, 37, 88, 0.2)'
               }}
             >
               Copy Link
@@ -640,34 +659,26 @@ const UserDashboard = () => {
               onClick={handleShareReferralLink}
               disabled={!memberDetails?.Member_id}
               sx={{
-                borderColor: '#000831',
-                color: '#000831',
+                borderColor: '#e2e8f0',
+                color: '#0a2558',
+                backgroundColor: '#f8fafc',
                 '&:hover': {
-                  backgroundColor: '#e0f2fe',
-                  borderColor: '#001242',
+                  backgroundColor: '#f1f5f9',
+                  borderColor: '#cbd5e1',
+                  transform: 'translateY(-2px)'
                 },
-                fontWeight: 'bold',
+                fontWeight: 700,
                 textTransform: 'none',
-                minWidth: { xs: '140px', sm: 'auto' }
+                flexGrow: 1,
+                borderRadius: '8px',
+                py: 1.2,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
               }}
             >
               Share Link
             </Button>
           </Box>
         </Box>
-
-        <Typography
-          variant="caption"
-          sx={{
-            display: 'block',
-            textAlign: 'center',
-            mt: 1,
-            color: '#000831',
-            opacity: 0.8
-          }}
-        >
-          Share this link with friends and earn rewards when they join!
-        </Typography>
       </Box>
 
       {/* Dashboard Cards Grid */}
@@ -776,7 +787,7 @@ const UserDashboard = () => {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+                background: 'linear-gradient(135deg, #FFC000 0%, #E6A800 100%)',
                 color: '#000',
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -822,7 +833,7 @@ const UserDashboard = () => {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+                background: 'linear-gradient(135deg, #FFC000 0%, #E6A800 100%)',
                 color: '#000',
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -859,7 +870,7 @@ const UserDashboard = () => {
           id="claim-reward-dialog-title"
           sx={{
             textAlign: 'center',
-            color: '#000831',
+            color: '#0a2558',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1
@@ -944,7 +955,7 @@ const UserDashboard = () => {
           }
         }}
       >
-        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', color: '#000831', fontSize: '1.5rem' }}>
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', color: '#0a2558', fontSize: '1.5rem' }}>
           Select Package
         </DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, py: 3 }}>
@@ -958,10 +969,10 @@ const UserDashboard = () => {
               onChange={(e) => setSelectedPackage(e.target.value)}
               sx={{
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#000831',
+                  borderColor: '#0a2558',
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#000831',
+                  borderColor: '#0a2558',
                 }
               }}
             >
@@ -979,9 +990,9 @@ const UserDashboard = () => {
             onClick={handlePackagePurchase}
             disabled={!selectedPackage}
             sx={{
-              backgroundColor: '#000831',
+              backgroundColor: '#0a2558',
               '&:hover': {
-                backgroundColor: '#001242'
+                backgroundColor: '#113278'
               }
             }}
           >
@@ -1007,7 +1018,7 @@ const UserDashboard = () => {
         <DialogTitle
           sx={{
             textAlign: 'center',
-            color: '#000831',
+            color: '#0a2558',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1
@@ -1099,7 +1110,7 @@ const UserDashboard = () => {
                   borderColor: '#d1d5db',
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#000831',
+                  borderColor: '#0a2558',
                 },
               }}
             >
@@ -1127,7 +1138,7 @@ const UserDashboard = () => {
 
           {isRepaying && (
             <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <CircularProgress size={20} sx={{ color: '#000831' }} />
+              <CircularProgress size={20} sx={{ color: '#0a2558' }} />
               <Typography variant="body2" sx={{ color: '#6b7280', mt: 1 }}>
                 Initializing payment...
               </Typography>
@@ -1165,7 +1176,7 @@ const UserDashboard = () => {
             variant="contained"
             disabled={isRepaying || selectedRepayAmount === 0}
             sx={{
-              background: 'linear-gradient(135deg, #000831 0%, #a855f7 100%)',
+              background: 'linear-gradient(135deg, #0a2558 0%, #a855f7 100%)',
               '&:hover': {
                 background: 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)',
                 boxShadow: '0 4px 12px rgba(107, 33, 168, 0.3)',
@@ -1187,7 +1198,7 @@ const UserDashboard = () => {
         <Card sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(10px)' }}>
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#000831' }}>Member Statistics</Typography>
+              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#0a2558' }}>Member Statistics</Typography>
               <MuiDatePicker
                 date={selectedDate}
                 setDate={handleDateChange}

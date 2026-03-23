@@ -25,7 +25,7 @@ export const KYCDocuments: React.FC<KYCDocumentsProps> = ({ formData }) => {
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 sx={{
-                    backgroundColor: '#000831',
+                    backgroundColor: '#0a2558',
                     color: '#fff',
                     '& .MuiSvgIcon-root': { color: '#fff' },
                 }}
@@ -50,7 +50,7 @@ export const KYCDocuments: React.FC<KYCDocumentsProps> = ({ formData }) => {
                                     sx={{
                                         height: '100%',
                                         opacity: doc.url ? 1 : 0.5,
-                                        border: doc.url ? '2px solid #000831' : '1px dashed #ccc',
+                                        border: doc.url ? '2px solid #0a2558' : '1px dashed #ccc',
                                     }}
                                 >
                                     <CardContent>
@@ -59,7 +59,7 @@ export const KYCDocuments: React.FC<KYCDocumentsProps> = ({ formData }) => {
                                             gutterBottom
                                             sx={{
                                                 fontWeight: 'bold',
-                                                color: doc.url ? '#000831' : '#999'
+                                                color: doc.url ? '#0a2558' : '#999'
                                             }}
                                         >
                                             {doc.label}

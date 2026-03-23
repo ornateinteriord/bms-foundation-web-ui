@@ -99,8 +99,8 @@ export default function Processed() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: '#000831',
-              '&:hover': { backgroundColor: '#000831' }
+              backgroundColor: '#0a2558',
+              '&:hover': { backgroundColor: '#0a2558' }
             }}
           >
             Search
@@ -114,7 +114,7 @@ export default function Processed() {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#000831',
+                backgroundColor: '#0a2558',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -142,7 +142,7 @@ export default function Processed() {
               <TableContainer component={Paper} elevation={1}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: '#000831' }}>
+                    <TableRow sx={{ backgroundColor: '#0a2558' }}>
                       {columns.map((column) => (
                         <TableCell
                           key={column.name}

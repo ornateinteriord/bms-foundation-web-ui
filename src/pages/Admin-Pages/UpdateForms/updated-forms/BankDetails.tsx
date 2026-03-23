@@ -32,7 +32,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}
         sx={{
-          backgroundColor: "#000831",
+          backgroundColor: "#0a2558",
           color: "#fff",
         }}
       >
@@ -59,7 +59,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AccountCircleIcon sx={{ color: "#000831" }} />
+                    <AccountCircleIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -75,7 +75,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AccountBalanceIcon sx={{ color: "#000831" }} />
+                    <AccountBalanceIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -91,7 +91,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AccountBalanceIcon sx={{ color: "#000831" }} />
+                    <AccountBalanceIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -107,7 +107,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AccountBalanceIcon sx={{ color: "#000831" }} />
+                    <AccountBalanceIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -125,7 +125,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LocationOnIcon sx={{ color: "#000831" }} />
+                    <LocationOnIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -141,7 +141,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <CreditCardIcon sx={{ color: "#000831" }} />
+                    <CreditCardIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -166,7 +166,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PaymentIcon sx={{ color: "#000831" }} />
+                    <PaymentIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -182,7 +182,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PaymentIcon sx={{ color: "#000831" }} />
+                    <PaymentIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -198,7 +198,7 @@ export const BankDetails: React.FC<BankDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PaymentIcon sx={{ color: "#000831" }} />
+                    <PaymentIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}

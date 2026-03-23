@@ -29,7 +29,7 @@ export const NomineeDetails: React.FC<NomineeDetailsProps> = ({
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}
         sx={{
-          backgroundColor: "#000831",
+          backgroundColor: "#0a2558",
           color: "#fff",
         }}
       >
@@ -56,7 +56,7 @@ export const NomineeDetails: React.FC<NomineeDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#000831" }} />
+                    <PersonIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -72,7 +72,7 @@ export const NomineeDetails: React.FC<NomineeDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#000831" }} />
+                    <PersonIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}
@@ -97,7 +97,7 @@ export const NomineeDetails: React.FC<NomineeDetailsProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#000831" }} />
+                    <PersonIcon sx={{ color: "#0a2558" }} />
                   </InputAdornment>
                 ),
               }}

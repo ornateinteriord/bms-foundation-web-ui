@@ -50,8 +50,8 @@ const CashBack = () => {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#000831",
-              "&:hover": { backgroundColor: "#000831" },
+              backgroundColor: "#0a2558",
+              "&:hover": { backgroundColor: "#0a2558" },
             }}
           >
             Search
@@ -64,7 +64,7 @@ const CashBack = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#000831",
+                backgroundColor: "#0a2558",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
