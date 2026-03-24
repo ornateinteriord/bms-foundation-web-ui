@@ -599,6 +599,8 @@ export const useGetMultiLevelSponsorship = () => {
 };
 
 export const useActivatePackage = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (data: { memberId: string; packageType: string }) => {
       const response = await put(`/user/activate-package/${data.memberId}`, {
@@ -613,6 +615,7 @@ export const useActivatePackage = () => {
     onSuccess: (response) => {
       if (response.success) {
         toast.success(response.message || "Package activated successfully!");
+        queryClient.invalidateQueries({ queryKey: ["allMembers"] });
       } else {
         const errorMessage = response.message || "Activation failed";
         console.error("Activation failed:", errorMessage);

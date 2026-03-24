@@ -29,8 +29,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WcIcon from "@mui/icons-material/Wc";
 import BMSLogo from "../../assets/bms_logo.png"; // Import the logo
-import LogBg from "../../assets/log_bg.jpg";
-import "./Register.scss";
 import { useGetSponserRef, useSignupMutation } from "../../api/Auth";
 import { LoadingComponent } from "../../App";
 
@@ -208,52 +206,77 @@ const Register = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
+        <Box
       sx={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        mt: 8,
-        backgroundColor: "#ffff", // consistent with Login
-        paddingTop: "10px",
-        paddingBottom: "10px",
+        background: "linear-gradient(135deg, #0a2558 0%, #153b93 100%)",
+        position: "relative",
+        overflow: "hidden",
+        pt: { xs: 5, md: 8 },
+        pb: { xs: 5, md: 8 }
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
+          position: "absolute",
+          top: "-10%",
+          left: "-10%",
+          width: "200px",
+          height: "200px",
+          background: "radial-gradient(circle, rgba(255,192,0,0.2) 0%, rgba(255,192,0,0) 70%)",
+          borderRadius: "50%",
+          filter: "blur(40px)",
         }}
-      >
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: "-5%",
+          right: "-5%",
+          width: "400px",
+          height: "400px",
+          background: "radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0) 70%)",
+          borderRadius: "50%",
+          filter: "blur(60px)",
+        }}
+      />
+      <Container component="main" maxWidth="md" sx={{ position: "relative", zIndex: 1, mt: { xs: -4, md: -8 } }}>
         <Card
+          elevation={24}
           sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             width: "100%",
-            boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
-            backgroundImage: `url(${LogBg})`, // Dark semi-transparent background
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            borderRadius: "8px",
-            border: "1px solid rgba(255, 255, 255, 0.05)",
+            p: { xs: 2, md: 3 },
+            borderRadius: "16px",
+            background: "rgba(255, 255, 255, 0.98)",
+            backdropFilter: "blur(10px)",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+            border: "1px solid rgba(255,255,255,0.7)",
           }}
         >
-          <CardContent sx={{ padding: "2rem" }}>
+          <CardContent sx={{ width: "100%", padding: { xs: '1rem', md: '2rem' } }}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
               <img
                 src={BMSLogo}
                 alt="BMS Logo"
-                style={{ maxWidth: "150px", height: "auto" }}
+                style={{ maxWidth: "220px", height: "auto", objectFit: "contain" }}
               />
             </Box>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ color: "#fff", mb: 1, textAlign: "center", fontWeight: "bold" }}
+              sx={{
+                color: "#0a2558",
+                fontWeight: 800,
+                textAlign: "center",
+                mb: 3,
+                letterSpacing: "-0.5px"
+              }}
             >
               Create Account
             </Typography>
@@ -285,14 +308,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -314,14 +341,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -344,14 +375,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -374,14 +409,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -404,14 +443,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -436,14 +479,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -466,14 +513,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -495,14 +546,18 @@ const Register = () => {
                         </InputAdornment>
                       ),
                     }}
+                    variant="outlined"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        backgroundColor: "#e5e5e5",
-                        borderRadius: "4px",
-                        "& fieldset": { border: "none" },
+                        borderRadius: "8px",
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#0a2558",
+                          borderWidth: "2px"
+                        },
                       },
-                      "& .MuiInputLabel-root": { color: "#9ca3af" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#fff" },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "#0a2558",
+                      }
                     }}
                   />
                 </Grid>
@@ -520,8 +575,8 @@ const Register = () => {
                       ml: 1
                     }}
                   >
-                    <FormLabel component="legend" sx={{ color: "#fff !important", display: 'flex', alignItems: 'center' }}>
-                      <WcIcon sx={{ mr: 1, color: "#fff" }} />
+                    <FormLabel component="legend" sx={{ color: "#475569 !important", fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+                      <WcIcon sx={{ mr: 1, color: "#94a3b8" }} />
                       Gender:
                     </FormLabel>
                     <RadioGroup
@@ -532,13 +587,13 @@ const Register = () => {
                     >
                       <FormControlLabel
                         value="Male"
-                        control={<Radio sx={{ color: "#bbb", "&.Mui-checked": { color: "#fff" } }} />}
-                        label={<span style={{ color: "#fff" }}>Male</span>}
+                        control={<Radio sx={{ color: "#94a3b8", "&.Mui-checked": { color: "#0a2558" } }} />}
+                        label={<span style={{ color: "#475569", fontWeight: 500 }}>Male</span>}
                       />
                       <FormControlLabel
                         value="Female"
-                        control={<Radio sx={{ color: "#bbb", "&.Mui-checked": { color: "#fff" } }} />}
-                        label={<span style={{ color: "#fff" }}>Female</span>}
+                        control={<Radio sx={{ color: "#94a3b8", "&.Mui-checked": { color: "#0a2558" } }} />}
+                        label={<span style={{ color: "#475569", fontWeight: 500 }}>Female</span>}
                       />
                     </RadioGroup>
                   </FormControl>
@@ -556,11 +611,11 @@ const Register = () => {
                       <Checkbox
                         checked={isChecked}
                         onChange={handleCheckboxChange}
-                        sx={{ color: "#bbb", "&.Mui-checked": { color: "#fff" } }}
+                        sx={{ color: "#94a3b8", "&.Mui-checked": { color: "#0a2558" } }}
                       />
                     }
                     label={
-                      <Typography variant="body2" sx={{ color: "#fff" }}>
+                      <Typography variant="body2" sx={{ color: "#475569", fontWeight: 500 }}>
                         I accept the Terms and Conditions
                       </Typography>
                     }
@@ -575,15 +630,26 @@ const Register = () => {
                     fullWidth
                     disabled={!isChecked || isPending}
                     sx={{
-                      background: "linear-gradient(90deg, #3d5a88ff 0%, #d4af37 100%)",
-                      color: "white",
-                      fontWeight: "bold",
-                      textTransform: "uppercase",
-                      maxWidth: "300px",
-                      py: 1.5,
+                      mt: 1,
+                      mb: 2,
+                      background: "linear-gradient(135deg, #FFC000 0%, #E6A800 100%)",
+                      color: "#0a2558",
+                      fontWeight: 800,
+                      fontSize: "1rem",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      textTransform: "none",
+                      boxShadow: "0 8px 16px rgba(255, 192, 0, 0.3)",
+                      transition: "all 0.3s ease",
                       "&:hover": {
-                        opacity: 0.9,
+                        background: "linear-gradient(135deg, #FFCE33 0%, #FFC000 100%)",
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 12px 20px rgba(255, 192, 0, 0.4)",
                       },
+                      "&:disabled": {
+                        background: "#e2e8f0",
+                        color: "#94a3b8"
+                      }
                     }}
                   >
                     {isPending ? "Registering..." : "Register"}
@@ -592,30 +658,18 @@ const Register = () => {
               </Grid>
             </Box>
 
-            <Typography variant="body2" sx={{ textAlign: "center", mt: 1, color: "#fff" }}>
-              Have an account?{" "}
+            <Typography variant="body2" sx={{ textAlign: "center", mt: 2, color: "#64748b", fontWeight: 500 }}>
+              Already registered?{" "}
               <Link
                 to="/login"
                 style={{
-                  color: "#22c55e",
+                  color: "#0a2558",
                   textDecoration: "none",
-                  fontWeight: "bold",
+                  fontWeight: 700,
+                  transition: "color 0.2s ease"
                 }}
               >
-                Login
-              </Link>
-            </Typography>
-
-            <Typography variant="body2" sx={{ textAlign: "center", mt: 1 }}>
-              <Link
-                to="/recover-password"
-                style={{
-                  color: "#5e81f4",
-                  textDecoration: "none",
-                  fontWeight: "bold",
-                }}
-              >
-                Recover Password
+                Sign In
               </Link>
             </Typography>
           </CardContent>
@@ -685,9 +739,9 @@ const Register = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Box>
+      </Container>
       {(isLoading || isPending) && <LoadingComponent />}
-    </Container>
+    </Box>
   );
 };
 

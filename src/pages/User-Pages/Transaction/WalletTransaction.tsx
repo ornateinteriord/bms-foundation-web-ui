@@ -39,44 +39,22 @@ const WalletTransaction = () => {
     }
   }, [isError, error]);
 
-  // Safely extract and filter transactions
+  // Safely extract all transactions (no filter)
   useEffect(() => {
-    // Extract transactions from the response object
     const transactions = transactionsResponse?.data || [];
 
-    console.log("Wallet Transactions Response:", transactionsResponse);
-    console.log("Extracted transactions:", transactions);
-    console.log("Is array?", Array.isArray(transactions));
-
     if (Array.isArray(transactions)) {
-      // Filter out loan-related transactions - show everything EXCEPT loans
-      const nonLoanTransactions = transactions.filter((tx: any) => {
-        const transactionType = tx.transaction_type?.toLowerCase() || '';
-        const description = tx.description?.toLowerCase() || '';
-        const benefitType = tx.benefit_type?.toLowerCase() || '';
-
-        return !(
-          transactionType.includes('loan') ||
-          description.includes('loan') ||
-          transactionType.includes('repayment') ||
-          description.includes('repayment') ||
-          benefitType.includes('loan')
-        );
-      });
-
-      console.log("Non-loan transactions:", nonLoanTransactions.length);
-
-      // Apply search filter
+      // Apply search filter only
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const searchedData = nonLoanTransactions.filter((tx: any) =>
+        const searchedData = transactions.filter((tx: any) =>
           Object.values(tx).some(value =>
             value?.toString().toLowerCase().includes(query)
           )
         );
         setFilteredData(searchedData);
       } else {
-        setFilteredData(nonLoanTransactions);
+        setFilteredData(transactions);
       }
     } else {
       setFilteredData([]);

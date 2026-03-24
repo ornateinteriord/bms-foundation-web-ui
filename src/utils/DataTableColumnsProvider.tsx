@@ -396,27 +396,37 @@ export const getMembersColumns = (
   ];
 
 export const getPendingMembersColumns = (
-  handleActivateClick: (memberId: string) => void,
+  handleActivateClick: (member: any) => void,
   isActivating: boolean
 ) => [
     {
       name: "SNo",
       selector: (row: any) => row.sNo,
       sortable: true,
+      width: "70px",
     },
     {
-      name: "Member",
+      name: "Member ID",
       selector: (row: any) => row.Member_id,
       sortable: true,
     },
     {
-      name: "Approved On",
-      selector: (row: any) => getFormattedDate(row.Date_of_joining),
+      name: "Name",
+      selector: (row: any) => row.Name ?? "-",
       sortable: true,
     },
     {
-      name: "Password",
-      selector: (row: any) => row.password,
+      name: "Package Amount",
+      selector: (row: any) => row.package_value ?? row.spackage ?? "-",
+      sortable: true,
+      cell: (row: any) => {
+        const amt = row.package_value ?? row.spackage;
+        return amt ? `₹${amt}` : "-";
+      },
+    },
+    {
+      name: "Approved On",
+      selector: (row: any) => getFormattedDate(row.Date_of_joining),
       sortable: true,
     },
     {
@@ -459,21 +469,23 @@ export const getPendingMembersColumns = (
           <div style={{ color: "red", fontWeight: 500 }}>
             Cannot Activate
           </div>
+        ) : row.status.toLowerCase() === "active" ? (
+          <div style={{ color: "green", fontWeight: 500 }}>Activated</div>
         ) : (
           <Button
-            onClick={() => handleActivateClick(row.Member_id)}
+            onClick={() => handleActivateClick(row)}
             disabled={isActivating}
             variant="contained"
             sx={{
               backgroundColor: "#51cf66",
               "&:hover": { backgroundColor: "#3bcf57" },
               color: "#000",
-              padding: "2px",
+              padding: "2px 10px",
               cursor: "pointer",
               textTransform: "capitalize"
             }}
           >
-            Active
+            Activate
           </Button>
         ),
     },

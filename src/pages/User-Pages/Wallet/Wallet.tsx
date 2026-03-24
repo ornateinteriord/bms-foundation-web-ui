@@ -25,11 +25,11 @@ import {
 } from "../../../utils/DataTableColumnsProvider";
 import TokenService from "../../../api/token/tokenService";
 import { useGetWalletOverview, useWalletWithdraw } from "../../../api/Memeber";
+import { toast } from "react-toastify";
 
 const Wallet = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [amount, setAmount] = useState("");
-  const [adminCharges, setAdminCharges] = useState(0);
   const [tds, setTds] = useState(0); const [netAmount, setNetAmount] = useState(0);
   const [optimisticBalance, setOptimisticBalance] = useState<number | null>(null);
   const [isWithdrawalAllowed, setIsWithdrawalAllowed] = useState<boolean>(true);
@@ -64,15 +64,13 @@ const Wallet = () => {
 
     if (selectedAmount && selectedAmount !== "0") {
       const withdrawalAmount = parseFloat(selectedAmount);
-      const adminChargeAmount = withdrawalAmount * 0.15; // 15% admin charges
+      // const adminChargeAmount = withdrawalAmount * 0.15; // 15% admin charges (Removed)
       const tdsAmount = withdrawalAmount * 0.05; // 5% TDS
-      const calculatedNetAmount = withdrawalAmount - adminChargeAmount - tdsAmount;
+      const calculatedNetAmount = withdrawalAmount - tdsAmount;
 
-      setAdminCharges(adminChargeAmount);
       setTds(tdsAmount);
       setNetAmount(calculatedNetAmount);
     } else {
-      setAdminCharges(0);
       setTds(0);
       setNetAmount(0);
     }
@@ -94,7 +92,8 @@ const Wallet = () => {
       return;
     }
 
-    if (withdrawalAmount < 500) {
+    if (withdrawalAmount < 100) {
+      toast.error('Minimum withdrawal amount is ₹100');
       return;
     }
 
@@ -110,7 +109,6 @@ const Wallet = () => {
       {
         onSuccess: () => {
           setAmount("");
-          setAdminCharges(0);
           setTds(0);
           setNetAmount(0);
           refetch();
@@ -332,7 +330,7 @@ const Wallet = () => {
                   <MenuItem value="0">
                     <em>Select Amount</em>
                   </MenuItem>
-                  {[500, 1000].map((value) => (
+                  {[100, 200, 500, 1000].map((value) => (
                     <MenuItem
                       key={value}
                       value={value}
@@ -346,6 +344,7 @@ const Wallet = () => {
                 </Select>
               </FormControl>
 
+              {/* 
               <TextField
                 label="Admin Charges (15%)"
                 value={`₹${adminCharges.toFixed(2)}`}
@@ -359,6 +358,7 @@ const Wallet = () => {
                   },
                 }}
               />
+              */}
 
               <TextField
                 label="TDS (5%)"
@@ -403,8 +403,9 @@ const Wallet = () => {
                   </Typography>
                   <Box sx={{ display: "flex", gap: 4, flexDirection: isMobile ? "column" : "row" }}>
                     <Box>
-                      <Typography variant="body2">• 15% admin charges + 5% TDS applied</Typography>
-                      <Typography variant="body2">• Minimum withdrawal: ₹500</Typography>
+                      {/* <Typography variant="body2">• 15% admin charges + 5% TDS applied</Typography> */}
+                      <Typography variant="body2">• 5% TDS applied</Typography>
+                      <Typography variant="body2">• Minimum withdrawal: ₹100</Typography>
                     </Box>
                     <Box>
                       <Typography variant="body2">• Maximum withdrawal: ₹1000</Typography>
