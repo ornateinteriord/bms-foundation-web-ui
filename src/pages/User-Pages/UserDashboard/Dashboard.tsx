@@ -611,7 +611,14 @@ const UserDashboard = () => {
                 }}
               >
                 {memberDetails?.Member_id ?
-                  `${window.location.origin}/register?ref=${memberDetails.Member_id}` :
+                  <a 
+                    href={`${window.location.origin}/register?ref=${memberDetails.Member_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#0a2558', textDecoration: 'underline' }}
+                  >
+                    {`${window.location.origin}/register?ref=${memberDetails.Member_id}`}
+                  </a> :
                   'Loading referral link...'
                 }
               </Typography>

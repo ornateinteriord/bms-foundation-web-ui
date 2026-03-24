@@ -22,7 +22,7 @@ import {
   EventIcon,
   SmsIcon,
 } from "../Icons";
-import { AccountBalance, CardMembershipRounded, Pending } from "@mui/icons-material";
+import { CardMembershipRounded, Pending } from "@mui/icons-material";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -60,7 +60,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  /* {
+  {
     name: "Earnings",
     icon: <MonetizationOnIcon />,
     isExpandable: true,
@@ -76,30 +76,30 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />,
       },
     ],
-  }, */
+  },
+  {
+    name: "Transactions",
+    icon: <ShowChartIcon />,
+    path: "/user/transactions",
+    isExpandable: false,
+  },
+  /* Sub-menus collapsed into single Transactions link above
   {
     name: "Transactions",
     icon: <ShowChartIcon />,
     isExpandable: true,
     subItems: [
-      {
-        name: "RD Deposit", // Renamed from Wallet
-        path: "/user/transactions",
-        icon: <CreditCardIcon />,
-      },
-      {
-        name: "Loan",
-        path: "/user/loantransactions",
-        icon: <AccountBalance />,
-      },
+      { name: "RD Deposit", path: "/user/transactions", icon: <CreditCardIcon /> },
+      { name: "Loan", path: "/user/loantransactions", icon: <AccountBalance /> },
     ],
   },
-  /* {
+  */
+  {
     name: "Wallet Balance",
     icon: <CreditCardIcon />,
     path: "/user/wallet",
     isExpandable: false,
-  }, */
+  },
   {
     name: "Mail Box",
     icon: <MailOutlineIcon />,

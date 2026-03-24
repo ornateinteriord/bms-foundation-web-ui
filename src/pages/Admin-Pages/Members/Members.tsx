@@ -1,14 +1,21 @@
 import DataTable from 'react-data-table-component';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, TextField, Typography, Button, Grid, CircularProgress, } from '@mui/material';
+import {
+  Card, CardContent, Accordion, AccordionSummary, AccordionDetails,
+  TextField, Typography, Button, Grid, CircularProgress,
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  Box, Divider,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CheckCircle } from '@mui/icons-material';
 import { DASHBOARD_CUTSOM_STYLE, getMembersColumns, getPendingMembersColumns } from '../../../utils/DataTableColumnsProvider';
 import './Members.scss'
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useGetAllMembersDetails, } from '../../../api/Admin';
+import { useGetAllMembersDetails } from '../../../api/Admin';
 import { useNavigate } from 'react-router-dom';
 import useSearch from '../../../hooks/SearchQuery';
+import { useActivatePackage } from '../../../api/Memeber';
 
 interface MemberTableProps {
   title: string;
@@ -18,7 +25,7 @@ interface MemberTableProps {
   showView?: boolean;
   showActivate?: boolean;
   isLoading?: boolean;
-  onActivate?: (memberId: string) => void;
+  onActivate?: (member: any) => void;
   isActivating?: boolean;
 }
 
@@ -50,9 +57,9 @@ const MemberTable = ({
     navigate(`/admin/members/${memberId}`);
   };
 
-  const handleActivateClick = (memberId: string) => {
+  const handleActivateClick = (member: any) => {
     if (onActivate) {
-      onActivate(memberId);
+      onActivate(member);
     }
   };
 
@@ -144,6 +151,7 @@ interface Member {
   mobileno: number | string;
   status: string;
   Name: string;
+  package_value?: number | string;
 }
 
 type status = "All" | "active" | "Inactive" | "Pending";
@@ -212,23 +220,165 @@ export const InActiveMembers = () => {
 
 export const PendingMembers = () => {
   const { memberdata, isLoading } = useMembers("Pending");
-  const navigate = useNavigate();
+  const { mutate: activatePackage, isPending: isActivating } = useActivatePackage();
 
-  const handleActivateClick = (memberId: string) => {
-    navigate('/admin/ActivatePackage', { state: { memberId } });
+  // Dialog state
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [packageAmount, setPackageAmount] = useState<string>('');
+
+  const handleActivateClick = (member: any) => {
+    setSelectedMember(member);
+    // Pre-fill with whatever amount is stored on the member
+    const stored = member.package_value ?? member.spackage ?? '';
+    setPackageAmount(stored !== null && stored !== undefined ? String(stored) : '');
+    setDialogOpen(true);
   };
 
+  const handleConfirm = () => {
+    if (!selectedMember) return;
+
+    const amt = Number(packageAmount);
+    if (!amt || amt <= 0) {
+      toast.error('Please enter a valid package amount.');
+      return;
+    }
+
+    const packageType = `BMS_${amt}`;
+
+    activatePackage(
+      { memberId: selectedMember.Member_id, packageType },
+      {
+        onSuccess: () => {
+          // if (response.success) {
+          //   toast.success(`${selectedMember.Name} activated successfully!`);
+          // }
+          setDialogOpen(false);
+          setSelectedMember(null);
+          setPackageAmount('');
+        },
+        onError: () => {
+          setDialogOpen(false);
+        },
+      }
+    );
+  };
+
+  const primaryColor = '#0a2558';
+
   return (
-    <MemberTable
-      title="Pending Members"
-      summaryTitle="List of Pending Members"
-      data={memberdata}
-      showActivate={true}
-      isLoading={isLoading}
-      onActivate={handleActivateClick}
-      isActivating={false}
-    />
+    <>
+      <MemberTable
+        title="Pending Members"
+        summaryTitle="List of Pending Members"
+        data={memberdata}
+        showActivate={true}
+        isLoading={isLoading}
+        onActivate={handleActivateClick}
+        isActivating={isActivating}
+      />
+
+      {/* ── Activation Confirmation Dialog ── */}
+      <Dialog
+        open={dialogOpen}
+        onClose={() => !isActivating && setDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ backgroundColor: primaryColor, color: '#fff', fontWeight: 600 }}>
+          Confirm Member Activation
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: 3 }}>
+          {/* Member Details */}
+          <Box sx={{ backgroundColor: '#f5f7fa', borderRadius: 2, p: 2, mb: 3 }}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              Member Details
+            </Typography>
+            <Divider sx={{ mb: 1.5 }} />
+            <Grid container spacing={1.5}>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary">Member ID</Typography>
+                <Typography variant="body2" fontWeight={600}>{selectedMember?.Member_id}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary">Name</Typography>
+                <Typography variant="body2" fontWeight={600}>{selectedMember?.Name}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary">Mobile</Typography>
+                <Typography variant="body2" fontWeight={600}>{selectedMember?.mobileno}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary">Package Amount</Typography>
+                <Typography variant="body2" fontWeight={600}>
+                  {selectedMember?.package_value
+                    ? `₹${selectedMember.package_value}`
+                    : selectedMember?.spackage
+                      ? `₹${selectedMember.spackage}`
+                      : '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary">Sponsor</Typography>
+                <Typography variant="body2" fontWeight={600}>{selectedMember?.Sponsor_name ?? '-'}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary">Current Status</Typography>
+                <Typography variant="body2" fontWeight={600} sx={{ color: '#FFC000' }}>
+                  {selectedMember?.status}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Editable Package Amount */}
+          <TextField
+            label="Package Amount (₹)"
+            type="number"
+            fullWidth
+            value={packageAmount}
+            onChange={(e) => setPackageAmount(e.target.value)}
+            helperText="Enter the correct package amount for this member"
+            inputProps={{ min: 1 }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: primaryColor },
+                '&:hover fieldset': { borderColor: primaryColor },
+                '&.Mui-focused fieldset': { borderColor: primaryColor },
+              },
+            }}
+          />
+
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
+          <Button
+            onClick={() => setDialogOpen(false)}
+            disabled={isActivating}
+            variant="outlined"
+            sx={{ borderColor: '#ccc', color: '#555' }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirm}
+            disabled={isActivating}
+            variant="contained"
+            startIcon={isActivating ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : <CheckCircle />}
+            sx={{
+              backgroundColor: primaryColor,
+              '&:hover': { backgroundColor: '#081d47' },
+              '&:disabled': { backgroundColor: '#ccc' },
+            }}
+          >
+            {isActivating ? 'Activating...' : 'Confirm Activation'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
 export default Members;
+

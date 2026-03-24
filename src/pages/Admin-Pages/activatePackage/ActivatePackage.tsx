@@ -95,10 +95,24 @@ const ActivatePackage: React.FC = () => {
   // NOTE: your hook returned isPending earlier; keep same mapping
   const { mutate: activatePackage, isPending: isActivating } = useActivatePackage();
 
-  // ✅ Added RD package
+  // Old packages (commented out)
+  // const packageOptions: PackageOption[] = [
+  //   { value: 'RD_1200', label: 'RD Package - ₹1200', amount: 1200 },
+  //   { value: 'RD_600', label: 'RD Package - ₹600', amount: 600 },
+  // ];
+
   const packageOptions: PackageOption[] = [
-    { value: 'RD_1200', label: 'RD Package - ₹1200', amount: 1200 },
-    { value: 'RD_600', label: 'RD Package - ₹600', amount: 600 },
+    { value: 'BMS_1000',    label: 'BMS Plan - ₹1,000',     amount: 1000 },
+    { value: 'BMS_2000',    label: 'BMS Plan - ₹2,000',     amount: 2000 },
+    { value: 'BMS_5000',    label: 'BMS Plan - ₹5,000',     amount: 5000 },
+    { value: 'BMS_10000',   label: 'BMS Plan - ₹10,000',    amount: 10000 },
+    { value: 'BMS_25000',   label: 'BMS Plan - ₹25,000',    amount: 25000 },
+    { value: 'BMS_50000',   label: 'BMS Plan - ₹50,000',    amount: 50000 },
+    { value: 'BMS_100000',  label: 'BMS Plan - ₹1,00,000',  amount: 100000 },
+    { value: 'BMS_250000',  label: 'BMS Plan - ₹2,50,000',  amount: 250000 },
+    { value: 'BMS_500000',  label: 'BMS Plan - ₹5,00,000',  amount: 500000 },
+    { value: 'BMS_1000000', label: 'BMS Plan - ₹10,00,000', amount: 1000000 },
+    { value: 'BMS_2500000', label: 'BMS Plan - ₹25,00,000', amount: 2500000 },
   ];
 
   // Handle member ID search
