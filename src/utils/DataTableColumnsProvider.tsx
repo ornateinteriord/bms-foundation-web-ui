@@ -178,26 +178,33 @@ export const getLevelBenifitsColumns = () => [
 export const getDailyPayoutColumns = () => [
   {
     name: "Date",
-    selector: (row: any) => row.date,
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.date),
     sortable: true,
   },
   {
-    name: "Level Benefits",
-    selector: (row: any) => row.level_benefits,
+    name: "Description",
+    selector: (row: any) => row.description,
     sortable: true,
-    cell: (row: any) => `${row.level_benefits}`
   },
   {
-    name: "Direct Benefits",
-    selector: (row: any) => row.direct_benefits,
+    name: "Amount",
+    selector: (row: any) => `₹ ${parseFloat(row.ew_credit || row.amount || 0).toLocaleString()}`,
     sortable: true,
-    cell: (row: any) => `${row.direct_benefits}`
   },
   {
-    name: "Gross Profit",
-    selector: (row: any) => row.gross_profit,
+    name: "Status",
+    selector: (row: any) => row.status,
     sortable: true,
-    cell: (row: any) => `${row.gross_profit}`
+    cell: (row: any) => (
+      <div
+        style={{
+          color: row.status?.toLowerCase() === "completed" || row.status?.toLowerCase() === "approved" ? "#569f35" : "#ff3860",
+          fontWeight: "bold"
+        }}
+      >
+        {row.status}
+      </div>
+    ),
   },
 ];
 
@@ -990,7 +997,7 @@ export const getMultiLevelColumns = () => [
 export const getAdminDailyBenifitsColumns = () => [
   {
     name: "Date",
-    selector: (row: any) => getFormattedDate(row.date),
+    selector: (row: any) => getFormattedDate(row.transaction_date || row.date),
     sortable: true,
   },
   {
@@ -999,12 +1006,16 @@ export const getAdminDailyBenifitsColumns = () => [
     sortable: true,
   },
   {
-    name: "Gross Profit",
-    selector: (row: any) => row.gross_profit || "0.00",
+    name: "ROI Amount",
+    selector: (row: any) => row.ew_credit || row.amount || "0.00",
     sortable: true,
-    format: (row: any) => `₹${parseFloat(row.gross_profit || 0).toFixed(2)}`,
+    format: (row: any) => `₹${parseFloat(row.ew_credit || row.amount || 0).toFixed(2)}`,
   },
-
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+  }
 ];
 
 

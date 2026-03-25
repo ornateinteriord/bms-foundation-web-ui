@@ -26,7 +26,7 @@ const DailyPayout = () => {
               '& .MuiSvgIcon-root': { color: '#fff' }
             }}
           >
-            Daily Payout Details
+            Daily ROI Details
           </AccordionSummary>
           <AccordionDetails>
             <DataTable

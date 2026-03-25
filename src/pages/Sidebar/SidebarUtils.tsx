@@ -1,4 +1,3 @@
-import { PackageIcon } from "lucide-react";
 import { SideBarMenuItemType } from "../../store/store";
 import {
   DashboardIcon,
@@ -71,7 +70,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <TrendingUpIcon />,
       },
       {
-        name: "Daily Payout",
+        name: "Daily ROI",
         path: "/user/earnings/daily-payout",
         icon: <PaymentsIcon />,
       },
@@ -145,25 +144,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       },
     ],
   },
-  {
-    name: "Activate",
-    icon: <DashboardIcon />,
-    isExpandable: true,
-    subItems: [
-      // {
-      //   name: "Activate",
-      //   icon: <CheckCircle2Icon />,
-      //   path: "/admin/Activate",
 
-      // },
-      {
-        name: "Activate Package",
-        icon: <PackageIcon />,
-        path: "/admin/ActivatePackage",
-
-      },
-    ],
-  },
   //   name: "Package",
   //   icon: <InventoryIcon />,
   //   isExpandable: true,
@@ -211,7 +192,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <TrendingUpIcon />,
       },
       {
-        name: "Daily Benefits Payouts",
+        name: "Daily ROI",
         path: "/admin/income/daily-payouts",
         icon: <PaymentsIcon />,
       },

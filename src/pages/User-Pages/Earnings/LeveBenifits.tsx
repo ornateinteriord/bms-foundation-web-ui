@@ -33,15 +33,30 @@ const LevelBenifits = () => {
 
       return matchesLevel;
     })
-    .map((transaction: any) => ({
-      id: transaction._id || transaction.transaction_id,
-      date: transaction.transaction_date,
-      payoutLevel: transaction.level ?? 'N/A',
-      members: transaction.related_member_id || 'N/A',
-      amount: transaction.ew_credit || '0',
-      description: transaction.description,
-      transactionType: transaction.transaction_type
-    }));
+    .map((transaction: any) => {
+      // Helper for ordinal numbers (1st, 2nd, etc.)
+      const getOrdinal = (n: number) => {
+        const s = ["th", "st", "nd", "rd"];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+      };
+
+      const levelStr = transaction.description && transaction.description.toLowerCase().includes('level') 
+          ? transaction.description 
+          : transaction.level 
+            ? `${getOrdinal(transaction.level)} Level Benefit` 
+            : 'N/A';
+
+      return {
+        id: transaction._id || transaction.transaction_id,
+        date: transaction.transaction_date,
+        payoutLevel: levelStr,
+        members: transaction.related_member_id || 'N/A',
+        amount: transaction.ew_credit || '0',
+        description: transaction.description,
+        transactionType: transaction.transaction_type
+      };
+    });
 
 
   const noDataComponent = (
