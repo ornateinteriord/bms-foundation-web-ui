@@ -20,7 +20,7 @@ import {
 import { useGetAllDailyPayouts } from '../../../api/Admin';
 
 
-const DailyBenifitsPayouts = () => {
+const DailyROI = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Properly destructure the useQuery return values
@@ -53,7 +53,7 @@ const DailyBenifitsPayouts = () => {
   return (
     <>
       <Typography variant="h4" sx={{ margin: "2rem", mt: 10 }}>
-        Daily Benefits Payouts
+        Daily ROI
       </Typography>
       <Card sx={{ margin: "2rem", mt: 2 }}>
         <CardContent>
@@ -66,7 +66,7 @@ const DailyBenifitsPayouts = () => {
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
             >
-              List of Daily Benefits Payouts
+              Daily ROI Details
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -103,4 +103,4 @@ const DailyBenifitsPayouts = () => {
   );
 };
 
-export default DailyBenifitsPayouts;
+export default DailyROI;

@@ -84,8 +84,8 @@ const AdminHolidays = lazy(
   () => import("./pages/Admin-Pages/Holidays/Holidays")
 );
 const WithdrawPending = lazy(() => import("./pages/Admin-Pages/WithdrawPending/WithdrawPending"));
-const Activate = lazy(() => import("./pages/Admin-Pages/Activate/Activate"));
-const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
+// const Activate = lazy(() => import("./pages/Admin-Pages/Activate/Activate"));
+// const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
 
 // user pages
 const UserDashboard = lazy(
@@ -279,8 +279,8 @@ const RoutesProvider = ({
                 path="/admin/members/pending"
                 element={<PendingMembers />}
               />
-              <Route path="/admin/Activate" element={<Activate />} />
-              <Route path="/admin/ActivatePackage" element={<ActivatePackage />} />
+              {/* <Route path="/admin/Activate" element={<Activate />} />
+              <Route path="/admin/ActivatePackage" element={<ActivatePackage />} /> */}
               <Route path="/admin/members/active" element={<ActiveMembers />} />
               <Route
                 path="/admin/members/inactive"
