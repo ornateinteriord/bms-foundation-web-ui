@@ -775,6 +775,21 @@ export const useGetDailyPayout = (memberId: any) => {
   });
 };
 
+export const useGetROIBenefits = (memberId: any) => {
+  return useQuery({
+    queryKey: ["roi-benefits", memberId],
+    queryFn: async () => {
+      const response = await get(`/user/roi-benefits/${memberId}`);
+      if (response?.success) {
+        return response?.data?.roi_benefits || [];
+      } else {
+        throw new Error(response?.data?.message || "Failed to fetch ROI benefits data");
+      }
+    },
+    enabled: !!memberId,
+  });
+};
+
 export const useClimeLoan = () => {
   return useMutation({
     mutationFn: async ({ memberId, data }: { memberId: string; data: any }) => {
