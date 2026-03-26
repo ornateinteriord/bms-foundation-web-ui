@@ -23,12 +23,18 @@ const LevelBenifits = () => {
     .filter((transaction: any) => {
       if (!transaction || typeof transaction !== 'object') return false;
 
+      const txType = transaction.transaction_type?.toLowerCase() || "";
+      const benefitType = transaction.benefit_type?.toLowerCase() || "";
+
+      // Exclude ROI related transactions from this specific page
+      if (txType.includes('roi') || benefitType.includes('roi')) return false;
+
       const matchesLevel =
-        transaction.benefit_type?.toLowerCase()?.includes('level') ||
-        transaction.transaction_type?.toLowerCase()?.includes('level') ||
-        transaction.transaction_type?.toLowerCase()?.includes('commission') ||
-        transaction.transaction_type?.toLowerCase()?.includes('payout') ||
-        transaction.transaction_type?.toLowerCase()?.includes('benefit') ||
+        benefitType.includes('level') ||
+        txType.includes('level') ||
+        txType.includes('commission') ||
+        txType.includes('payout') ||
+        txType.includes('benefit') ||
         (transaction.level !== null && transaction.level !== undefined);
 
       return matchesLevel;

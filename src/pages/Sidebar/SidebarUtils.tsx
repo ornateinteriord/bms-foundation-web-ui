@@ -74,6 +74,11 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
         path: "/user/earnings/daily-payout",
         icon: <PaymentsIcon />,
       },
+      {
+        name: "ROI Benefits",
+        path: "/user/earnings/roi-benefits",
+        icon: <TrendingUpIcon />,
+      },
     ],
   },
   {

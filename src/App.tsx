@@ -126,6 +126,9 @@ const UserLevelBenifits = lazy(
 const UserDailyPayout = lazy(
   () => import("./pages/User-Pages/Earnings/DailyPayout")
 );
+const UserROIBenefits = lazy(
+  () => import("./pages/User-Pages/Earnings/ROIBenefits")
+);
 const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
 
 
@@ -389,6 +392,10 @@ const RoutesProvider = ({
               <Route
                 path="/user/earnings/daily-payout"
                 element={<UserDailyPayout />}
+              />
+              <Route
+                path="/user/earnings/roi-benefits"
+                element={<UserROIBenefits />}
               />
               <Route path="/user/transactions" element={<UserTransaction />} />
               <Route path="/user/loantransactions" element={<UserLoanTransaction />} />
