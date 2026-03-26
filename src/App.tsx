@@ -229,6 +229,12 @@ const RoutesProvider = ({
           display: "flex",
           maxWidth: "100vw",
           overflowX: "hidden",
+          backgroundImage: isDashboard ? `url(${DashboardBg})` : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          minHeight: "100vh"
         }}
       >
         {!shouldHide && (
@@ -245,12 +251,7 @@ const RoutesProvider = ({
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",
-            backgroundImage: isDashboard ? `url(${DashboardBg})` : "none",
-            backgroundColor: isDashboard ? "transparent" : "#ffffff",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundAttachment: "fixed",
+            backgroundColor: isDashboard ? "transparent" : "#f4f7f9",
             minHeight: "calc(100vh - 64px)"
           }}
         >
