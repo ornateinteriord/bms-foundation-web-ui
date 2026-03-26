@@ -393,8 +393,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          {IconComponent ? 
-            <IconComponent sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} /> : 
+          {IconComponent ?
+            <IconComponent sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} /> :
             <CurrencyRupeeIcon sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} />
           }
         </Box>
@@ -453,7 +453,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           <Button
             variant="contained"
             disabled={loanStatus.toLowerCase() === 'approved'}
-            sx={{...getButtonStyle(loanStatus), mt: 2}}
+            sx={{ ...getButtonStyle(loanStatus), mt: 2 }}
           >
             {loanStatus.toLowerCase() === 'approved' ? 'Approved' : loanStatus}
           </Button>

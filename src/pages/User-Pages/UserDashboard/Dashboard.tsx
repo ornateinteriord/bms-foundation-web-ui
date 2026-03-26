@@ -18,8 +18,6 @@ import {
   useVerifyPayment,
   parsePaymentRedirectParams,
   useGetTransactionDetails,
-  useGetlevelbenifits,
-  useGetDailyPayout,
   useGetWalletOverview,
   useGetMemberDetails
 } from '../../../api/Memeber';
@@ -34,8 +32,6 @@ const UserDashboard = () => {
 
   const { data: walletOverview } = useGetWalletOverview(memberId);
   const { data: memberDetails, refetch: refetchMemberDetails } = useGetMemberDetails(memberId);
-  const { data: levelBenefitsData } = useGetlevelbenifits(memberId);
-  const { data: dailyPayoutData } = useGetDailyPayout(memberId);
 
 
   // Payment verification hook
@@ -133,19 +129,18 @@ const UserDashboard = () => {
         sx={{
           mx: { xs: 2, sm: 3, md: 4 },
           mt: { xs: 8, md: 12 }, // Increased top margin as requested
-          mb: 3,
           p: { xs: 3, md: 4 },
           borderRadius: '16px',
           background: 'linear-gradient(135deg, #0a2558 0%, #153b93 100%)',
           position: 'relative',
-          overflow: 'hidden',
           boxShadow: '0 20px 40px -10px rgba(10, 37, 88, 0.4)',
           border: '1px solid rgba(255,255,255,0.1)',
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'space-between',
           alignItems: 'center',
-          gap: 3
+          gap: 3,
+          mb: 4 // Ensure gap below banner
         }}
       >
         {/* Abstract Gold Glow inside Header */}
@@ -182,19 +177,6 @@ const UserDashboard = () => {
       </Box>
 
 
-
-      <Typography
-        variant="h6"
-        sx={{
-          mx: { xs: 2, sm: 3, md: 4 },
-          color: '#0a2558',
-          fontWeight: 800,
-          mb: 1.5,
-          fontSize: { xs: '1.1rem', md: '1.3rem' }
-        }}
-      >
-        Quick Actions & Overview
-      </Typography>
 
       {/* Referral Link Box */}
       <Box
@@ -330,32 +312,38 @@ const UserDashboard = () => {
       {/* Dashboard Cards Grid */}
       <Grid
         container
-        spacing={{ xs: 2, sm: 3 }}
+        spacing={{ xs: 2, md: 3 }}
         sx={{
-          mx: { xs: 1, sm: 2 },
-          my: 2,
-          pt: 1,
-          pr: 7,
-          width: 'auto',
+          px: { xs: 2, sm: 3, md: 4 },
+          pb: 8, // ADDED BOTTOM PADDING FOR SCROLL ROOM
+          position: 'relative',
+          zIndex: 2,
           '& .MuiGrid-item': {
-            display: 'flex',
+            display: 'flex'
           }
         }}
       >
+        {/* Row 1: 3 Cards */}
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
-            amount={levelBenefitsData?.total_benefits ? `₹${Number(levelBenefitsData.total_benefits).toFixed(2)}` : "₹0.00"}
+            amount={walletOverview?.levelBenefits ? `₹${Number(walletOverview.levelBenefits).toFixed(2)}` : "₹0.00"}
             title="Level Benefits"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
-            amount={Array.isArray(dailyPayoutData)
-              ? `₹${Number(dailyPayoutData.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0)).toFixed(2)}`
-              : "₹0.00"}
+            amount={walletOverview?.roiBenefits ? `₹${Number(walletOverview.roiBenefits).toFixed(2)}` : "₹0.00"}
             title="Daily ROI"
           />
         </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard
+            amount={walletOverview?.roiLevelBenefits ? `₹${Number(walletOverview.roiLevelBenefits).toFixed(2)}` : "₹0.00"}
+            title="ROI Level Benefits"
+          />
+        </Grid>
+
+        {/* Row 2: 4th Card */}
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
             amount={walletOverview?.balance ? `₹${Number(walletOverview.balance).toFixed(2)}` : "₹0.00"}
