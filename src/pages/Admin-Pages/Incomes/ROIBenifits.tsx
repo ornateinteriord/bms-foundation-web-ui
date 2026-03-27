@@ -16,31 +16,17 @@ import {
   DASHBOARD_CUTSOM_STYLE,
   getAdminAggregatedIncomeColumns,
 } from "../../../utils/DataTableColumnsProvider";
-import { useGetAllTransactionDetails } from '../../../api/Admin';
+import { useGetROIBenefits } from '../../../api/Admin';
 
-const LevelBenifits = () => {
+const ROIBenifits = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Use the same transaction hook and filter for level benefits
-  const { data: allTransactions, isLoading, isError } = useGetAllTransactionDetails();
+  const { data: roiBenefits, isLoading, isError, error } = useGetROIBenefits();
 
-  // Filter transactions to get only level benefits
-  const levelBenefits = allTransactions?.filter((transaction: any) => {
-    const isLevel = (
-      transaction.type === 'level_benefit' ||
-      transaction.transactionType === 'level' ||
-      transaction.category === 'level_benefits' ||
-      transaction.description?.toLowerCase().includes('level')
-    );
-    const isROI = transaction.description?.toLowerCase().includes('roi') || 
-                  transaction.type?.toLowerCase().includes('roi') || 
-                  transaction.transactionType?.toLowerCase().includes('roi');
-    
-    return isLevel && !isROI;
-  }) || [];
+  const benefits = Array.isArray(roiBenefits) ? roiBenefits : [];
 
-  // Aggregate level benefits by user
-  const aggregatedData = levelBenefits.reduce((acc: any, curr: any) => {
+  // Aggregate ROI benefits by user
+  const aggregatedData = benefits.reduce((acc: any, curr: any) => {
     const memberId = curr.member_id || curr.related_member_id || 'N/A';
     if (!acc[memberId]) {
       acc[memberId] = {
@@ -65,7 +51,7 @@ const LevelBenifits = () => {
 
   const noDataComponent = (
     <div style={{ padding: "24px" }}>
-      {isError ? "Error loading data" : "No data available in table"}
+      {isError ? `Error: ${error?.message}` : "No ROI benefits data available"}
     </div>
   );
 
@@ -79,9 +65,10 @@ const LevelBenifits = () => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ margin: "2rem", mt: 10 }}>
-        Level Benefits
-      </Typography>
+      <Box sx={{ margin: "2rem", mt: 10 }}>
+        <Typography variant="h4">ROI Benefits</Typography>
+      </Box>
+
       <Card sx={{ margin: "2rem", mt: 2 }}>
         <CardContent>
           <Accordion defaultExpanded>
@@ -93,7 +80,7 @@ const LevelBenifits = () => {
                 "& .MuiSvgIcon-root": { color: "#fff" },
               }}
             >
-              List of Level Benefits
+              List of ROI Benefits ({filteredData.length})
             </AccordionSummary>
             <AccordionDetails>
               <Box
@@ -130,4 +117,4 @@ const LevelBenifits = () => {
   );
 };
 
-export default LevelBenifits;
+export default ROIBenifits;

@@ -263,6 +263,57 @@ export const useGetAllDailyPayouts = () => {
   });
 };
 
+export const useGetROISummary = () => {
+  return useQuery({
+    queryKey: ["admin-roi-summary"],
+    queryFn: async () => {
+      const response = await get("/admin/roi-summary");
+      if (response.success) {
+        return response.data;
+      } else {
+        throw new Error(response.message || "Failed to fetch ROI summary");
+      }
+    },
+  });
+};
+
+export const useGetROIBenefits = () => {
+  return useQuery({
+    queryKey: ["admin-roi-benefits"],
+    queryFn: async () => {
+      const response = await get("/admin/roi-benefits");
+      if (response.success) {
+        return response.data.roi_benefits || [];
+      } else {
+        throw new Error(response.message || "Failed to fetch ROI benefits");
+      }
+    },
+  });
+};
+
+
+export const useTriggerDailyROI = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      return await post("/admin/trigger-roi", {});
+    },
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success(response.message || "ROI Sync triggered successfully");
+        queryClient.invalidateQueries({ queryKey: ["admin-daily-payouts"] });
+        queryClient.invalidateQueries({ queryKey: ["admin-roi-summary"] });
+      } else {
+        toast.error(response.message || "ROI Sync failed");
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to trigger ROI Sync");
+    },
+  });
+};
+
+
 
 
 // Single unified hook for both pending and processed loans

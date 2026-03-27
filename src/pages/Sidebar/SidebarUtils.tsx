@@ -21,7 +21,7 @@ import {
   EventIcon,
   SmsIcon,
 } from "../Icons";
-import { CardMembershipRounded, Pending } from "@mui/icons-material";
+import { Pending } from "@mui/icons-material";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -187,9 +187,9 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: true,
     subItems: [
       {
-        name: "Cash Back",
-        path: "/admin/income/cashback",
-        icon: <PaymentsIcon />,
+        name: "ROI Benefits",
+        path: "/admin/income/roi-benefits",
+        icon: <TrendingUpIcon />,
       },
       {
         name: "Level Benefits",
@@ -206,7 +206,8 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
 
 
 
-  {
+
+  /* {
     name: "Loans",
     icon: <CreditCardIcon />,
     isExpandable: true,
@@ -235,7 +236,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         icon: <PaymentsIcon />
       },
     ],
-  },
+  }, */
 
 
   {
@@ -244,6 +245,10 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     path: "/admin/payout",
     isExpandable: false,
   },
+  /* Separate ROI menu removed and merged into Incomes */
+
+
+
   {
     name: "Withdraw Requests",
     icon: <Pending />,

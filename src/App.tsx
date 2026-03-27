@@ -68,6 +68,10 @@ const AdminDailyBenifitsPayouts = lazy(
 const AdminLevelBenifits = lazy(
   () => import("./pages/Admin-Pages/Incomes/LevelBenifits")
 );
+const AdminROIBenefits = lazy(
+  () => import("./pages/Admin-Pages/Incomes/ROIBenifits")
+);
+
 const AdminPayout = lazy(() => import("./pages/Admin-Pages/Payout/Payout"));
 
 const AdminTransactions = lazy(
@@ -321,6 +325,11 @@ const RoutesProvider = ({
                 path="/admin/income/daily-payouts"
                 element={<AdminDailyBenifitsPayouts />}
               />
+              <Route
+                path="/admin/income/roi-benefits"
+                element={<AdminROIBenefits />}
+              />
+
               <Route path="/admin/payout" element={<AdminPayout />} />
 
               {/* admin transaction routes */}
