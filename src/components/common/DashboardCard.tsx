@@ -19,6 +19,7 @@ interface DashboardCardProps {
   onClaim?: () => void;
   isClaimEligible?: boolean;
   loanStatus?: string | null;
+  onClick?: () => void;
 }
 
 const DashboardCard: React.FC<DashboardCardProps> = ({
@@ -37,7 +38,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   isRenewEnabled = false,
   onClaim,
   isClaimEligible = false,
-  loanStatus = null
+  loanStatus = null,
+  onClick
 }) => {
 
   const getRepayButtonText = () => {
@@ -373,8 +375,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.1)',
-        }
+        },
+        cursor: onClick ? 'pointer' : 'default'
       }}
+      onClick={onClick}
     >
       <Box
         sx={{

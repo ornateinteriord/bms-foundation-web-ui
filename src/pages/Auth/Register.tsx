@@ -21,7 +21,9 @@ import {
   DialogContent,
   DialogActions,
   Grid,
+  Autocomplete,
 } from "@mui/material";
+
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import EmailIcon from "@mui/icons-material/Email";
@@ -46,7 +48,9 @@ const Register = () => {
     confirmPassword: "",
     mobileno: "",
     pincode: "",
+    packageAmount: "",
   });
+
 
   const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -171,11 +175,14 @@ const Register = () => {
     try {
       // Create the final data object with the required structure
       const finalData = {
-        sponsor_id: formData.Sponsor_code,  // Using Sponsor_code as sponsor_id
+        sponsor_id: formData.Sponsor_code,
         Sponsor_code: formData.Sponsor_code,
         Sponsor_name: formData.Sponsor_name,
-        ...formData // Spread all other form data
+        spackage: 'BMS Plan',
+        ...(formData.packageAmount ? { package_value: Number(formData.packageAmount) } : {}),
+        ...formData
       };
+
 
       mutate(finalData, {
         onSuccess: (response) => {
@@ -561,6 +568,38 @@ const Register = () => {
                     }}
                   />
                 </Grid>
+
+                {/* Package Amount */}
+                <Grid item xs={12} sm={6}>
+                  <Autocomplete
+                    freeSolo
+                    options={["1000", "2000", "5000", "10000", "25000", "50000", "100000", "250000", "500000", "1000000", "2500000"]}
+                    value={formData.packageAmount || ''}
+                    onChange={(_, newValue) => setFormData(prev => ({ ...prev, packageAmount: newValue || '' }))}
+                    onInputChange={(_, newInputValue) => setFormData(prev => ({ ...prev, packageAmount: newInputValue }))}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Package Amount"
+                        variant="outlined"
+                        placeholder="e.g. 15000"
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: "8px",
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#0a2558",
+                              borderWidth: "2px"
+                            },
+                          },
+                          "& .MuiInputLabel-root.Mui-focused": {
+                            color: "#0a2558",
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </Grid>
+
 
                 {/* Gender */}
                 <Grid item xs={12}>
