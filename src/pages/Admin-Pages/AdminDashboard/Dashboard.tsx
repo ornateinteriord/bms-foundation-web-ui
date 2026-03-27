@@ -9,10 +9,17 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
-import { useGetAllMembersDetails } from '../../../api/Admin';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import { useGetAllMembersDetails, useGetROISummary } from '../../../api/Admin';
+
 
 const AdminDashboard = () => {
-  const { data: members = [], isLoading, error } = useGetAllMembersDetails();
+  const { data: members = [], isLoading: membersLoading, error: membersError } = useGetAllMembersDetails();
+  const { data: roiSummary, isLoading: roiLoading } = useGetROISummary();
+
+  const isLoading = membersLoading || roiLoading;
+  const error = membersError;
+
 
   // Sort members by most recent registration date
   const sortedMembers = [...members].sort((a, b) => {
@@ -138,7 +145,16 @@ const AdminDashboard = () => {
             IconComponent={PersonIcon}
           />
         </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard
+            amount={`₹${(roiSummary?.totalROIDistributed || 0).toLocaleString()}`}
+            title="Total ROI Distributed"
+            subTitle={`Today: ₹${(roiSummary?.todaysTotal || 0).toLocaleString()} (${roiSummary?.todaysCount || 0} payouts)`}
+            IconComponent={PaymentsIcon}
+          />
+        </Grid>
       </Grid>
+
 
       <div className='mt-10 p-4 rounded shadow'>
         <Card className='bg-gray-300'>

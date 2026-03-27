@@ -11,28 +11,18 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Tabs,
-  Tab,
   TextField,
 } from '@mui/material';
 import DataTable from 'react-data-table-component';
 import { DASHBOARD_CUTSOM_STYLE, getWithdrawPendingColumns } from '../../../utils/DataTableColumnsProvider';
-import { useGetPendingWithdrawals, useApproveWithdrawal, useCreatePaymentOrder } from '../../../api/Memeber';
+import { useGetPendingWithdrawals, useApproveWithdrawal } from '../../../api/Memeber';
 import { toast } from 'react-toastify';
 
 const WithdrawPending: React.FC = () => {
   const { data: pending = [], isFetching } = useGetPendingWithdrawals();
-  const { isPending: isApproving } = useApproveWithdrawal();
-  const { mutate: createPaymentOrder, isPending: isCreatingOrder } = useCreatePaymentOrder();
+  const { mutate: approveWithdrawal, isPending: isApproving } = useApproveWithdrawal();
   const [repayDialogOpen, setRepayDialogOpen] = useState(false);
   const [selectedTx, setSelectedTx] = useState<any>(null);
-  const [repayAmount, setRepayAmount] = useState<number>(500);
-  const [manualAmount, setManualAmount] = useState<string>('');
-  const [tabValue, setTabValue] = useState(0);
 
   // Filter only withdrawal requests
   const withdrawalRequests = (pending || []).filter((transaction: any) => {
@@ -47,70 +37,19 @@ const WithdrawPending: React.FC = () => {
 
   const handleRepayClick = (tx: any) => {
     setSelectedTx(tx);
-    setRepayAmount(tx?.ew_debit ? Number(tx.ew_debit) : 500);
-    setManualAmount('');
-    setTabValue(0);
     setRepayDialogOpen(true);
-  };
-
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
-  const handleManualAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      setManualAmount(value);
-    }
-  };
-
-  const getFinalRepayAmount = (): number => {
-    if (tabValue === 0) return repayAmount;
-    return manualAmount ? parseFloat(manualAmount) : 0;
   };
 
   const handleConfirmRepay = () => {
     if (!selectedTx) return;
 
-    const finalAmount = getFinalRepayAmount();
-
-    if (finalAmount <= 0) {
-      toast.error('Please enter a valid payment amount');
-      return;
-    }
-
-    // Optional: ensure not greater than requested amount
-    const due = Number(selectedTx?.ew_debit || 0);
-    if (finalAmount > due) {
-      toast.error(`Payment exceeds requested amount ₹${due}`);
-      return;
-    }
-
-    // Create Cashfree payment order instead of manual approval
-    const paymentData = {
-      amount: finalAmount,
-      currency: "INR",
-      customer: {
-        customer_id: selectedTx.member_id,
-        customer_email: selectedTx.memberDetails?.email || "",
-        customer_phone: selectedTx.memberDetails?.mobileno || "",
-        customer_name: selectedTx.memberDetails?.Name || ""
-      },
-      notes: {
-        transaction_id: selectedTx.transaction_id,
-        isWithdrawal: true,
-        withdrawalAmount: finalAmount
-      }
-    };
-
-    createPaymentOrder(paymentData, {
+    approveWithdrawal(selectedTx.transaction_id, {
       onSuccess: () => {
-        // Payment order created successfully, Cashfree checkout will be initialized
         setRepayDialogOpen(false);
         setSelectedTx(null);
       },
       onError: (err: any) => {
-        toast.error(err.response?.data?.message || err.message || 'Failed to initiate payment');
+        toast.error(err.response?.data?.message || err.message || 'Failed to approve withdrawal');
         setRepayDialogOpen(false);
         setSelectedTx(null);
       }
@@ -149,7 +88,7 @@ const WithdrawPending: React.FC = () => {
               pagination
               customStyles={DASHBOARD_CUTSOM_STYLE}
               paginationPerPage={25}
-              progressPending={isFetching || isApproving || isCreatingOrder}
+              progressPending={isFetching || isApproving}
               paginationRowsPerPageOptions={[25, 50, 100]}
               highlightOnHover
               noDataComponent={<div>No withdrawal requests found</div>}
@@ -161,7 +100,7 @@ const WithdrawPending: React.FC = () => {
       {/* Repayment Dialog: styled to match LoansList */}
       <Dialog
         open={repayDialogOpen}
-        onClose={() => { !isApproving && !isCreatingOrder && setRepayDialogOpen(false) }}
+        onClose={() => { !isApproving && setRepayDialogOpen(false) }}
         PaperProps={{
           sx: {
             borderRadius: 3,
@@ -181,7 +120,7 @@ const WithdrawPending: React.FC = () => {
             pb: 1,
           }}
         >
-          payment
+          Confirm Withdrawal
         </DialogTitle>
 
         <DialogContent>
@@ -189,12 +128,13 @@ const WithdrawPending: React.FC = () => {
             sx={{
               textAlign: 'center',
               mb: 3,
-              fontSize: '1rem',
-              color: '#4b5563',
+              fontSize: '1.2rem',
+              color: '#0a2558',
+              fontWeight: 600,
               lineHeight: 1.6,
             }}
           >
-            Choose the repayment amount and confirm to proceed.
+            Are you sure you want to process this withdrawal?
           </DialogContentText>
 
           <Box sx={{ mb: 3 }}>
@@ -225,52 +165,14 @@ const WithdrawPending: React.FC = () => {
             </Box>
           </Box>
 
-          <Tabs value={tabValue} onChange={handleTabChange} centered>
-            <Tab label="Quick Amount" />
-            <Tab label="Manual Amount" />
-          </Tabs>
 
-          {tabValue === 0 ? (
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel>Amount</InputLabel>
-                <Select
-                  value={repayAmount}
-                  label="Amount"
-                  onChange={(e) => setRepayAmount(Number(e.target.value))}
-                >
-                  {[500, 1000, 2000]
-                    .filter(a => a <= Number(selectedTx?.ew_debit || 0))
-                    .map(a => (
-                      <MenuItem key={a} value={a}>₹{a} {a === Number(selectedTx?.ew_debit || 0) && '(Full)'}</MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
-          ) : (
-            <Box sx={{ mt: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel>Enter Amount</InputLabel>
-                <input
-                  value={manualAmount}
-                  onChange={handleManualAmountChange}
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: 6,
-                    border: '1px solid #d1d5db'
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )}
         </DialogContent>
 
         <DialogActions sx={{ justifyContent: 'center', pb: 2, pt: 1, gap: 1 }}>
           <Button
             onClick={() => setRepayDialogOpen(false)}
             variant="outlined"
-            disabled={isApproving || isCreatingOrder}
+            disabled={isApproving}
             sx={{
               borderColor: '#d1d5db',
               color: '#6b7280',
@@ -286,7 +188,7 @@ const WithdrawPending: React.FC = () => {
           <Button
             onClick={handleConfirmRepay}
             variant="contained"
-            disabled={getFinalRepayAmount() === 0 || isApproving || isCreatingOrder}
+            disabled={isApproving}
             sx={{
               background: 'linear-gradient(135deg, #0a2558 0%, #a855f7 100%)',
               '&:hover': { background: 'linear-gradient(135deg, #581c87 0%, #9333ea 100%)' },
@@ -296,7 +198,7 @@ const WithdrawPending: React.FC = () => {
               px: 3,
             }}
           >
-            {isApproving || isCreatingOrder ? <CircularProgress size={18} color="inherit" /> : 'Confirm Payment'}
+            {isApproving ? <CircularProgress size={18} color="inherit" /> : 'Confirm Payment'}
           </Button>
         </DialogActions>
       </Dialog>

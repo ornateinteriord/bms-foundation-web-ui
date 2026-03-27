@@ -175,6 +175,30 @@ export const getLevelBenifitsColumns = () => [
   },
 ];
 
+export const getAdminAggregatedIncomeColumns = () => [
+  {
+    name: "S No",
+    cell: (_: any, index: number) => index + 1,
+    width: "80px",
+  },
+  {
+    name: "Member ID",
+    selector: (row: any) => row.member_id,
+    sortable: true,
+  },
+  {
+    name: "Member Name",
+    selector: (row: any) => row.name || "-",
+    sortable: true,
+  },
+  {
+    name: "Total Amount",
+    selector: (row: any) => row.totalAmount,
+    sortable: true,
+    format: (row: any) => `₹ ${parseFloat(row.totalAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+  },
+];
+
 export const getDailyPayoutColumns = () => [
   {
     name: "Date",
@@ -1194,7 +1218,7 @@ export const getWithdrawPendingColumns = (onRepay: (transaction: any) => void) =
           sx={{ textTransform: 'capitalize' }}
           onClick={() => onRepay(row)}
         >
-          pay online
+          Pay Now
         </Button>
       </div>
     ),
