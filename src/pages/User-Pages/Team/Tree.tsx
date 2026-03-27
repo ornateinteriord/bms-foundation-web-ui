@@ -31,6 +31,9 @@ const Tree = () => {
     Name: string;
     status: string;
     Date_of_joining: string;
+    direct_referrals?: string[];
+    total_team?: number;
+    wallet_balance?: number;
   } | null>(null);
 
   const memberId = searchParams.get("memberId") || TokenService.getMemberId()
@@ -56,11 +59,11 @@ const Tree = () => {
   const data = hoveredSponsor ? [
     { field: "Member Name", value: hoveredSponsor.Name },
     { field: "Status", value: hoveredSponsor.status },
-    { field: "Direct", value: "0/0" },
-    { field: "Team", value: "0/0" },
+    { field: "Direct", value: hoveredSponsor.direct_referrals?.length || 0 },
+    { field: "Team", value: hoveredSponsor.total_team || 0 },
     { field: "Activation Date", value: getFormattedDate(hoveredSponsor.Date_of_joining) },
     { field: "Club", value: "2K" },
-    { field: "Earnings", value: "Rs. 0" },
+    { field: "Earnings", value: `Rs. ${hoveredSponsor.wallet_balance || 0}` },
   ] : []
 
   // Get avatar background color based on status

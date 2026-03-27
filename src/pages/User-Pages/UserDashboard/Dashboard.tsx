@@ -1,6 +1,6 @@
 // components/UserDashboard.tsx
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Grid,
   Typography,
@@ -26,6 +26,7 @@ import { toast } from 'react-toastify';
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [paymentProcessed, setPaymentProcessed] = useState(false);
 
   const memberId = TokenService.getMemberId();
@@ -328,26 +329,30 @@ const UserDashboard = () => {
           <DashboardCard
             amount={walletOverview?.levelBenefits ? `₹${Number(walletOverview.levelBenefits).toFixed(2)}` : "₹0.00"}
             title="Level Benefits"
+            onClick={() => navigate('/user/earnings/level-benefits')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
             amount={walletOverview?.roiBenefits ? `₹${Number(walletOverview.roiBenefits).toFixed(2)}` : "₹0.00"}
             title="Daily ROI"
+            onClick={() => navigate('/user/earnings/daily-payout')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
             amount={walletOverview?.roiLevelBenefits ? `₹${Number(walletOverview.roiLevelBenefits).toFixed(2)}` : "₹0.00"}
             title="ROI Level Benefits"
+            onClick={() => navigate('/user/earnings/roi-benefits')}
           />
         </Grid>
-
+ 
         {/* Row 2: 4th Card */}
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard
             amount={walletOverview?.balance ? `₹${Number(walletOverview.balance).toFixed(2)}` : "₹0.00"}
             title="Wallet Balance"
+            onClick={() => navigate('/user/wallet')}
           />
         </Grid>
       </Grid>
