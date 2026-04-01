@@ -17,6 +17,7 @@ import { Visibility, VisibilityOff, PersonOutline, LockOutlined } from "@mui/ico
 import BMSLogo from "../../assets/bms_logo.png"; // Import the logo
 import { LoadingComponent } from "../../App";
 import { useLoginMutation } from "../../api/Auth";
+import ForgotPasswordForm from "./components/ForgotPasswordForm";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ const Login = () => {
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isResetMode, setIsResetMode] = useState(false);
 
   // Load saved credentials on mount
   useEffect(() => {
@@ -132,9 +134,13 @@ const Login = () => {
             />
           </Box>
 
-          <Typography
-            component="h1"
-            variant="h5"
+          {isResetMode ? (
+            <ForgotPasswordForm onBackToLogin={() => setIsResetMode(false)} />
+          ) : (
+            <>
+              <Typography
+                component="h1"
+                variant="h5"
             sx={{
               color: "#0a2558", // Deep Navy target
               fontWeight: 800,
@@ -263,7 +269,9 @@ const Login = () => {
                 }
               />
               <MuiLink
-                href="#"
+                component="button"
+                type="button"
+                onClick={() => setIsResetMode(true)}
                 underline="hover"
                 sx={{ color: "#0a2558", fontSize: "0.875rem", fontWeight: 600 }}
               >
@@ -320,6 +328,8 @@ const Login = () => {
               </Link>
             </Typography>
           </Box>
+            </>
+          )}
         </Paper>
       </Container>
       {isPending && <LoadingComponent />}
