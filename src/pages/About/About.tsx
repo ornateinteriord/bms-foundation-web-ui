@@ -35,7 +35,7 @@ const About = () => {
                     About Us
                 </Typography>
                 <Typography variant="h6" color="text.secondary">
-                    Manipal Souharda Co-operative Society Ltd.
+                   BMS Fundation Ltd.
                 </Typography>
             </Box>
 
