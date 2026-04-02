@@ -46,7 +46,7 @@ const Footer = () => {
                                 WebkitTextFillColor: "transparent",
                             }}
                         >
-                            Manipal Souharda Co-operative Society Ltd.
+                            BMS Fundation Ltd.
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 2, opacity: 0.9, lineHeight: 1.8 }}>
                             A trusted cooperative society providing comprehensive financial services
@@ -73,7 +73,7 @@ const Footer = () => {
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                 <Mail size={16} />
                                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                                    mscsociety100@gmail.com
+                                     BMSFundation@gmail.com
                                 </Typography>
                             </Box>
                         </Box>
@@ -198,7 +198,7 @@ const Footer = () => {
                     }}
                 >
                     <Typography variant="body2" sx={{ opacity: 0.7, textAlign: { xs: "center", md: "left" } }}>
-                        © {currentYear} Manipal Souharda Co-operative Society Ltd. All rights reserved.
+                        © {currentYear}  BMS Fundation Ltd. All rights reserved.
                     </Typography>
                     <Box
                         sx={{
