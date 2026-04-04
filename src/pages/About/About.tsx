@@ -35,7 +35,7 @@ const About = () => {
                     About Us
                 </Typography>
                 <Typography variant="h6" color="text.secondary">
-                    BMS Foundation ltd
+                   BMS Fundation Ltd.
                 </Typography>
             </Box>
 
