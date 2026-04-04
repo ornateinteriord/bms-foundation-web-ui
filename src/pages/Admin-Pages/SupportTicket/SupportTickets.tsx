@@ -28,7 +28,7 @@ interface Ticket {
   reference_id: string;
   type_of_ticket: string;
   SUBJECT: string;
-  ticket_status: "pending" | "solved";
+  ticket_status: "pending" | "solved" | "answered";
 
 }
 
@@ -51,20 +51,23 @@ const SupportTickets = () => {
 
   const replyTicketMutation = useUpdateTickets()
   const handleSubmitReply = (e: React.FormEvent) => {
-    try {
-      e.preventDefault();
-      if (!selectedTicket) return;
-      const replyTicket = {
-        id: selectedTicket._id,
-        reply_details: replyText,
+    e.preventDefault();
+    if (!selectedTicket || !replyText.trim()) return;
 
-      }
-      replyTicketMutation.mutate(replyTicket)
-    } catch (error) {
-      console.error("Failed to update ticket", error);
-    } finally {
-      handleCloseDialog();
+    const replyTicket = {
+      id: selectedTicket._id,
+      reply_details: replyText,
     }
+
+    replyTicketMutation.mutate(replyTicket, {
+      onSuccess: () => {
+        handleCloseDialog();
+      },
+      onError: (error) => {
+        console.error("Failed to update ticket", error);
+        // Error toast is already handled in the hook
+      }
+    });
 
   };
 
@@ -177,9 +180,9 @@ const SupportTickets = () => {
               backgroundColor: '#0a2558',
               '&:hover': { backgroundColor: '#581c87' }
             }}
-            disabled={!selectedTicket}
+            disabled={!selectedTicket || replyTicketMutation.isPending}
           >
-            Reply
+            {replyTicketMutation.isPending ? "Submitting..." : "Reply"}
           </Button>
 
         </DialogActions>

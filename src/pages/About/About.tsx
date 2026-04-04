@@ -35,7 +35,7 @@ const About = () => {
                     About Us
                 </Typography>
                 <Typography variant="h6" color="text.secondary">
-                    Manipal Souharda Co-operative Society Ltd.
+                    BMS Foundation ltd
                 </Typography>
             </Box>
 
@@ -44,7 +44,7 @@ const About = () => {
                     Who We Are
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    Manipal Souharda Co-operative Society Ltd. (MSI) is a premier cooperative society dedicated to
+                    BMS Foundation ltd (BMSF) is a premier cooperative society dedicated to
                     providing comprehensive financial services to our valued members. Established with the vision of
                     financial inclusion and empowerment, we have been serving our community with integrity, transparency,
                     and excellence.

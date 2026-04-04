@@ -346,7 +346,7 @@ const UserDashboard = () => {
             onClick={() => navigate('/user/earnings/roi-benefits')}
           />
         </Grid>
- 
+
         {/* Row 2: 4th Card */}
         <Grid item xs={12} sm={6} md={4}>
           <DashboardCard

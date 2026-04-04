@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid, Typography } from '@mui/material';
 import { cn } from '../../../lib/utils';
+import { useNavigate } from 'react-router-dom';
 import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
 import DashboardCard from '../../../components/common/DashboardCard';
@@ -14,6 +15,7 @@ import { useGetAllMembersDetails, useGetROISummary } from '../../../api/Admin';
 
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const { data: members = [], isLoading: membersLoading, error: membersError } = useGetAllMembersDetails();
   const { data: roiSummary, isLoading: roiLoading } = useGetROISummary();
 
@@ -127,6 +129,7 @@ const AdminDashboard = () => {
             title="Total Members"
             subTitle={`${totalMembers} members in total`}
             IconComponent={PersonIcon}
+            onClick={() => navigate('/admin/members')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -135,6 +138,7 @@ const AdminDashboard = () => {
             title="Active Members"
             subTitle={`${activeMembers} active members`}
             IconComponent={PersonIcon}
+            onClick={() => navigate('/admin/members/active')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -143,6 +147,7 @@ const AdminDashboard = () => {
             title="Pending Members"
             subTitle={`${pendingMembers} pending activation`}
             IconComponent={PersonIcon}
+            onClick={() => navigate('/admin/members/pending')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -151,6 +156,7 @@ const AdminDashboard = () => {
             title="Total ROI Distributed"
             subTitle={`Today: ₹${(roiSummary?.todaysTotal || 0).toLocaleString()} (${roiSummary?.todaysCount || 0} payouts)`}
             IconComponent={PaymentsIcon}
+            onClick={() => navigate('/admin/income/daily-payouts')}
           />
         </Grid>
       </Grid>

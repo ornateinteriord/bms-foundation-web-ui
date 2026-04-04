@@ -99,7 +99,13 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
       </AnimatePresence>
       <div style={{ height: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '80px' }}>
         <AnimatePresence>
-          {menuItems.map((item: SideBarMenuItemType) => (
+          {menuItems.filter((item: SideBarMenuItemType) => {
+            // Hide "Add-On Packages" if user is not active
+            if (role === "USER" && item.name === "Add-On Packages" && fethedUser?.status !== 'active') {
+              return false;
+            }
+            return true;
+          }).map((item: SideBarMenuItemType) => (
             <motion.div
               key={item.name}
               initial={{ opacity: 0, x: -20 }}

@@ -47,7 +47,7 @@ const Terms = () => {
                     </Typography>
                 </Box>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    Welcome to Manipal Souharda Co-operative Society Ltd. ("MSI", "we", "us", or "our"). These Terms
+                    Welcome to BMS Foundation ltd (\"BMSF\", \"we\", \"us\", or \"our\"). These Terms
                     and Conditions govern your use of our services and platform. By accessing or using our services,
                     you agree to be bound by these terms.
                 </Typography>
@@ -65,7 +65,7 @@ const Terms = () => {
                     </Typography>
                 </Box>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    To become a member of MSI and use our services, you must:
+                    To become a member of BMSF and use our services, you must:
                 </Typography>
                 <Box component="ul" sx={{ pl: 4, mb: 2 }}>
                     <li>Be at least 18 years of age</li>
@@ -103,7 +103,7 @@ const Terms = () => {
                     Financial Services
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    MSI offers various financial services including:
+                    BMSF offers various financial services including:
                 </Typography>
                 <Box component="ul" sx={{ pl: 4 }}>
                     <li>Savings Accounts with competitive interest rates</li>
@@ -166,7 +166,7 @@ const Terms = () => {
                     Limitation of Liability
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    MSI shall not be liable for any indirect, incidental, special, or consequential damages arising out
+                    BMSF shall not be liable for any indirect, incidental, special, or consequential damages arising out
                     of or related to your use of our services. We do not guarantee uninterrupted or error-free service.
                 </Typography>
             </Paper>
@@ -180,7 +180,7 @@ const Terms = () => {
                     with or without notice, for any violation of these terms or for any other reason we deem appropriate.
                 </Typography>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    Upon termination, you remain liable for all outstanding obligations and amounts due to MSI.
+                    Upon termination, you remain liable for all outstanding obligations and amounts due to BMSF.
                 </Typography>
             </Paper>
 

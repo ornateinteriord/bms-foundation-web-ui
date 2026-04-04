@@ -553,18 +553,20 @@ export const getSupportTicketColumns = (handleOpenDialog: any) => [
   {
     name: 'Status',
     selector: (row: any) => row.ticket_status,
-    cell: (row: any) => (
-      <span
-        style={{
-          color: row.ticket_status === 'pending' ? '#CC5500' : '#008000',
-          padding: '0.5rem',
-          borderRadius: '4px',
-
-        }}
-      >
-        {row.ticket_status?.charAt(0).toUpperCase() + row.ticket_status?.slice(1)}
-      </span>
-    ),
+    cell: (row: any) => {
+      const status = row.ticket_status?.toLowerCase();
+      return (
+        <span
+          style={{
+            color: status === 'pending' ? '#CC5500' : '#008000',
+            padding: '0.5rem',
+            borderRadius: '4px',
+          }}
+        >
+          {row.ticket_status?.charAt(0).toUpperCase() + row.ticket_status?.slice(1)}
+        </span>
+      );
+    },
     sortable: true,
   },
   {

@@ -45,7 +45,7 @@ const LevelBenifits = () => {
     if (!acc[memberId]) {
       acc[memberId] = {
         member_id: memberId,
-        name: curr.name || curr.memberName || curr.member_name || '-',
+        name: curr.Name || curr.name || curr.memberName || curr.member_name || '-',
         totalAmount: 0,
       };
     }
