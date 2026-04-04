@@ -10,11 +10,8 @@ import {
   Grid,
   Box,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   CircularProgress,
+
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
@@ -59,12 +56,14 @@ const Wallet = () => {
   }, [walletData?.data?.balance, walletData?.loanStatus]);
 
   const handleAmountChange = (e: any) => {
-    const selectedAmount = e.target.value;
-    setAmount(selectedAmount);
+    const value = e.target.value;
+    // Allow only numeric input
+    if (value !== "" && !/^\d*$/.test(value)) return;
 
-    if (selectedAmount && selectedAmount !== "0") {
-      const withdrawalAmount = parseFloat(selectedAmount);
-      // const adminChargeAmount = withdrawalAmount * 0.15; // 15% admin charges (Removed)
+    setAmount(value);
+
+    if (value && value !== "0") {
+      const withdrawalAmount = parseFloat(value);
       const tdsAmount = withdrawalAmount * 0.05; // 5% TDS
       const calculatedNetAmount = withdrawalAmount - tdsAmount;
 
@@ -94,10 +93,6 @@ const Wallet = () => {
 
     if (withdrawalAmount < 100) {
       toast.error('Minimum withdrawal amount is ₹100');
-      return;
-    }
-
-    if (withdrawalAmount > 1000) {
       return;
     }
 
@@ -314,35 +309,24 @@ const Wallet = () => {
                 }}
               />
 
-              <FormControl fullWidth size="medium">
-                <InputLabel>Withdrawal Amount</InputLabel>
-                <Select
-                  value={amount}
-                  onChange={handleAmountChange}
-                  label="Withdrawal Amount"
-                  disabled={withdrawMutation.isPending || !isWithdrawalAllowed}
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: isWithdrawalAllowed ? "inherit" : "#ff9800",
-                    },
-                  }}
-                >
-                  <MenuItem value="0">
-                    <em>Select Amount</em>
-                  </MenuItem>
-                  {[100, 200, 500, 1000].map((value) => (
-                    <MenuItem
-                      key={value}
-                      value={value}
-                      disabled={value > displayBalance || !isWithdrawalAllowed}
-                    >
-                      ₹{value}
-                      {value > displayBalance ? " (Insufficient Balance)" : ""}
-                      {!isWithdrawalAllowed ? " (Withdrawal Disabled)" : ""}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <TextField
+                label="Withdrawal Amount"
+                type="text"
+                value={amount}
+                onChange={handleAmountChange}
+                fullWidth
+                size="medium"
+                placeholder="Enter amount (Min ₹100)"
+                disabled={withdrawMutation.isPending || !isWithdrawalAllowed}
+                error={parseFloat(amount) > displayBalance}
+                helperText={parseFloat(amount) > displayBalance ? "Insufficient Balance" : ""}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
+                  },
+                }}
+              />
 
               {/* 
               <TextField
@@ -403,12 +387,8 @@ const Wallet = () => {
                   </Typography>
                   <Box sx={{ display: "flex", gap: 4, flexDirection: isMobile ? "column" : "row" }}>
                     <Box>
-                      {/* <Typography variant="body2">• 15% admin charges + 5% TDS applied</Typography> */}
                       <Typography variant="body2">• 5% TDS applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹100</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="body2">• Maximum withdrawal: ₹1000</Typography>
                       <Typography variant="body2">• One withdrawal per day allowed</Typography>
                     </Box>
                   </Box>
