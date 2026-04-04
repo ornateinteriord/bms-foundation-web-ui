@@ -91,10 +91,13 @@ const WithdrawPending = lazy(() => import("./pages/Admin-Pages/WithdrawPending/W
 // const Activate = lazy(() => import("./pages/Admin-Pages/Activate/Activate"));
 // const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
 
+const AdminAddOnRequests = lazy(() => import("./pages/Admin-Pages/Packages/AdminAddOnRequests"));
+
 // user pages
 const UserDashboard = lazy(
   () => import("./pages/User-Pages/UserDashboard/Dashboard")
 );
+const UserAddOnPackages = lazy(() => import("./pages/User-Pages/Packages/UserAddOnPackages"));
 const UserPackageHistory = lazy(
   () => import("./pages/User-Pages/Packages/PackageHistory")
 );
@@ -294,6 +297,10 @@ const RoutesProvider = ({
                 path="/admin/members/inactive"
                 element={<InActiveMembers />}
               />
+              
+              {/* admin addon routes */}
+              <Route path="/admin/addon-approvals" element={<AdminAddOnRequests />} />
+
               {/* admin package routes */}
               <Route
                 path="/admin/package/generate"
@@ -373,6 +380,7 @@ const RoutesProvider = ({
               />
               <Route path="/user/activate" element={<UserActivate />} />
               {/* package routes */}
+              <Route path="/user/addon-packages" element={<UserAddOnPackages />} />
               <Route path="/user/package/used" element={<UserUsedPackage />} />
               <Route
                 path="/user/package/unused"

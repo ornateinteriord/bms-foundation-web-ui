@@ -47,7 +47,7 @@ const RefundPolicy = () => {
                     </Typography>
                 </Box>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    At Manipal Souharda Co-operative Society Ltd. (MSI), we strive to provide excellent financial services
+                    At BMS Foundation ltd (BMSF), we strive to provide excellent financial services
                     to our members. This Refund Policy outlines the circumstances under which refunds may be requested and
                     processed for various fees and charges.
                 </Typography>

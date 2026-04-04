@@ -22,6 +22,7 @@ import {
   SmsIcon,
 } from "../Icons";
 import { Pending } from "@mui/icons-material";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 
 export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
@@ -105,12 +106,17 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
+    name: "Add-On Packages",
+    icon: <PaymentsIcon />,
+    path: "/user/addon-packages",
+    isExpandable: false,
+  },
+  {
     name: "Mail Box",
     icon: <MailOutlineIcon />,
     path: "/user/mailbox",
     isExpandable: false,
   },
-
 ];
 
 
@@ -180,6 +186,19 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
   //       icon: <HistoryIcon />,
   //     },
   //   ],
+
+  {
+    name: "Add-On Incomes",
+    icon: <PaymentsIcon />,
+    isExpandable: true,
+    subItems: [
+      {
+        name: "Add-On Approvals",
+        path: "/admin/addon-approvals",
+        icon: <ReceiptLongIcon />,
+      },
+    ],
+  },
 
   {
     name: "Incomes",

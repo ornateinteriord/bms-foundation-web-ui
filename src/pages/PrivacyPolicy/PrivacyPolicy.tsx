@@ -47,7 +47,7 @@ const PrivacyPolicy = () => {
                     </Typography>
                 </Box>
                 <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
-                    Manipal Souharda Co-operative Society Ltd. ("MSI", "we", "us", or "our") is committed to protecting
+                    BMS Foundation ltd (\"BMSF\", \"we\", \"us\", or \"our\") is committed to protecting
                     your privacy and personal information. This Privacy Policy explains how we collect, use, disclose,
                     and safeguard your information when you use our services and platform.
                 </Typography>
