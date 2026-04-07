@@ -790,6 +790,28 @@ export const useGetROIBenefits = (memberId: any) => {
   });
 };
 
+export const useTriggerUserROI = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (memberId: string) => {
+      console.log(`🎯 Triggering ROI for member: ${memberId}`);
+      const response = await get(`/user/roi/trigger/${memberId}`);
+      return response;
+    },
+    onSuccess: (data: any, memberId: string) => {
+      console.log(`✅ ROI Trigger Success for ${memberId}:`, data);
+      // Invalidate relevant queries to refresh the UI
+      queryClient.invalidateQueries({ queryKey: ["roi-benefits", memberId] });
+      queryClient.invalidateQueries({ queryKey: ["daily-payout", memberId] });
+      queryClient.invalidateQueries({ queryKey: ["walletOverview", memberId] });
+      queryClient.invalidateQueries({ queryKey: ["memberDetails", TokenService.getUserId()] });
+    },
+    onError: (error: any) => {
+      console.error("❌ Failed to trigger ROI:", error);
+    }
+  });
+};
+
 export const useClimeLoan = () => {
   return useMutation({
     mutationFn: async ({ memberId, data }: { memberId: string; data: any }) => {

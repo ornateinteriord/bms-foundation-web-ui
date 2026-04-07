@@ -2,11 +2,21 @@ import DataTable from 'react-data-table-component';
 import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { DASHBOARD_CUTSOM_STYLE, getLevelBenifitsColumns } from '../../../utils/DataTableColumnsProvider';
-import { useGetROIBenefits } from '../../../api/Memeber';
+import { useEffect } from 'react';
+import { useGetROIBenefits, useTriggerUserROI } from '../../../api/Memeber';
 import TokenService from '../../../api/token/tokenService';
 
 const ROIBenefits = () => {
   const memberId = TokenService.getMemberId();
+  const triggerROI = useTriggerUserROI();
+
+  // Forcefully trigger ROI on component mount
+  useEffect(() => {
+    if (memberId) {
+      triggerROI.mutate(memberId);
+    }
+  }, [memberId]);
+
   const {
     data: roiBenefitsData,
     isLoading,
