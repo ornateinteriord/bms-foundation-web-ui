@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Button } from '@mui/material';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import RupeeIcon from './RupeeIcon';
 
 interface DashboardCardProps {
   amount: string | number;
@@ -41,6 +41,25 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   loanStatus = null,
   onClick
 }) => {
+
+  const renderTextWithIcon = (val: string | number, justifyContent: string = 'center') => {
+    const valStr = String(val);
+    if (!valStr.includes('₹')) return valStr;
+
+    const parts = valStr.split('₹');
+    return (
+      <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent, gap: 0, flexWrap: 'wrap' }}>
+        {parts.map((part, index) => (
+          <React.Fragment key={index}>
+            {part}
+            {index < parts.length - 1 && (
+              <RupeeIcon sx={{ width: '1em', height: '1em', mx: 0.1, mt: -0.2 }} />
+            )}
+          </React.Fragment>
+        ))}
+      </Box>
+    );
+  };
 
   const getRepayButtonText = () => {
     if (isRepayEnabled) return 'Repay Now';
@@ -143,7 +162,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                   textShadow: '0 2px 4px rgba(0,0,0,0.3)'
                 }}
               >
-                ₹{amount}
+                {renderTextWithIcon(amount, 'center')}
               </Typography>
             </Box>
 
@@ -167,7 +186,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                   color: '#ef4444' // Red for due
                 }}
               >
-                ₹{dueAmount}
+                {renderTextWithIcon(dueAmount, 'center')}
               </Typography>
             </Box>
           </Box>
@@ -260,7 +279,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 fontSize: { xs: '1.3rem', sm: '1.6rem' },
               }}
             >
-              {amount}
+              {renderTextWithIcon(amount, 'center')}
             </Typography>
           </Box>
 
@@ -390,7 +409,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         }}
       >
         <Box sx={{
-          background: 'rgba(255, 192, 0, 0.15)', // Soft gold circle behind icon
+          background: 'transparent', // Removed soft gold circle
           borderRadius: '50%',
           padding: '16px',
           display: 'flex',
@@ -399,7 +418,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         }}>
           {IconComponent ?
             <IconComponent sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} /> :
-            <CurrencyRupeeIcon sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} />
+            <RupeeIcon sx={{ width: { xs: '2.5rem', sm: '3rem' }, height: { xs: '2.5rem', sm: '3rem' }, filter: 'brightness(1.2)' }} />
           }
         </Box>
       </Box>
@@ -436,7 +455,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             letterSpacing: '-0.5px'
           }}
         >
-          {amount}
+          {renderTextWithIcon(amount, 'flex-start')}
         </Typography>
 
         {subTitle && (
@@ -449,7 +468,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               marginTop: '4px'
             }}
           >
-            {subTitle}
+            {renderTextWithIcon(subTitle, 'flex-start')}
           </Typography>
         )}
 
