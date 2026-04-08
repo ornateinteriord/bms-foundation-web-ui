@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Button } from '@mui/material';
 import RupeeIcon from './RupeeIcon';
+import SmallRupeeIcon from './SmallRupeeIcon';
 
 interface DashboardCardProps {
   amount: string | number;
@@ -53,7 +54,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           <React.Fragment key={index}>
             {part}
             {index < parts.length - 1 && (
-              <RupeeIcon sx={{ width: '1em', height: '1em', mx: 0.1, mt: -0.2 }} />
+              <SmallRupeeIcon sx={{ width: '1em', height: '1em', mx: 0.1, mt: -0.2 }} />
             )}
           </React.Fragment>
         ))}
