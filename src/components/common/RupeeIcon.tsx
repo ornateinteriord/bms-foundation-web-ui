@@ -9,19 +9,18 @@ interface RupeeIconProps {
 const RupeeIcon: React.FC<RupeeIconProps> = ({ sx, className }) => {
   return (
     <Box
-      component="img"
-      src="/B3.png"
-      alt="₹"
+      component="span"
       className={className}
       sx={{
         display: 'inline-block',
         verticalAlign: 'middle',
-        width: '1em',
-        height: '1em',
-        objectFit: 'contain',
+        fontFamily: 'inherit',
+        fontWeight: 'bold',
         ...sx,
       }}
-    />
+    >
+      ₹
+    </Box>
   );
 };
 

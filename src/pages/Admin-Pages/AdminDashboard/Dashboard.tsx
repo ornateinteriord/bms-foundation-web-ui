@@ -5,7 +5,9 @@ import '../../Dashboard/dashboard.scss';
 import DashboardTable from '../../Dashboard/DashboardTable';
 import DashboardCard from '../../../components/common/DashboardCard';
 import { getAdminDashboardTableColumns } from '../../../utils/DataTableColumnsProvider';
-import PersonIcon from '@mui/icons-material/Person';
+import PeopleIcon from '@mui/icons-material/People';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import HistoryIcon from '@mui/icons-material/History';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -128,7 +130,7 @@ const AdminDashboard = () => {
             amount={totalMembers}
             title="Total Members"
             subTitle={`${totalMembers} members in total`}
-            IconComponent={PersonIcon}
+            IconComponent={PeopleIcon}
             onClick={() => navigate('/admin/members')}
           />
         </Grid>
@@ -137,7 +139,7 @@ const AdminDashboard = () => {
             amount={activeMembers}
             title="Active Members"
             subTitle={`${activeMembers} active members`}
-            IconComponent={PersonIcon}
+            IconComponent={PersonAddIcon}
             onClick={() => navigate('/admin/members/active')}
           />
         </Grid>
@@ -146,7 +148,7 @@ const AdminDashboard = () => {
             amount={pendingMembers}
             title="Pending Members"
             subTitle={`${pendingMembers} pending activation`}
-            IconComponent={PersonIcon}
+            IconComponent={HistoryIcon}
             onClick={() => navigate('/admin/members/pending')}
           />
         </Grid>

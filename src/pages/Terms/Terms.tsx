@@ -203,7 +203,7 @@ const Terms = () => {
                     For questions regarding these Terms and Conditions, please contact us:
                 </Typography>
                 <Typography variant="body1">
-                    <strong>Email:</strong> mscsociety100@gmail.com<br />
+                    <strong>Email:</strong> support@bmsfoundation.biz<br />
                     <strong>Phone:</strong> +91 9004478100, 0820-7966887<br />
                     <strong>Address:</strong> Shop No. G6, Asha Chandra Trade Centre, Udupi, Karnataka
                 </Typography>
