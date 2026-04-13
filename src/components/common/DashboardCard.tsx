@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Button } from '@mui/material';
-import RupeeIcon from './RupeeIcon';
 import SmallRupeeIcon from './SmallRupeeIcon';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 interface DashboardCardProps {
   amount: string | number;
@@ -419,7 +419,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
         }}>
           {IconComponent ?
             <IconComponent sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} /> :
-            <RupeeIcon sx={{ width: { xs: '2.5rem', sm: '3rem' }, height: { xs: '2.5rem', sm: '3rem' }, filter: 'brightness(1.2)' }} />
+            <MonetizationOnIcon sx={{ fontSize: { xs: '2.5rem', sm: '3rem' }, color: '#FFC000' }} />
           }
         </Box>
       </Box>

@@ -35,7 +35,7 @@ const About = () => {
                     About Us
                 </Typography>
                 <Typography variant="h6" color="text.secondary">
-                   BMS Fundation Ltd.
+                   BMS Foundation Ltd.
                 </Typography>
             </Box>
 
@@ -124,7 +124,7 @@ const About = () => {
                     <strong>Address:</strong> Shop No. G6, Asha Chandra Trade Centre, Udupi, Karnataka
                 </Typography>
                 <Typography variant="body1">
-                    <strong>Contact:</strong> +91 9004478100, 0820-7966887 | mscsociety100@gmail.com
+                    <strong>Contact:</strong> +91 9004478100, 0820-7966887 | support@bmsfoundation.biz
                 </Typography>
             </Paper>
         </Container>

@@ -14,6 +14,10 @@ import DashboardCard from '../../../components/common/DashboardCard';
 import TokenService from '../../../api/token/tokenService';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import {
   useVerifyPayment,
   parsePaymentRedirectParams,
@@ -329,6 +333,7 @@ const UserDashboard = () => {
           <DashboardCard
             amount={walletOverview?.levelBenefits ? `₹${Number(walletOverview.levelBenefits).toFixed(2)}` : "₹0.00"}
             title="Level Benefits"
+            IconComponent={AccountTreeIcon}
             onClick={() => navigate('/user/earnings/level-benefits')}
           />
         </Grid>
@@ -336,6 +341,7 @@ const UserDashboard = () => {
           <DashboardCard
             amount={walletOverview?.roiBenefits ? `₹${Number(walletOverview.roiBenefits).toFixed(2)}` : "₹0.00"}
             title="Daily ROI"
+            IconComponent={TrendingUpIcon}
             onClick={() => navigate('/user/earnings/daily-payout')}
           />
         </Grid>
@@ -343,6 +349,7 @@ const UserDashboard = () => {
           <DashboardCard
             amount={walletOverview?.roiLevelBenefits ? `₹${Number(walletOverview.roiLevelBenefits).toFixed(2)}` : "₹0.00"}
             title="ROI Level Benefits"
+            IconComponent={ShowChartIcon}
             onClick={() => navigate('/user/earnings/roi-benefits')}
           />
         </Grid>
@@ -352,6 +359,7 @@ const UserDashboard = () => {
           <DashboardCard
             amount={walletOverview?.balance ? `₹${Number(walletOverview.balance).toFixed(2)}` : "₹0.00"}
             title="Wallet Balance"
+            IconComponent={AccountBalanceWalletIcon}
             onClick={() => navigate('/user/wallet')}
           />
         </Grid>
