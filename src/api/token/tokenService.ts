@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import { disconnectSocket } from "../../utils/socket";
 
 
 class TokenService {
@@ -40,6 +41,7 @@ class TokenService {
   static removeToken(): void {
     sessionStorage.removeItem("token");
     localStorage.removeItem("token"); // Cleanup legacy/fallback
+    disconnectSocket();
     window.dispatchEvent(new Event("token-change"));
   }
 }

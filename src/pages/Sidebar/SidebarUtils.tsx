@@ -117,7 +117,20 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     path: "/user/mailbox",
     isExpandable: false,
   },
+  {
+    name: "Support",
+    icon: <SupportIcon />,
+    path: "/user/support-chat",
+    isExpandable: false,
+  },
+  {
+    name: "Chat",
+    icon: <MailOutlineIcon />,
+    path: "/user/chat",
+    isExpandable: false,
+  },
 ];
+
 
 
 export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
@@ -309,6 +322,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <EventIcon />,
     isExpandable: false,
   },
-
+  {
+    name: "Chat",
+    path: "/admin/chat",
+    icon: <MailOutlineIcon />,
+    isExpandable: false,
+  },
 ];
 

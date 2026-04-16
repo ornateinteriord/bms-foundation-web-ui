@@ -18,6 +18,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import {
   useVerifyPayment,
   parsePaymentRedirectParams,
@@ -363,6 +364,17 @@ const UserDashboard = () => {
             onClick={() => navigate('/user/wallet')}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <DashboardCard
+            amount="Open Chat"
+            title="Chat"
+            IconComponent={MailOutlineIcon}
+            onClick={() => navigate('/user/chat')}
+          />
+        </Grid>
+
+
       </Grid>
 
 

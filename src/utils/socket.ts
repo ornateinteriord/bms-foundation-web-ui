@@ -9,10 +9,12 @@ export const initializeSocket = (): Socket => {
     }
 
     const token = TokenService.getToken();
+    const memberId = TokenService.getMemberId();
     const apiUrl = import.meta.env.VITE_MLM_API_URL || 'http://localhost:5051';
 
     socket = io(apiUrl, {
         auth: { token },
+        query: { userId: memberId }, // backend matches this to activeUsers map
         autoConnect: false,
         reconnection: true,
         reconnectionAttempts: 5,

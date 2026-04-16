@@ -32,12 +32,24 @@ const Login = () => {
   useEffect(() => {
     const savedUser = localStorage.getItem("rememberedUser");
     if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setFormData({
-        username: parsedUser.username,
-        password: parsedUser.password,
-      });
-      setRememberMe(true);
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        // Validate the structure of the saved data
+        if (parsedUser && typeof parsedUser === 'object' && parsedUser.username && parsedUser.password) {
+          setFormData({
+            username: parsedUser.username,
+            password: parsedUser.password,
+          });
+          setRememberMe(true);
+        } else {
+          // If data is invalid formatted, remove it to prevent future errors
+          localStorage.removeItem("rememberedUser");
+        }
+      } catch (error) {
+        // If saved data is not valid JSON (e.g. was stored as plain text), remove it
+        localStorage.removeItem("rememberedUser");
+        console.error("Failed to parse rememberedUser data:", error);
+      }
     }
   }, []);
 
