@@ -42,7 +42,8 @@ const ROIBenefits = () => {
       id: transaction._id || transaction.transaction_id,
       date: transaction.transaction_date,
       payoutLevel: levelStr,
-      members: transaction.related_member_name || (transaction.Name ? `${transaction.Name} (${transaction.related_member_id})` : transaction.related_member_id) || 'N/A',
+      memberName: transaction.related_member_name || 'N/A',
+      memberId: transaction.related_member_id || 'N/A',
       amount: transaction.ew_credit || '0',
       description: transaction.description,
       transactionType: transaction.transaction_type

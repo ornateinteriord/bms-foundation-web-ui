@@ -164,8 +164,13 @@ export const getLevelBenifitsColumns = () => [
     sortable: true,
   },
   {
-    name: "Members",
-    selector: (row: any) => row.members,
+    name: "Member Name",
+    selector: (row: any) => row.memberName,
+    sortable: true,
+  },
+  {
+    name: "Member ID",
+    selector: (row: any) => row.memberId,
     sortable: true,
   },
   {

@@ -33,6 +33,8 @@ import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
 import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
+import ChatNotificationListener from "./components/Chat/ChatNotificationListener";
+
 
 
 
@@ -92,6 +94,8 @@ const WithdrawPending = lazy(() => import("./pages/Admin-Pages/WithdrawPending/W
 // const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
 
 const AdminAddOnRequests = lazy(() => import("./pages/Admin-Pages/Packages/AdminAddOnRequests"));
+const AdminChat = lazy(() => import("./pages/Admin-Pages/AdminChat/AdminChat"));
+
 
 // user pages
 const UserDashboard = lazy(
@@ -137,6 +141,9 @@ const UserROIBenefits = lazy(
   () => import("./pages/User-Pages/Earnings/ROIBenefits")
 );
 const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
+const UserSupportChat = lazy(() => import("./pages/User-Pages/SupportChat/SupportChat"));
+const UserChat = lazy(() => import("./pages/User-Pages/Chat/Chat"));
+
 
 
 const LoansMemberPending = lazy(() => import("./pages/Loans/Loanspending/Pending"));
@@ -231,6 +238,8 @@ const RoutesProvider = ({
   return (
     <>
       <Navbar toggelSideBar={toggelSideBar} shouldHide={shouldHide} />
+      <ChatNotificationListener />
+
       <div
         style={{
           display: "flex",
@@ -355,8 +364,10 @@ const RoutesProvider = ({
               <Route path="/admin/news" element={<AdminNews />} />
               <Route path="/admin/holidays" element={<AdminHolidays />} />
               <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
-              <Route path="/admin/kyc-approval" element={<KYCApproval />} />
+               <Route path="/admin/kyc-approval" element={<KYCApproval />} />
               <Route path="/admin/withdraw-pending" element={<WithdrawPending />} />
+              <Route path="/admin/chat" element={<AdminChat />} />
+
 
 
             </Route>
@@ -418,7 +429,10 @@ const RoutesProvider = ({
               <Route path="/user/transactions" element={<UserTransaction />} />
               <Route path="/user/loantransactions" element={<UserLoanTransaction />} />
               <Route path="/user/mailbox" element={<UserMailBox />} />
-              <Route path="/user/wallet" element={<UserWallet />} />
+               <Route path="/user/wallet" element={<UserWallet />} />
+              <Route path="/user/support-chat" element={<UserSupportChat />} />
+              <Route path="/user/chat" element={<UserChat />} />
+
 
             </Route>
 
