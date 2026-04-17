@@ -18,8 +18,10 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import DownloadIcon from '@mui/icons-material/Download';
 import UserContext from '../../../context/user/userContext';
 import { useRequestAddOnMutation, useGetMemberAddOns } from '../../../api/Packages';
+import { openBondCertificate } from '../../../utils/BondCertificateGenerator';
 
 export const UserAddOnPackages = () => {
   const { user } = useContext(UserContext);
@@ -232,6 +234,43 @@ export const UserAddOnPackages = () => {
                           }
                         }}
                       />
+
+                      {/* Download Bond Button */}
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<DownloadIcon />}
+                        onClick={() => openBondCertificate({
+                          memberNumber: user.Member_id,
+                          memberName: user.Name,
+                          dob: user.dob,
+                          fatherName: user.Father_name,
+                          address: user.address,
+                          accountNo: user.account_number || pkg.package_id || `FD${pkgId.toString().slice(-5)}`,
+                          commencementDate: pkg.roi_start_date || user.Date_of_joining || new Date().toISOString(),
+                          planTerm: 'FD / 365 days',
+                          planAmount: pkgAmount,
+                          interestRate: 9.0,
+                          aadhaarNo: undefined,
+                          panNo: user.Pan_no,
+                          nomineeName: user.Nominee_name,
+                          nomineeRelation: user.Nominee_Relation,
+                          branchCode: '004',
+                          branch: 'UDUPI',
+                        })}
+                        sx={{
+                          mt: 2,
+                          width: '100%',
+                          borderColor: '#0a2558',
+                          color: '#0a2558',
+                          fontWeight: 700,
+                          textTransform: 'none',
+                          fontSize: '0.75rem',
+                          '&:hover': { bgcolor: '#0a2558', color: '#fff' }
+                        }}
+                      >
+                        Download Bond Certificate
+                      </Button>
 
                       <Box sx={{ mt: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
