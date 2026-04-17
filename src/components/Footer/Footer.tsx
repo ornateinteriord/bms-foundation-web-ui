@@ -49,8 +49,7 @@ const Footer = () => {
                             BMS Fundation Ltd.
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 2, opacity: 0.9, lineHeight: 1.8 }}>
-                            A trusted cooperative society providing comprehensive financial services
-                            to our members since establishment.
+
                         </Typography>
                         <Typography variant="caption" sx={{ display: "block", opacity: 0.7 }}>
                             Reg. No: DRP | 6112 | 21-22
@@ -67,13 +66,13 @@ const Footer = () => {
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
                                 <Phone size={16} />
                                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                                    +91 9004478100, 0820-7966887
+                                    +91 9964465968
                                 </Typography>
                             </Box>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                 <Mail size={16} />
                                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                                     BMSFundation@gmail.com
+                                    BMSFundation@gmail.com
                                 </Typography>
                             </Box>
                         </Box>

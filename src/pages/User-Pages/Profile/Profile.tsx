@@ -34,6 +34,10 @@ const Profile: React.FC = () => {
     mobileno: "",
     profile_image: null as string | null,
     profile_image_name: "",
+    dob: "",
+    Father_name: "",
+    Nominee_name: "",
+    Nominee_Relation: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +53,10 @@ const Profile: React.FC = () => {
         mobileno: user.mobileno ?? "",
         profile_image: user.profile_image,
         profile_image_name: "",
+        dob: user.dob ?? "",
+        Father_name: user.Father_name ?? "",
+        Nominee_name: user.Nominee_name ?? "",
+        Nominee_Relation: user.Nominee_Relation ?? "",
       });
     }
   }, [user]);
@@ -203,7 +211,72 @@ const Profile: React.FC = () => {
                 }}
               />
 
-
+              {/* Bond Certificate Required Fields */}
+              <TextField
+                label="Date of Birth"
+                name="dob"
+                type="date"
+                value={formData.dob}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: "#0a2558" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Father's Name"
+                name="Father_name"
+                value={formData.Father_name}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                placeholder="Enter father's name"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: "#0a2558" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Nominee Name"
+                name="Nominee_name"
+                value={formData.Nominee_name}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                placeholder="Enter nominee's name"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: "#0a2558" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Nominee Relation"
+                name="Nominee_Relation"
+                value={formData.Nominee_Relation}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                placeholder="e.g. Mother, Father, Spouse"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: "#0a2558" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
               <FormControl>
                 <FormLabel sx={{ color: "#0a2558" }}>Profile Image</FormLabel>
