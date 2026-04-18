@@ -2,21 +2,19 @@ import {
   ChevronDown,
   Lock,
   LogOutIcon,
-  MenuIcon,
   Settings,
   User,
 } from "lucide-react";
-import { Button } from "../../components/ui/button";
 import "./navbar.scss";
 import {
   AppBar,
   Avatar,
   Divider,
-  IconButton,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
+  Box,
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/use-auth";
@@ -25,23 +23,16 @@ import { deepOrange } from "@mui/material/colors";
 import { useState } from "react";
 import { useGetMemberDetails } from "../../api/Memeber";
 
-
-const Navbar = ({
-  toggelSideBar,
-  shouldHide,
-}: {
-  toggelSideBar: () => void;
-  shouldHide: boolean;
-}) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, userRole } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Get logged-in userId from TokenService
   const userId = TokenService.getMemberId();
 
-  // Fetch member details using your custom hook
+  // Fetch member details
   const { data: memberDetails } = useGetMemberDetails(userId);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -60,7 +51,6 @@ const Navbar = ({
   };
 
   const isHomePage = location.pathname === "/";
-  const isAdmin = userRole === "ADMIN";
 
   return (
     <>
@@ -68,63 +58,60 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: "#0a2558",
+          background: "#5f259f", // PhonePe Purple for consistency
         }}
       >
         <Toolbar className="navbar-toolbar">
-          {!shouldHide && (
-            <IconButton onClick={() => toggelSideBar()}>
-              <MenuIcon color="white" />
-            </IconButton>
-          )}
           <Typography
             variant="h4"
             className="navbar-title"
-            style={{ marginLeft: "12px", cursor: "pointer" }}
+            style={{ fontWeight: 900, cursor: "pointer", fontSize: '1.5rem', letterSpacing: '1px' }}
             onClick={() => navigate("/")}
           >
             BMS
           </Typography>
 
-          <div style={{ marginLeft: "auto" }}>
+          <div style={{ marginLeft: "auto", display: 'flex', alignItems: 'center', gap: '16px' }}>
             {isLoggedIn ? (
-              <div className="admin-panel-container">
-                {!isHomePage && isAdmin && (
-                  <div className="admin-panel-content" onClick={handleMenuOpen}>
+              <div className="admin-panel-container" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+
+                {!isHomePage && (
+                  <div className="admin-panel-content" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={handleMenuOpen}>
                     <Avatar
                       className="user-avatar"
                       alt="User Avatar"
-                      sx={{ width: 40, height: 40, background: deepOrange[500] }}
+                      sx={{ 
+                        width: 32, 
+                        height: 32, 
+                        background: '#FFC000', 
+                        color: '#5f259f',
+                        fontWeight: 900,
+                        fontSize: '0.8rem',
+                        border: '2px solid rgba(255,255,255,0.2)'
+                      }}
                     >
-                      {memberDetails?.Name
-                        ? memberDetails.Name.charAt(0).toUpperCase()
+                      {memberDetails?.Full_name
+                        ? memberDetails.Full_name.charAt(0).toUpperCase()
                         : "U"}
                     </Avatar>
-                    <Typography variant="body1" sx={{ color: "white" }}>
-                      {memberDetails?.Name || "Admin"}
-                    </Typography>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                      <Typography variant="body2" sx={{ color: "white", fontWeight: 700, lineHeight: 1 }}>
+                        {memberDetails?.Full_name || "Member"}
+                      </Typography>
+                      {memberDetails?.Member_id && (
+                        <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)", fontSize: '0.65rem' }}>
+                          ID: {memberDetails.Member_id}
+                        </Typography>
+                      )}
+                    </Box>
                     <ChevronDown
                       color="white"
-                      size={22}
+                      size={18}
                       style={{
                         transform: anchorEl ? "rotate(180deg)" : "rotate(0deg)",
                         transition: "transform 0.3s ease",
                       }}
                     />
-                  </div>
-                )}
-
-                {!isHomePage && !isAdmin && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-
-                    <Button
-                      className="logout-btn"
-                      variant="ghost"
-                      style={{ marginRight: "8px", fontSize: "50px" }}
-                      onClick={handleLogout}
-                    >
-                      <LogOutIcon />
-                    </Button>
                   </div>
                 )}
               </div>

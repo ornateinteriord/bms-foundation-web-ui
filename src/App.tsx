@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +34,7 @@ import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
 import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 import ChatNotificationListener from "./components/Chat/ChatNotificationListener";
+import MobileBottomNav from "./components/common/MobileBottomNav";
 
 
 
@@ -47,7 +48,6 @@ const Register = lazy(() => import("./pages/Auth/Register"));
 const RecoverPassword = lazy(() => import("./pages/Auth/RecoverPassword"))
 const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"))
 const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
-const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 const Footer = lazy(() => import("./components/Footer/Footer"));
 const About = lazy(() => import("./pages/About/About"));
@@ -191,12 +191,6 @@ const IsDashboardPage = () => {
 };
 
 function App() {
-  const [isOpen, setIsOpen] = useState(() => window.innerWidth > 768);
-
-  const toggelSideBar = () => {
-    setIsOpen(!isOpen);
-  };
-
   const queryClient = new QueryClient();
 
   return (
@@ -209,11 +203,7 @@ function App() {
         <Router>
           <Suspense fallback={<LoadingComponent />}>
 
-            <RoutesProvider
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              toggelSideBar={toggelSideBar}
-            />
+            <RoutesProvider />
           </Suspense>
         </Router>
       </QueryClientProvider>
@@ -221,15 +211,7 @@ function App() {
   );
 }
 
-const RoutesProvider = ({
-  isOpen,
-  setIsOpen,
-  toggelSideBar,
-}: {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
-  toggelSideBar: () => void;
-}) => {
+const RoutesProvider = () => {
   const shouldHide = ShouldHideSidebarComponent();
   const isDashboard = IsDashboardPage();
   const shouldShowFooter = ShouldShowFooter();
@@ -237,7 +219,7 @@ const RoutesProvider = ({
 
   return (
     <>
-      <Navbar toggelSideBar={toggelSideBar} shouldHide={shouldHide} />
+      <Navbar />
       <ChatNotificationListener />
 
       <div
@@ -253,17 +235,18 @@ const RoutesProvider = ({
           minHeight: "100vh"
         }}
       >
-        {!shouldHide && (
+        {/* {!shouldHide && (
           <Sidebar
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
             role={userRole}
           />
-        )}
+        )} */}
         <div
           style={{
             flex: 1,
-            marginLeft: !shouldHide && isOpen ? "250px" : "0",
+            // marginLeft: !shouldHide && isOpen ? "250px" : "0",
+            marginLeft: "0",
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",
@@ -450,6 +433,7 @@ const RoutesProvider = ({
           {shouldHide && shouldShowFooter && <Footer />}
         </div>
       </div>
+      {!shouldHide && userRole === 'USER' && <MobileBottomNav />}
     </>
   );
 };
