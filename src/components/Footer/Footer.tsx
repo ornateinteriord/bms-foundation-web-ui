@@ -48,9 +48,9 @@ const Footer = () => {
                         >
                             BMS Fundation Ltd.
                         </Typography>
-                        <Typography variant="body2" sx={{ mb: 2, opacity: 0.9, lineHeight: 1.8 }}>
+                        {/* <Typography variant="body2" sx={{ mb: 2, opacity: 0.9, lineHeight: 1.8 }}>
 
-                        </Typography>
+                        </Typography> */}
                         <Typography variant="caption" sx={{ display: "block", opacity: 0.7 }}>
                             Reg. No: DRP | 6112 | 21-22
                         </Typography>

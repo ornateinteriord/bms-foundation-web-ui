@@ -257,6 +257,7 @@ export const UserAddOnPackages = () => {
                           nomineeRelation: user.Nominee_Relation,
                           branchCode: '004',
                           branch: 'UDUPI',
+                          profilePhotoUrl: user.profile_image,
                         })}
                         sx={{
                           mt: 2,

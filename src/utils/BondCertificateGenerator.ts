@@ -22,6 +22,7 @@ export interface BondData {
   maturityDate?: string;
   branchCode?: string;
   branch?: string;
+  profilePhotoUrl?: string;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -48,6 +49,7 @@ const numberToWords = (num: number): string => {
 };
 
 const addDays = (ds: string, d: number): string => {
+  if (!ds) return '';
   const dt = new Date(ds);
   dt.setDate(dt.getDate() + d);
   return dt.toISOString().split('T')[0];
@@ -97,7 +99,7 @@ const buildStamp = (): string => {
 
 // ─── HTML Generator ──────────────────────────────────────────────────────────
 
-export const generateBondCertificate = (data: BondData, logoDataUrl: string): string => {
+export const generateBondCertificate = (data: BondData, logoDataUrl: string, profilePhotoDataUrl?: string): string => {
   const interestRate = data.interestRate ?? 9.0;
   const maturityDate = data.maturityDate ?? addDays(data.commencementDate, 365);
   const maturityAmt  = data.maturityAmount ?? (data.planAmount + (data.planAmount * interestRate / 100));
@@ -195,7 +197,9 @@ body {
   width: 90px; height: 110px; border: 1px solid #999;
   display: flex; align-items: center; justify-content: center;
   font-size: 7.5pt; color: #999; background: #fafafa;
+  overflow: hidden;
 }
+.hdr-photo img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ── Title ── */
 .cert-title {
@@ -281,7 +285,9 @@ th { background: #e0e0e0; font-weight: bold; }
             Branch Address: ASHA CHANDRA TRADE CENTER OPPOSITE COURT ROAD UDUPI Karnataka - 576101
           </div>
         </div>
-        <div class="hdr-photo">Passport Photo</div>
+        <div class="hdr-photo">
+          ${profilePhotoDataUrl ? `<img src="${profilePhotoDataUrl}" alt="Profile Photo"/>` : 'Passport Photo'}
+        </div>
       </header>
 
       <!-- TITLE -->
@@ -392,7 +398,18 @@ export const openBondCertificate = async (data: BondData): Promise<void> => {
     console.warn('BondCertificate: could not convert logo to base64');
   }
 
-  const html = generateBondCertificate(data, logoDataUrl);
+  // Resolve profile photo
+  let profilePhotoDataUrl = '';
+  if (data.profilePhotoUrl) {
+    try {
+      profilePhotoDataUrl = await toBase64DataUrl(data.profilePhotoUrl);
+    } catch {
+      profilePhotoDataUrl = data.profilePhotoUrl;
+      console.warn('BondCertificate: could not convert profile photo to base64');
+    }
+  }
+
+  const html = generateBondCertificate(data, logoDataUrl, profilePhotoDataUrl);
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const win  = window.open(url, '_blank', 'width=1000,height=860,scrollbars=yes,resizable=yes');
