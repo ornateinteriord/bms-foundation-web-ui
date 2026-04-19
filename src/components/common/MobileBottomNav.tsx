@@ -41,27 +41,59 @@ const MobileBottomNav: React.FC = () => {
             switch (newValue) {
               case 0: navigate('/user/dashboard'); break;
               case 1: navigate('/user/transactions'); break;
-              case 2: navigate('/user/wallet'); break;
+              case 2: navigate('/user/chat'); break; // Updated to match image
               case 3: navigate('/user/account/profile'); break;
             }
           }}
           sx={{
-            height: 64,
+            height: 70,
             '& .MuiBottomNavigationAction-root': {
               color: '#9e9e9e',
+              minWidth: 0,
+              padding: '6px 0',
             },
             '& .Mui-selected': {
-              color: '#0a2558 !important', // Changed from purple to project blue
+              color: '#0a2558 !important',
               '& .MuiBottomNavigationAction-label': {
-                fontWeight: 700,
+                fontWeight: 800,
+                fontSize: '0.75rem',
+                mt: 0.5
+              },
+              // The blue rounded square highlight for the icon
+              '& .MuiBottomNavigationAction-iconOnly': {
+                paddingTop: '16px',
+              },
+              '& .indicator': {
+                backgroundColor: '#0a2558',
+                color: 'white',
+                borderRadius: '12px',
+                padding: '4px',
+                width: '40px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 0.5
               }
             }
           }}
         >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-          <BottomNavigationAction label="History" icon={<HistoryIcon />} />
-          <BottomNavigationAction label="Wallet" icon={<AccountBalanceWalletIcon />} />
-          <BottomNavigationAction label="Account" icon={<PersonIcon />} />
+          <BottomNavigationAction 
+            label="Home" 
+            icon={<Box className={value === 0 ? "indicator" : ""}>{<HomeIcon />}</Box>} 
+          />
+          <BottomNavigationAction 
+            label="Wallet" 
+            icon={<Box className={value === 1 ? "indicator" : ""}>{<AccountBalanceWalletIcon />}</Box>} 
+          />
+          <BottomNavigationAction 
+            label="Chat" 
+            icon={<Box className={value === 2 ? "indicator" : ""}>{<HistoryIcon />}</Box>} 
+          />
+          <BottomNavigationAction 
+            label="Profile" 
+            icon={<Box className={value === 3 ? "indicator" : ""}>{<PersonIcon />}</Box>} 
+          />
         </BottomNavigation>
       </Paper>
       {/* Spacer to prevent content from being hidden behind nav */}

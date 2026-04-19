@@ -65,7 +65,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="h-auto md:h-40 relative w-full overflow-hidden bg-[#0a2558] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
+      <div className="h-auto md:h-40 relative w-full overflow-hidden bg-[#0a2558] flex flex-col items-center justify-center py-6 md:py-0">
         <div className="absolute inset-0 w-full h-full bg-[#0a2558] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
 
         <div className="flex flex-col md:flex-row justify-evenly items-center w-full px-4 md:px-8 relative z-20 gap-6 md:gap-0">
