@@ -11,7 +11,6 @@ import {
 import "./App.css";
 import "./index.css";
 import { Dialog, DialogContent, CircularProgress } from "@mui/material";
-import DashboardBg from "./assets/dashboard_bg.jpg";
 
 import Members, {
   ActiveMembers,
@@ -34,6 +33,7 @@ import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
 import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 import ChatNotificationListener from "./components/Chat/ChatNotificationListener";
+import MobileBottomNav from "./components/common/MobileBottomNav";
 
 
 
@@ -161,21 +161,14 @@ export const LoadingComponent = () => {
   );
 };
 
-const ShouldHideSidebarComponent = () => {
+const ShouldHideSidebar = () => {
   const location = useLocation();
-  const publicPaths = [
-    "/",
-    "/login",
-    "/register",
-    "/recover-password",
-    "/reset-password",
-    "/about",
-    "/contact",
-    "/privacy-policy",
-    "/terms",
-    "/refund-policy"
-  ];
-  return publicPaths.includes(location.pathname);
+  const noSidebarPaths = ["/login", "/register", "/forgot-password", "/"];
+  return noSidebarPaths.includes(location.pathname);
+};
+
+const ShouldHideNavbar = () => {
+  return false;
 };
 
 const ShouldShowFooter = () => {
@@ -184,18 +177,9 @@ const ShouldShowFooter = () => {
   return !noFooterPaths.includes(location.pathname);
 };
 
-const IsDashboardPage = () => {
-  const location = useLocation();
-  const dashboardPaths = ["/user/dashboard", "/admin/dashboard"];
-  return dashboardPaths.includes(location.pathname);
-};
 
 function App() {
   const [isOpen, setIsOpen] = useState(() => window.innerWidth > 768);
-
-  const toggelSideBar = () => {
-    setIsOpen(!isOpen);
-  };
 
   const queryClient = new QueryClient();
 
@@ -212,7 +196,6 @@ function App() {
             <RoutesProvider
               isOpen={isOpen}
               setIsOpen={setIsOpen}
-              toggelSideBar={toggelSideBar}
             />
           </Suspense>
         </Router>
@@ -224,20 +207,19 @@ function App() {
 const RoutesProvider = ({
   isOpen,
   setIsOpen,
-  toggelSideBar,
 }: {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  toggelSideBar: () => void;
 }) => {
-  const shouldHide = ShouldHideSidebarComponent();
-  const isDashboard = IsDashboardPage();
+  const hideSidebar = ShouldHideSidebar();
+  const hideNavbar = ShouldHideNavbar();
   const shouldShowFooter = ShouldShowFooter();
-  const { userRole } = useAuth()
+  const { isLoggedIn, userRole } = useAuth();
+  const isAdmin = userRole === "ADMIN";
 
   return (
     <>
-      <Navbar toggelSideBar={toggelSideBar} shouldHide={shouldHide} />
+      <Navbar shouldHide={hideNavbar} />
       <ChatNotificationListener />
 
       <div
@@ -245,15 +227,10 @@ const RoutesProvider = ({
           display: "flex",
           maxWidth: "100vw",
           overflowX: "hidden",
-          backgroundImage: isDashboard ? `url(${DashboardBg})` : "none",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
           minHeight: "100vh"
         }}
       >
-        {!shouldHide && (
+        {!hideSidebar && isAdmin && (
           <Sidebar
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
@@ -263,12 +240,14 @@ const RoutesProvider = ({
         <div
           style={{
             flex: 1,
-            marginLeft: !shouldHide && isOpen ? "250px" : "0",
+            marginLeft: !hideSidebar && isAdmin && isOpen ? "250px" : "0",
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",
-            backgroundColor: isDashboard ? "transparent" : "#f4f7f9",
-            minHeight: "calc(100vh - 64px)"
+            backgroundColor: "#f4f7f9",
+            minHeight: "calc(100vh - 64px)",
+            paddingTop: !hideSidebar ? (window.innerWidth < 900 ? "56px" : "64px") : "0", // Add padding only for internal pages with fixed navbar
+            paddingBottom: !isAdmin && isLoggedIn ? "64px" : "0"
           }}
         >
           <Routes>
@@ -299,14 +278,12 @@ const RoutesProvider = ({
                 path="/admin/members/pending"
                 element={<PendingMembers />}
               />
-              {/* <Route path="/admin/Activate" element={<Activate />} />
-              <Route path="/admin/ActivatePackage" element={<ActivatePackage />} /> */}
               <Route path="/admin/members/active" element={<ActiveMembers />} />
               <Route
                 path="/admin/members/inactive"
                 element={<InActiveMembers />}
               />
-              
+
               {/* admin addon routes */}
               <Route path="/admin/addon-approvals" element={<AdminAddOnRequests />} />
 
@@ -364,7 +341,7 @@ const RoutesProvider = ({
               <Route path="/admin/news" element={<AdminNews />} />
               <Route path="/admin/holidays" element={<AdminHolidays />} />
               <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
-               <Route path="/admin/kyc-approval" element={<KYCApproval />} />
+              <Route path="/admin/kyc-approval" element={<KYCApproval />} />
               <Route path="/admin/withdraw-pending" element={<WithdrawPending />} />
               <Route path="/admin/chat" element={<AdminChat />} />
 
@@ -375,7 +352,6 @@ const RoutesProvider = ({
               <Route path="/admin/member/pending" element={<LoansMemberPending />} />
               <Route path="/admin/member/processed" element={<LoansMemberProcessed />} />
               <Route path="/admin/repayments/list" element={<LoansRepaymentsList />} />
-              {/* <Route path="/loans/repayments/placeholder" element={<LoansRepaymentsPlaceholder />} /> */}
             </Route>
 
             {/* user routes */}
@@ -429,7 +405,7 @@ const RoutesProvider = ({
               <Route path="/user/transactions" element={<UserTransaction />} />
               <Route path="/user/loantransactions" element={<UserLoanTransaction />} />
               <Route path="/user/mailbox" element={<UserMailBox />} />
-               <Route path="/user/wallet" element={<UserWallet />} />
+              <Route path="/user/wallet" element={<UserWallet />} />
               <Route path="/user/support-chat" element={<UserSupportChat />} />
               <Route path="/user/chat" element={<UserChat />} />
 
@@ -447,9 +423,10 @@ const RoutesProvider = ({
               </Route>
             </Route>
           </Routes>
-          {shouldHide && shouldShowFooter && <Footer />}
+          {hideSidebar && shouldShowFooter && <Footer />}
         </div>
       </div>
+      {!isAdmin && isLoggedIn && <MobileBottomNav />}
     </>
   );
 };

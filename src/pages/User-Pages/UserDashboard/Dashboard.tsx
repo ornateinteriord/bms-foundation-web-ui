@@ -2,31 +2,40 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
-  Grid,
   Typography,
-  Button,
   Box,
-  CircularProgress
+  CircularProgress,
+  IconButton,
+  Paper,
+  Button,
+  Stack,
 } from '@mui/material';
-import '../../Dashboard/dashboard.scss';
-
-import DashboardCard from '../../../components/common/DashboardCard';
-import TokenService from '../../../api/token/tokenService';
+import Divider from '@mui/material/Divider';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import HubIcon from '@mui/icons-material/Hub';
+
+import TokenService from '../../../api/token/tokenService';
 import {
   useVerifyPayment,
   parsePaymentRedirectParams,
   useGetTransactionDetails,
   useGetWalletOverview,
-  useGetMemberDetails
+  useGetMemberDetails,
+  useGetDailyPayout
 } from '../../../api/Memeber';
 import { toast } from 'react-toastify';
+
 
 
 const UserDashboard = () => {
@@ -35,352 +44,320 @@ const UserDashboard = () => {
   const [paymentProcessed, setPaymentProcessed] = useState(false);
 
   const memberId = TokenService.getMemberId();
-
   const { data: walletOverview } = useGetWalletOverview(memberId);
   const { data: memberDetails, refetch: refetchMemberDetails } = useGetMemberDetails(memberId);
 
-
-  // Payment verification hook
   const { mutate: verifyPayment, isPending: isVerifyingPayment } = useVerifyPayment();
-
   const { refetch: refetchTransactions } = useGetTransactionDetails("all");
+  const { data: dailyPayout } = useGetDailyPayout(memberId);
 
-  // Handle payment redirect from Cashfree
+  // Custom calculations requested by user
+  const latestDailyROI = Number(dailyPayout?.[0]?.ew_credit || 0);
+  const dailyROIValue = latestDailyROI;
+  const adjustedDeposit = dailyROIValue * 150;
+  const totalIncome = Number(walletOverview?.totalIncome || 0);
+  const adjustedBonus = totalIncome + adjustedDeposit;
+
   useEffect(() => {
     const paymentParams = parsePaymentRedirectParams(searchParams);
-
     if (paymentParams.order_id && paymentParams.payment_status && !paymentProcessed) {
-      console.log("🔄 Processing payment redirect:", paymentParams);
       setPaymentProcessed(true);
-
-      // Verify the payment with backend
       verifyPayment(paymentParams.order_id, {
         onSuccess: () => {
-          // Clear URL params after processing
           setSearchParams({});
-          // Refresh transactions to show updated data
           refetchTransactions();
           refetchMemberDetails();
         },
-        onError: () => {
-          // Still clear URL params even on error
-          setSearchParams({});
-        }
+        onError: () => setSearchParams({})
       });
     }
   }, [searchParams, paymentProcessed, verifyPayment, setSearchParams, refetchTransactions, refetchMemberDetails]);
 
-
   const handleCopyReferralLink = () => {
     if (!memberDetails?.Member_id) return;
-
     const referralLink = `${window.location.origin}/register?ref=${memberDetails.Member_id}`;
-
     navigator.clipboard.writeText(referralLink)
-      .then(() => {
-        toast.success('Referral link copied to clipboard!');
-      })
-      .catch(() => {
-        toast.error('Failed to copy referral link');
-      });
+      .then(() => toast.success('Referral link copied!'))
+      .catch(() => toast.error('Failed to copy link'));
   };
 
-  const handleShareReferralLink = () => {
-    if (!memberDetails?.Member_id) return;
-
-    const referralLink = `${window.location.origin}/register?ref=${memberDetails.Member_id}`;
-
-    if (navigator.share) {
-      navigator.share({
-        title: 'Join me!',
-        text: 'Check out this amazing platform and join using my referral link!',
-        url: referralLink,
-      })
-        .then(() => console.log('Successful share'))
-        .catch((error) => console.log('Error sharing:', error));
-    } else {
-      handleCopyReferralLink();
+  const menuSections = [
+    {
+      title: "QUICK ACCESS",
+      items: [
+        { label: "Profile", icon: <AccountCircleIcon />, route: "/user/account/profile", color: "#3b82f6" },
+        { label: "KYC", icon: <VerifiedUserIcon />, route: "/user/account/kyc", color: "#10b981" },
+        { label: "Password", icon: <VpnKeyIcon />, route: "/user/account/change-password", color: "#f59e0b" },
+        { label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages", color: "#6366f1" },
+        { label: "ROI Benefits", icon: <ShowChartIcon />, route: "/user/earnings/roi-benefits", color: "#10b981" },
+        { label: "Daily ROI", icon: <TrendingUpIcon />, route: "/user/earnings/daily-payout", color: "#ef4444" },
+        { label: "Level Benefits", icon: <AccountTreeIcon />, route: "/user/earnings/level-benefits", color: "#3b82f6" },
+        { label: "Transactions", icon: <ReceiptLongIcon />, route: "/user/transactions", color: "#3b82f6" },
+        { label: "My Team", icon: <GroupsIcon />, route: "/user/team", color: "#3b82f6" },
+        { label: "My Directs", icon: <PersonAddAltIcon />, route: "/user/team/direct", color: "#6366f1" },
+        { label: "Tree View", icon: <HubIcon />, route: "/user/team/tree", color: "#ef4444" },
+        { label: "New Register", icon: <PersonAddAltIcon />, route: "/user/team/new-register", color: "#10b981" },
+      ]
     }
-  };
-
-
+  ];
 
   return (
-    <>
-      {/* Payment verification loading overlay */}
+    <Box sx={{ pb: 10, background: '#f8fafc', minHeight: '100vh' }}>
+      {/* Verification Overlay */}
       {isVerifyingPayment && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-          }}
-        >
+        <Box sx={{ position: 'fixed', inset: 0, bgcolor: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress size={60} sx={{ color: 'white', mb: 2 }} />
-          <Typography variant="h6" sx={{ color: 'white' }}>
-            Verifying your payment...
-          </Typography>
+          <Typography variant="h6" sx={{ color: 'white' }}>Verifying payment...</Typography>
         </Box>
       )}
 
-      <Box
-        sx={{
-          mx: { xs: 2, sm: 3, md: 4 },
-          mt: { xs: 8, md: 12 }, // Increased top margin as requested
-          p: { xs: 3, md: 4 },
-          borderRadius: '16px',
-          background: 'linear-gradient(135deg, #0a2558 0%, #153b93 100%)',
-          position: 'relative',
-          boxShadow: '0 20px 40px -10px rgba(10, 37, 88, 0.4)',
-          border: '1px solid rgba(255,255,255,0.1)',
+      {/* Main Content below Navbar */}
+      <Box sx={{ 
+        px: { xs: 2, md: 8, lg: 16 }, 
+        mt: 4, 
+        maxWidth: '1800px', 
+        mx: 'auto' 
+      }}>
+        <Box sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 3,
-          mb: 4 // Ensure gap below banner
-        }}
-      >
-        {/* Abstract Gold Glow inside Header */}
-        <Box sx={{ position: 'absolute', top: '-50px', left: '-50px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(255,192,0,0.2) 0%, rgba(255,192,0,0) 70%)', borderRadius: '50%', filter: 'blur(30px)', zIndex: 0 }} />
-        <Box sx={{ position: 'absolute', bottom: '-80px', right: '-20px', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0) 70%)', borderRadius: '50%', filter: 'blur(40px)', zIndex: 0 }} />
-
-        <Box sx={{ position: 'relative', zIndex: 1, textAlign: { xs: 'center', md: 'left' } }}>
-          <Typography variant="h3" sx={{ fontWeight: 800, color: '#fff', fontSize: { xs: '1.8rem', md: '2.5rem' }, letterSpacing: '-0.5px', mb: 0.5 }}>
-            Welcome to Dashboard
-          </Typography>
-          <Typography variant="body1" sx={{ color: '#cbd5e1', fontWeight: 500, fontSize: { xs: '0.9rem', md: '1rem' } }}>
-            Manage your foundation network and track your success
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: 'flex', gap: { xs: 2, md: 4 }, position: 'relative', zIndex: 1 }}>
-          <Box sx={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', p: 2, borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', minWidth: '100px' }}>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#FFC000', mb: 0.5 }}>
-              {memberDetails ? `${memberDetails.direct_referrals?.length || 0}` : '—'}
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
-              My Referrals
-            </Typography>
-          </Box>
-          <Box sx={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', p: 2, borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', minWidth: '100px' }}>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#10b981', mb: 0.5 }}>
-              {memberDetails ? `${memberDetails.total_team || 0}` : '—'}
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
-              My Team
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-
-
-
-      {/* Referral Link Box */}
-      <Box
-        sx={{
-          mx: { xs: 2, sm: 3, md: 4 },
-          mb: 3,
-          p: { xs: 2, md: 3 },
-          backgroundColor: '#ffffff',
-          borderRadius: '16px',
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
-          transition: 'transform 0.3s ease',
-          '&:hover': {
-            boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.1)',
-          }
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: 'center',
-            gap: 2,
-            justifyContent: 'space-between'
-          }}
-        >
-          <Box sx={{ flexGrow: 1, width: '100%' }}>
-            <Typography variant="body1" sx={{ color: '#0a2558', fontWeight: 800, mb: 1 }}>
-              <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '6px', color: '#FFC000' }}>link</span>
-              Your Referral Link
-            </Typography>
+          gap: { xs: 0, md: 4 },
+          alignItems: 'flex-start'
+        }}>
+          {/* Left Column: Banner, Menu, Team */}
+          <Box sx={{ flex: 1, width: '100%' }}>
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: '#f8fafc',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                p: 1.5,
                 width: '100%',
-                overflow: 'hidden'
+                height: { xs: '120px', md: '160px' },
+                mb: 4,
+                borderRadius: '24px',
+                overflow: 'hidden',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.15)',
+                cursor: 'pointer',
+                position: 'relative',
+                '&:hover img': { transform: 'scale(1.05)' }
               }}
+              onClick={() => navigate('/user/chat')}
             >
-              <Typography
-                variant="body2"
-                sx={{
-                  color: '#475569',
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  width: '100%'
+            {/* Custom Banner Image */}
+              <img
+                src="/cb.png"
+                alt="BMS Banner"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'block',
+                  objectFit: 'cover',
+                  transition: 'transform 0.5s ease'
                 }}
-              >
-                {memberDetails?.Member_id ?
-                  <a
-                    href={`${window.location.origin}/register?ref=${memberDetails.Member_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: '#0a2558', textDecoration: 'underline' }}
-                  >
-                    {`${window.location.origin}/register?ref=${memberDetails.Member_id}`}
-                  </a> :
-                  'Loading referral link...'
-                }
-              </Typography>
+              />
+            </Box>
+
+            {/* Menu Grid - Matched to QUICK ACCESS style */}
+            {menuSections.map((section, idx) => (
+              <Box key={idx} sx={{ mt: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
+                  <Box sx={{ width: 4, height: 18, bgcolor: '#0a2558', borderRadius: '2px' }} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0a2558', letterSpacing: '0.5px', fontSize: '0.85rem' }}>
+                    {section.title}
+                  </Typography>
+                </Box>
+
+                <Box sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: 'repeat(4, 1fr)', sm: 'repeat(5, 1fr)', lg: 'repeat(6, 1fr)' },
+                  gap: { xs: 2.5, md: 3.5 },
+                  px: 0.5
+                }}>
+                  {section.items.map((item, i) => (
+                    <Box
+                      key={i}
+                      onClick={() => navigate(item.route)}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 1.2,
+                        cursor: 'pointer',
+                        '&:active': { transform: 'scale(0.95)' },
+                        transition: 'transform 0.1s'
+                      }}
+                    >
+                      <Box sx={{
+                        width: { xs: 54, md: 64 },
+                        height: { xs: 54, md: 64 },
+                        borderRadius: '16px', // Modern squircle
+                        bgcolor: 'white',
+                        color: item.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: `0 8px 25px ${item.color}20`,
+                        border: `1px solid ${item.color}10`,
+                        position: 'relative',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          transform: 'translateY(-5px)',
+                          boxShadow: `0 12px 30px ${item.color}30`,
+                        }
+                      }}>
+                        {item.icon}
+                      </Box>
+                      <Typography variant="caption" sx={{ 
+                        fontWeight: 900, 
+                        fontSize: { xs: '0.7rem', md: '0.8rem' }, 
+                        textAlign: 'center', 
+                        color: '#1e293b', // Darker text
+                        lineHeight: 1.2,
+                        mt: 0.5
+                      }}>
+                        {item.label}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            ))}
+
+            {/* TEAM PERFORMANCE Section */}
+            <Box sx={{ mt: 5, mb: { xs: 4, md: 0 } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 1 }}>
+                <Box sx={{ width: 4, height: 18, bgcolor: '#3b82f6', borderRadius: '2px' }} />
+                <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0a2558', letterSpacing: '0.5px', fontSize: '0.85rem' }}>
+                  TEAM PERFORMANCE
+                </Typography>
+              </Box>
+              <Paper elevation={0} sx={{ p: 3, borderRadius: '20px', bgcolor: 'white', border: '1px solid #e2e8f0' }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, fontSize: '0.75rem' }}>Total Team</Typography>
+                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#0a2558', mt: 0.5 }}>
+                      {memberDetails?.total_team || 0}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, fontSize: '0.75rem' }}>Directs</Typography>
+                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#0a2558', mt: 0.5 }}>
+                      {memberDetails?.direct_referrals?.length || 0}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
             </Box>
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              flexDirection: { xs: 'row', sm: 'row' },
-              width: { xs: '100%', md: 'auto' },
-              mt: { xs: 1, md: 0 },
-              alignItems: 'flex-end',
-              height: '100%',
-              pt: { xs: 0, md: 4 }
-            }}
-          >
-            <Button
-              variant="contained"
-              startIcon={<ContentCopyIcon />}
-              onClick={handleCopyReferralLink}
-              disabled={!memberDetails?.Member_id}
+          {/* Right Column: Referral and Wallet Summary */}
+          <Box sx={{ 
+            width: { xs: '100%', md: '380px' }, 
+            position: { md: 'sticky' }, 
+            top: { md: '80px' },
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3
+          }}>
+            {/* Referral Card - Top Right */}
+            <Paper
+              elevation={0}
               sx={{
-                background: 'linear-gradient(135deg, #0a2558 0%, #153b93 100%)',
-                color: '#fff',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #153b93 0%, #0a2558 100%)',
-                  transform: 'translateY(-2px)'
-                },
-                fontWeight: 700,
-                textTransform: 'none',
-                flexGrow: 1,
-                borderRadius: '8px',
-                py: 1.2,
-                boxShadow: '0 4px 12px rgba(10, 37, 88, 0.2)'
+                p: 3,
+                borderRadius: '24px',
+                background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+                color: 'white',
+                boxShadow: '0 8px 32px rgba(59, 130, 246, 0.2)'
               }}
             >
-              Copy Link
-            </Button>
+              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, letterSpacing: '0.5px' }}>Referral link</Typography>
+              <Box sx={{ display: 'flex', gap: 1.5, mt: 2 }}>
+                <Button
+                  variant="contained"
+                  startIcon={<ShareIcon />}
+                  fullWidth
+                  sx={{
+                    bgcolor: 'white',
+                    color: '#1e3a8a',
+                    borderRadius: '12px',
+                    textTransform: 'none',
+                    fontWeight: 900,
+                    py: 1.2,
+                    '&:hover': { bgcolor: '#f1f5f9' }
+                  }}
+                >
+                  Share Now
+                </Button>
+                <IconButton
+                  onClick={handleCopyReferralLink}
+                  sx={{
+                    bgcolor: 'rgba(255,255,255,0.15)',
+                    color: 'white',
+                    borderRadius: '12px',
+                    width: 48,
+                    height: 48
+                  }}
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </Box>
+            </Paper>
 
-            <Button
-              variant="outlined"
-              startIcon={<ShareIcon />}
-              onClick={handleShareReferralLink}
-              disabled={!memberDetails?.Member_id}
-              sx={{
-                borderColor: '#e2e8f0',
-                color: '#0a2558',
-                backgroundColor: '#f8fafc',
-                '&:hover': {
-                  backgroundColor: '#f1f5f9',
-                  borderColor: '#cbd5e1',
-                  transform: 'translateY(-2px)'
-                },
-                fontWeight: 700,
-                textTransform: 'none',
-                flexGrow: 1,
-                borderRadius: '8px',
-                py: 1.2,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-              }}
-            >
-              Share Link
-            </Button>
+            {/* WALLET SUMMARY Section - Below Referral */}
+            <Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
+                <Box sx={{ width: 4, height: 18, bgcolor: '#10b981', borderRadius: '2px' }} />
+                <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0f172a', letterSpacing: '1px', fontSize: '0.9rem' }}>
+                  WALLET SUMMARY
+                </Typography>
+              </Box>
+
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 3, 
+                  borderRadius: '24px', 
+                  bgcolor: 'white', 
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                  overflow: 'hidden'
+                }}
+              >
+                <Stack spacing={2.2}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569', fontSize: '0.8rem' }}>MY DEPOSIT</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{adjustedDeposit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569', fontSize: '0.8rem' }}>MY BONUS</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{adjustedBonus.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569', fontSize: '0.8rem' }}>MY WITHDRAWAL</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#ef4444' }}>₹{Number(walletOverview?.totalWithdrawal || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569', fontSize: '0.8rem' }}>MY LEVEL BENEFITS</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#6366f1' }}>₹{Number(walletOverview?.levelBenefits || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569', fontSize: '0.8rem' }}>MY ROI BENEFITS</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{Number(walletOverview?.roiBenefits || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569', fontSize: '0.8rem' }}>DAILY ROI</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#f59e0b' }}>₹{dailyROIValue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                  <Divider />
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 900, color: '#0a2558', fontSize: '0.85rem' }}>WALLET BALANCE</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#0a2558', fontSize: '1.1rem' }}>₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</Typography>
+                  </Box>
+                </Stack>
+              </Paper>
           </Box>
         </Box>
       </Box>
-
-      {/* Dashboard Cards Grid */}
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        sx={{
-          px: { xs: 2, sm: 3, md: 4 },
-          pb: 8, // ADDED BOTTOM PADDING FOR SCROLL ROOM
-          position: 'relative',
-          zIndex: 2,
-          '& .MuiGrid-item': {
-            display: 'flex'
-          }
-        }}
-      >
-        {/* Row 1: 3 Cards */}
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard
-            amount={walletOverview?.levelBenefits ? `₹${Number(walletOverview.levelBenefits).toFixed(2)}` : "₹0.00"}
-            title="Level Benefits"
-            IconComponent={AccountTreeIcon}
-            onClick={() => navigate('/user/earnings/level-benefits')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard
-            amount={walletOverview?.roiBenefits ? `₹${Number(walletOverview.roiBenefits).toFixed(2)}` : "₹0.00"}
-            title="Daily ROI"
-            IconComponent={TrendingUpIcon}
-            onClick={() => navigate('/user/earnings/daily-payout')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard
-            amount={walletOverview?.roiLevelBenefits ? `₹${Number(walletOverview.roiLevelBenefits).toFixed(2)}` : "₹0.00"}
-            title="ROI Level Benefits"
-            IconComponent={ShowChartIcon}
-            onClick={() => navigate('/user/earnings/roi-benefits')}
-          />
-        </Grid>
-
-        {/* Row 2: 4th Card */}
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard
-            amount={walletOverview?.balance ? `₹${Number(walletOverview.balance).toFixed(2)}` : "₹0.00"}
-            title="Wallet Balance"
-            IconComponent={AccountBalanceWalletIcon}
-            onClick={() => navigate('/user/wallet')}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard
-            amount="Open Chat"
-            title="Chat"
-            IconComponent={MailOutlineIcon}
-            onClick={() => navigate('/user/chat')}
-          />
-        </Grid>
-
-
-      </Grid>
-
-
-
-    </>
+    </Box>
+  </Box>
   );
-}
+};
 
 export default UserDashboard;

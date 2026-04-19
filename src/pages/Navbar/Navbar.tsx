@@ -2,23 +2,21 @@ import {
   ChevronDown,
   Lock,
   LogOutIcon,
-  MenuIcon,
   Settings,
   User,
 } from "lucide-react";
-import { Button } from "../../components/ui/button";
 import "./navbar.scss";
 import {
   AppBar,
   Avatar,
+  Box,
   Divider,
-  IconButton,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/use-auth";
 import TokenService from "../../api/token/tokenService";
 import { deepOrange } from "@mui/material/colors";
@@ -26,17 +24,17 @@ import { useState } from "react";
 import { useGetMemberDetails } from "../../api/Memeber";
 
 
-const Navbar = ({
-  toggelSideBar,
-  shouldHide,
-}: {
-  toggelSideBar: () => void;
-  shouldHide: boolean;
-}) => {
+interface NavbarProps {
+  shouldHide?: boolean;
+}
+
+const Navbar = ({ shouldHide }: NavbarProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { isLoggedIn, userRole } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  // If we should hide the navbar (on public/auth pages), return null
+  if (shouldHide) return null;
 
   // Get logged-in userId from TokenService
   const userId = TokenService.getMemberId();
@@ -59,79 +57,75 @@ const Navbar = ({
     setAnchorEl(null);
   };
 
-  const isHomePage = location.pathname === "/";
-  const isAdmin = userRole === "ADMIN";
-
   return (
     <>
       <AppBar
         position="fixed"
-        className="navbar"
-        style={{
-          background: "#0a2558",
+        elevation={0}
+        sx={{
+          background: "#081b42", // Darkened version of #0D2B68
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          zIndex: (theme) => theme.zIndex.drawer + 1
         }}
       >
-        <Toolbar className="navbar-toolbar">
-          {!shouldHide && (
-            <IconButton onClick={() => toggelSideBar()}>
-              <MenuIcon color="white" />
-            </IconButton>
-          )}
+        <Toolbar sx={{ 
+          height: { xs: 56, md: 64 }, 
+          px: { xs: 2, md: 3 }, 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
           <Typography
             variant="h4"
-            className="navbar-title"
-            style={{ marginLeft: "12px", cursor: "pointer" }}
             onClick={() => navigate("/")}
+            sx={{ 
+              fontWeight: 950, 
+              fontSize: { xs: '1.4rem', md: '1.85rem' }, 
+              cursor: "pointer", 
+              letterSpacing: '1.5px',
+              color: 'white',
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+            }}
           >
             BMS
           </Typography>
 
-          <div style={{ marginLeft: "auto" }}>
-            {isLoggedIn ? (
-              <div className="admin-panel-container">
-                {!isHomePage && isAdmin && (
-                  <div className="admin-panel-content" onClick={handleMenuOpen}>
-                    <Avatar
-                      className="user-avatar"
-                      alt="User Avatar"
-                      sx={{ width: 40, height: 40, background: deepOrange[500] }}
-                    >
-                      {memberDetails?.Name
-                        ? memberDetails.Name.charAt(0).toUpperCase()
-                        : "U"}
-                    </Avatar>
-                    <Typography variant="body1" sx={{ color: "white" }}>
-                      {memberDetails?.Name || "Admin"}
-                    </Typography>
-                    <ChevronDown
-                      color="white"
-                      size={22}
-                      style={{
-                        transform: anchorEl ? "rotate(180deg)" : "rotate(0deg)",
-                        transition: "transform 0.3s ease",
-                      }}
-                    />
-                  </div>
-                )}
-
-                {!isHomePage && !isAdmin && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-
-                    <Button
-                      className="logout-btn"
-                      variant="ghost"
-                      style={{ marginRight: "8px", fontSize: "50px" }}
-                      onClick={handleLogout}
-                    >
-                      <LogOutIcon />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div></div>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
+            {isLoggedIn && (
+              <Box 
+                onClick={handleMenuOpen} 
+                sx={{ 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1,
+                  padding: '4px 8px',
+                  borderRadius: '12px',
+                  transition: 'background 0.2s',
+                  '&:hover': {
+                    bgcolor: 'rgba(255,255,255,0.1)'
+                  }
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: { xs: 32, md: 38 },
+                    height: { xs: 32, md: 38 },
+                    bgcolor: '#FFC000', 
+                    color: '#0a2558',
+                    fontWeight: 900,
+                    fontSize: { xs: '0.85rem', md: '1rem' },
+                    border: '2px solid rgba(255,255,255,0.4)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  {memberDetails?.Name?.charAt(0).toUpperCase() || 'U'}
+                </Avatar>
+                <ChevronDown size={18} color="white" style={{ opacity: 0.8 }} />
+              </Box>
             )}
-          </div>
+          </Box>
         </Toolbar>
 
         {/* Dropdown Menu */}
