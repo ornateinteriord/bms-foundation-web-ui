@@ -12,7 +12,10 @@ import {
   Button,
   Card,
   CardContent,
+  Box,
   InputAdornment,
+  Avatar,
+  Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonIcon from "@mui/icons-material/Person";
@@ -119,8 +122,8 @@ const Profile: React.FC = () => {
   return (
     <Card
       sx={{
-        margin: "2rem",
-        mt: 10,
+        margin: "1rem", // Reduced margin
+        mt: 2, // Signficantly reduced top margin
         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
       }}
     >
@@ -279,12 +282,41 @@ const Profile: React.FC = () => {
               />
 
               <FormControl>
-                <FormLabel sx={{ color: "#0a2558" }}>Profile Image</FormLabel>
-                <Button variant="outlined" component="label" disabled={loading}>
-                  Choose File
-                  <input type="file" hidden onChange={handleFileChange} />
-                </Button>
-                <span>{formData.profile_image ? formData.profile_image_name : "No file chosen"}</span>
+                <FormLabel sx={{ color: "#0a2558", mb: 1, fontWeight: 'bold' }}>Profile Image</FormLabel>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Avatar
+                    src={formData.profile_image || ""}
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      border: '2px solid #0a2558',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    {!formData.profile_image && formData.Name?.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <Box sx={{ flex: 1 }}>
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      disabled={loading}
+                      fullWidth
+                      sx={{
+                        borderColor: "#0a2558",
+                        color: "#0a2558",
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        "&:hover": { borderColor: "#0a2558", bgcolor: "rgba(10, 37, 88, 0.05)" }
+                      }}
+                    >
+                      {formData.profile_image ? "Change Photo" : "Choose Photo"}
+                      <input type="file" hidden onChange={handleFileChange} accept="image/*" />
+                    </Button>
+                    <Typography variant="caption" sx={{ mt: 0.5, display: 'block', color: '#64748b' }}>
+                      {formData.profile_image ? formData.profile_image_name || "Image uploaded" : "No file chosen"}
+                    </Typography>
+                  </Box>
+                </Box>
               </FormControl>
               <Button
                 variant="contained"
