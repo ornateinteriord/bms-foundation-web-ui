@@ -11,9 +11,9 @@ const Footer = () => {
             sx={{
                 background: "linear-gradient(135deg, #0a2558 0%, #0f172a 50%, #020617 100%)",
                 color: "white",
-                pt: 10,
-                pb: 6,
-                mt: { xs: 8, md: 0 },
+                pt: { xs: 4, md: 6 },
+                pb: { xs: 3, md: 4 },
+                mt: 0,
                 borderTop: "1px solid rgba(255,255,255,0.08)",
                 position: "relative",
                 overflow: "hidden"
@@ -23,7 +23,7 @@ const Footer = () => {
             <Box sx={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, background: "radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
 
             <Container maxWidth="xl">
-                <Grid container spacing={8}>
+                <Grid container spacing={3}>
                     {/* Branding Section */}
                     <Grid item xs={12} lg={4}>
                         <Typography
@@ -52,7 +52,7 @@ const Footer = () => {
 
                     {/* Links & Info Grouped */}
                     <Grid item xs={12} lg={8}>
-                        <Grid container spacing={4}>
+                        <Grid container spacing={3}>
                             {/* Location Section */}
                             <Grid item xs={12} sm={4}>
                                 <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#3b82f6", letterSpacing: "2px" }}>
@@ -119,7 +119,7 @@ const Footer = () => {
                     </Grid>
                 </Grid>
 
-                <Divider sx={{ my: 8, borderColor: "rgba(255,255,255,0.06)" }} />
+                <Divider sx={{ my: { xs: 3, md: 4 }, borderColor: "rgba(255,255,255,0.06)" }} />
 
                 {/* Bottom Bar */}
                 <Box
@@ -128,13 +128,13 @@ const Footer = () => {
                         flexDirection: { xs: "column", md: "row" },
                         justifyContent: "space-between",
                         alignItems: "center",
-                        gap: 4,
+                        gap: { xs: 1.5, md: 2 },
                     }}
                 >
                     <Typography variant="caption" sx={{ opacity: 0.4, fontWeight: 600 }}>
                         © {currentYear} BLUSKY MICRO SERVICES FOUNDATION. Designed for excellence.
                     </Typography>
-                    
+
                     <Box sx={{ display: "flex", gap: { xs: 2, sm: 5 }, flexWrap: "wrap", justifyContent: "center" }}>
                         {["About Us", "Contact Us", "Privacy Policy", "Terms & Conditions", "Refund Policy"].map((label) => (
                             <Link

@@ -38,6 +38,7 @@ import TvIcon from '@mui/icons-material/Tv';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import SpeedIcon from '@mui/icons-material/Speed';
+import LockIcon from '@mui/icons-material/Lock';
 
 import TokenService from '../../../api/token/tokenService';
 import {
@@ -49,6 +50,7 @@ import {
   useGetDailyPayout
 } from '../../../api/Memeber';
 import { toast } from 'react-toastify';
+import React from 'react';
 
 const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,10 +63,17 @@ const UserDashboard = () => {
   const { data: memberDetails, refetch: refetchMemberDetails, isLoading: isMemberLoading } = useGetMemberDetails(memberId);
   const { mutate: verifyPayment, isPending: isVerifyingPayment } = useVerifyPayment();
   const { refetch: refetchTransactions } = useGetTransactionDetails("all");
-  const { data: dailyPayout } = useGetDailyPayout(memberId);
+  useGetDailyPayout(memberId);
 
-  const dailyROIValue = Number(dailyPayout?.[0]?.ew_credit || 0);
-  const adjustedDeposit = dailyROIValue * 150;
+  const totalPrincipal = Number(walletOverview?.totalPackages || 0);
+  const totalRoiPaidValue = Number(walletOverview?.roiBenefits || 0);
+
+  // Wallet starts at Total Principal and decreases as ROI is paid.
+  const displayWallet = Math.max(0, totalPrincipal - totalRoiPaidValue);
+
+  // Once ROI exceeds Total Principal, the Deposit itself starts to "decrease" visually.
+  const extraROI = Math.max(0, totalRoiPaidValue - totalPrincipal);
+  const displayDeposit = Math.max(0, totalPrincipal - extraROI);
 
   useEffect(() => {
     const paymentParams = parsePaymentRedirectParams(searchParams);
@@ -116,8 +125,8 @@ const UserDashboard = () => {
       items: [
         { label: "Profile", icon: <AccountCircleIcon />, route: "/user/account/profile", color: "#3b82f6" },
         { label: "KYC", icon: <VerifiedUserIcon />, route: "/user/account/kyc", color: "#10b981" },
-        { label: "Passbook", icon: <ReceiptLongIcon />, route: "/user/transactions", color: "#f59e0b" },
-        { label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages", color: "#6366f1" },
+        { label: "Password", icon: <LockIcon />, route: "/user/account/change-password", color: "#f59e0b" },
+        { label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages", color: "#3b82f6" },
       ]
     },
     {
@@ -144,17 +153,48 @@ const UserDashboard = () => {
     <Box sx={{
       position: 'relative',
       mb: 2,
+      mt: { xs: 2, md: 3 },
       background: 'linear-gradient(135deg, #0a2558 0%, #1e3a8a 100%)',
-      p: { xs: 2, md: 3 },
-      borderRadius: '24px',
+      p: { xs: 2.5, md: 3.5 },
+      borderRadius: '28px',
       color: 'white',
-      boxShadow: '0 10px 40px rgba(10, 37, 88, 0.2)',
+      boxShadow: '0 15px 45px rgba(10, 37, 88, 0.25)',
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
       justifyContent: 'space-between',
       alignItems: { xs: 'flex-start', md: 'center' },
       gap: 2
     }}>
+      {/* Clickable Wallet Shortcut */}
+      <Box
+        onClick={() => navigate('/user/wallet')}
+        sx={{
+          position: 'absolute',
+          top: 15,
+          right: 20,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          bgcolor: 'rgba(255,255,255,0.1)',
+          px: 1.5,
+          py: 0.5,
+          borderRadius: '12px',
+          cursor: 'pointer',
+          border: '1px solid rgba(255,255,255,0.1)',
+          backdropFilter: 'blur(10px)',
+          transition: 'all 0.2s',
+          '&:hover': {
+            bgcolor: 'rgba(255,255,255,0.2)',
+            transform: 'translateY(-2px)'
+          },
+          '&:active': { transform: 'scale(0.95)' }
+        }}
+      >
+        <AccountBalanceWalletIcon sx={{ fontSize: 18, color: '#FFC000' }} />
+        <Typography sx={{ fontWeight: 900, fontSize: '0.85rem' }}>
+          ₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+        </Typography>
+      </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
         <Avatar
           sx={{
@@ -164,16 +204,17 @@ const UserDashboard = () => {
             border: '3px solid rgba(255,255,255,0.3)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}
+          src={memberDetails?.profile_image || ""}
         >
-          {memberDetails?.Member_Name?.[0] || <AccountCircleIcon sx={{ fontSize: 40 }} />}
+          {!memberDetails?.profile_image && (memberDetails?.Name?.[0] || <AccountCircleIcon sx={{ fontSize: 40 }} />)}
         </Avatar>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, letterSpacing: '-0.5px', mb: 0.5 }}>
-            {memberDetails?.Member_Name || (isMemberLoading ? "..." : "")}
+          <Typography variant="h5" sx={{ fontWeight: 900, mb: 0.2, letterSpacing: '-0.5px' }}>
+            {memberDetails?.Name || (isMemberLoading ? "..." : "")}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.8 }}>
-            <VerifiedUserIcon sx={{ fontSize: 18, color: '#10b981' }} />
-            <Typography variant="body1" sx={{ fontWeight: 700 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.9 }}>
+            <VerifiedUserIcon sx={{ fontSize: 16, color: '#10b981' }} />
+            <Typography variant="body2" sx={{ fontWeight: 800, letterSpacing: '0.5px' }}>
               ID: {memberDetails?.Member_id || memberId || ""}
             </Typography>
           </Box>
@@ -185,6 +226,7 @@ const UserDashboard = () => {
           variant="contained"
           size="small"
           fullWidth={window.innerWidth < 900}
+          onClick={() => navigate('/user/addon-packages')}
           startIcon={<NoteAddIcon sx={{ fontSize: '1rem !important' }} />}
           sx={{
             borderRadius: '12px',
@@ -204,10 +246,10 @@ const UserDashboard = () => {
         <Button
           variant="contained"
           size="small"
-          fullWidth={window.innerWidth < 900}
           onClick={() => setShowQuickAccess(!showQuickAccess)}
           startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1rem !important' }} />}
           sx={{
+            display: { xs: 'flex', md: 'none' }, // Only show on mobile/tablet
             borderRadius: '12px',
             textTransform: 'none',
             fontWeight: 900,
@@ -226,7 +268,15 @@ const UserDashboard = () => {
   );
 
   return (
-    <Box sx={{ pb: 10, background: '#f4f7f9', minHeight: '100vh', px: { xs: 2, md: 8, lg: 16 }, pt: 3 }}>
+    <Box sx={{
+      pb: 6,
+      background: '#f4f7f9',
+      minHeight: '100vh',
+      px: { xs: 2.5, md: 5, lg: 10, xl: 16 },
+      pt: { xs: 1.5, md: 4 }, // Reduced top gap for mobile, more balanced for desktop
+      maxWidth: '1800px',
+      margin: '0 auto'
+    }}>
       {isVerifyingPayment && (
         <Box sx={{ position: 'fixed', inset: 0, bgcolor: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress size={60} sx={{ color: 'white', mb: 2 }} />
@@ -236,67 +286,128 @@ const UserDashboard = () => {
 
       <Header />
 
-      {!showQuickAccess ? (
-        /* Page 1: Main View */
-        <Box>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: { xs: 4, md: 5 },
+        alignItems: 'flex-start'
+      }}>
+        {/* Left Column (Main/Services) */}
+        <Box sx={{
+          flex: 1,
+          width: '100%',
+          display: { xs: showQuickAccess ? 'none' : 'block', md: 'block' }
+        }}>
+          {/* Banner */}
           <Box
             onClick={() => navigate('/user/chat')}
             sx={{
               width: '100%',
-              height: { xs: '90px', md: '120px' },
-              mb: 2,
-              borderRadius: '24px',
+              height: { xs: '100px', md: '180px' },
+              mb: 4,
+              borderRadius: '28px',
               overflow: 'hidden',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.1)',
+              boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
               cursor: 'pointer',
-              transition: 'transform 0.2s',
-              '&:active': { transform: 'scale(0.98)' }
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              '&:hover': { transform: 'translateY(-6px)', boxShadow: '0 20px 45px rgba(0,0,0,0.18)' }
             }}
           >
             <img src="/cb.png" alt="BMS Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: { xs: 2, md: 4 } }}>
-            {servicesGrid.map((item, i) => (
-              <Box key={i} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
-                <Paper elevation={0} sx={{
-                  width: { xs: 50, md: 70 },
-                  height: { xs: 50, md: 70 },
-                  borderRadius: '15px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  bgcolor: 'white',
-                  color: item.color,
-                  boxShadow: `0 4px 15px ${item.color}15`,
-                  '&:active': { transform: 'scale(0.95)' },
-                  transition: '0.2s'
-                }}>
-                  {item.icon}
-                </Paper>
-                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.65rem', textAlign: 'center', color: '#1e293b', lineHeight: 1.1 }}>
-                  {item.label}
-                </Typography>
+          {/* Quick Services Grid */}
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 3, letterSpacing: '0.5px' }}>
+              QUICK SERVICES
+            </Typography>
+            <Box sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: 'repeat(4, 1fr)', lg: 'repeat(4, 1fr)', xl: 'repeat(6, 1fr)' },
+              gap: { xs: 2, md: 4 }
+            }}>
+              {servicesGrid.map((item, i) => (
+                <Box key={i} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5, cursor: 'pointer' }}>
+                  <Paper elevation={0} sx={{
+                    width: { xs: 54, md: 74 },
+                    height: { xs: 54, md: 74 },
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    bgcolor: 'white',
+                    color: item.color,
+                    boxShadow: `0 6px 20px ${item.color}15`,
+                    '&:hover': { transform: 'translateY(-5px) scale(1.05)', boxShadow: `0 10px 30px ${item.color}25` },
+                    transition: 'all 0.3s'
+                  }}>
+                    {React.cloneElement(item.icon as React.ReactElement, { sx: { fontSize: { xs: 24, md: 32 } } })}
+                  </Paper>
+                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.68rem', textAlign: 'center', color: '#334155', lineHeight: 1.2 }}>
+                    {item.label}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Team Performance - In Left Column on Desktop */}
+          <Box sx={{ mt: 6, display: { xs: 'none', md: 'block' } }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 3 }}>TEAM PERFORMANCE</Typography>
+            <Paper elevation={0} sx={{ p: 4, borderRadius: '28px', bgcolor: 'white', border: '1px solid #f1f5f9', boxShadow: '0 15px 35px rgba(0,0,0,0.02)' }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Team</Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#0a2558', mt: 1 }}>{memberDetails?.total_team || 0}</Typography>
+                </Box>
+                <Box sx={{ textAlign: 'center', borderLeft: '1px solid #f1f5f9' }}>
+                  <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Directs</Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#0a2558', mt: 1 }}>{memberDetails?.direct_referrals?.length || 0}</Typography>
+                </Box>
               </Box>
-            ))}
+            </Paper>
           </Box>
         </Box>
-      ) : (
-        /* Page 2: Quick Access View */
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
+        {/* Right Column / Mobile Conditional View */}
+        <Box sx={{
+          width: { xs: '100%', md: '380px', lg: '440px' },
+          display: { xs: showQuickAccess ? 'flex' : 'none', md: 'flex' },
+          flexDirection: 'column',
+          gap: 4,
+          position: { md: 'sticky' },
+          top: { md: '80px' }
+        }}>
+          {/* Mobile Only: Quick Access Header */}
+          <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 1, display: { xs: 'block', md: 'none' } }}>
+            QUICK ACCESS
+          </Typography>
+
           <Box sx={{ flex: 1 }}>
             {quickAccessGroups.map((group, idx) => (
               <Box key={idx} sx={{ mb: 4 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0a2558', mb: 2, letterSpacing: '1px' }}>
                   {group.title}
                 </Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 3 }}>
                   {group.items.map((item, i) => (
-                    <Box key={i} onClick={() => navigate(item.route)} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
-                      <Box sx={{ width: 54, height: 54, borderRadius: '16px', bgcolor: 'white', color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
+                    <Box key={i} onClick={() => navigate(item.route)} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5, cursor: 'pointer' }}>
+                      <Box sx={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: '16px',
+                        bgcolor: 'white',
+                        color: item.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 6px 15px rgba(0,0,0,0.04)',
+                        border: '1px solid #f1f5f9',
+                        '&:hover': { transform: 'scale(1.1)', bgcolor: '#f8fafc' },
+                        transition: '0.2s'
+                      }}>
                         {item.icon}
                       </Box>
-                      <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.7rem', textAlign: 'center', color: '#1e293b' }}>
+                      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.7rem', textAlign: 'center', color: '#475569' }}>
                         {item.label}
                       </Typography>
                     </Box>
@@ -305,7 +416,8 @@ const UserDashboard = () => {
               </Box>
             ))}
 
-            <Box sx={{ mt: 5 }}>
+            {/* Team Performance - Mobile Only inside Quick Access */}
+            <Box sx={{ mt: 2, display: { xs: 'block', md: 'none' } }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0a2558', mb: 2 }}>TEAM PERFORMANCE</Typography>
               <Paper elevation={0} sx={{ p: 3, borderRadius: '20px', bgcolor: 'white', border: '1px solid #e2e8f0' }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
@@ -363,17 +475,17 @@ const UserDashboard = () => {
             </Paper>
 
             {/* Wallet Section - Matched to 3rd Drawing */}
-            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '2px', mb: -2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '2px', mb: -2, mt: { xs: 2, md: 3 } }}>
               Deposit-BOND
             </Typography>
 
-            <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', bgcolor: 'white', border: '1px solid #e2e8f0', boxShadow: '0 10px 40px rgba(0,0,0,0.03)' }}>
+            <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', bgcolor: 'white', border: '1px solid #e2e8f0', boxShadow: '0 10px 40px rgba(0,0,0,0.03)', mt: 1 }}>
               <Stack spacing={4}>
                 {/* 1st Section: Deposits */}
                 <Box sx={{ p: 3, borderRadius: '24px', bgcolor: '#f8fafc', border: '1px dashed #cbd5e1' }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Typography sx={{ fontWeight: 800, color: '#475569' }}>MY Deposit</Typography>
-                    <Typography sx={{ fontWeight: 900, color: '#0f172a' }}>₹{adjustedDeposit.toLocaleString('en-IN')}</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#0f172a' }}>₹{displayDeposit.toLocaleString('en-IN', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontWeight: 800, color: '#475569' }}>Total Withdrawal</Typography>
@@ -389,15 +501,15 @@ const UserDashboard = () => {
                   <Stack spacing={2} sx={{ mt: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Wallet</Typography>
-                      <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN')}</Typography>
+                      <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS Level Benefits</Typography>
                       <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{Number(walletOverview?.levelBenefits || 0).toLocaleString('en-IN')}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Daily</Typography>
-                      <Typography sx={{ fontWeight: 900, color: '#f59e0b' }}>₹{dailyROIValue.toLocaleString('en-IN')}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569' }}>Daily ROI</Typography>
+                      <Typography sx={{ fontWeight: 900, color: '#d97706' }}>₹{totalRoiPaidValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                     </Box>
                   </Stack>
                 </Box>
@@ -410,7 +522,7 @@ const UserDashboard = () => {
                   <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, p: 2, px: 4, bgcolor: '#0a2558', borderRadius: '20px', color: 'white' }}>
                     <CurrencyRupeeIcon sx={{ fontSize: 28 }} />
                     <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {Number(walletOverview?.balance || 0).toLocaleString('en-IN')}
+                      {displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </Typography>
                   </Box>
                 </Box>
@@ -418,7 +530,7 @@ const UserDashboard = () => {
             </Paper>
           </Box>
         </Box>
-      )}
+      </Box>
     </Box>
   );
 };

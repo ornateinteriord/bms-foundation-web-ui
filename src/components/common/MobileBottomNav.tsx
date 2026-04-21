@@ -1,9 +1,9 @@
 import React from 'react';
 import { BottomNavigation, BottomNavigationAction, Paper, Box } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
-import HistoryIcon from '@mui/icons-material/History';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PersonIcon from '@mui/icons-material/Person';
+import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const MobileBottomNav: React.FC = () => {
@@ -14,8 +14,8 @@ const MobileBottomNav: React.FC = () => {
   // Sync state with current path
   React.useEffect(() => {
     if (location.pathname.includes('/user/dashboard')) setValue(0);
-    else if (location.pathname.includes('/user/transactions')) setValue(1);
-    else if (location.pathname.includes('/user/wallet')) setValue(2);
+    else if (location.pathname.includes('/user/wallet')) setValue(1);
+    else if (location.pathname.includes('/user/chat')) setValue(2);
     else if (location.pathname.includes('/user/account/profile')) setValue(3);
   }, [location.pathname]);
 
@@ -40,8 +40,8 @@ const MobileBottomNav: React.FC = () => {
             setValue(newValue);
             switch (newValue) {
               case 0: navigate('/user/dashboard'); break;
-              case 1: navigate('/user/transactions'); break;
-              case 2: navigate('/user/chat'); break; // Updated to match image
+              case 1: navigate('/user/wallet'); break;
+              case 2: navigate('/user/chat'); break;
               case 3: navigate('/user/account/profile'); break;
             }
           }}
@@ -88,7 +88,7 @@ const MobileBottomNav: React.FC = () => {
           />
           <BottomNavigationAction 
             label="Chat" 
-            icon={<Box className={value === 2 ? "indicator" : ""}>{<HistoryIcon />}</Box>} 
+            icon={<Box className={value === 2 ? "indicator" : ""}>{<ChatIcon />}</Box>} 
           />
           <BottomNavigationAction 
             label="Profile" 

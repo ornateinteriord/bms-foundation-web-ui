@@ -123,7 +123,7 @@ const Wallet = () => {
       <Card
         sx={{
           margin: isMobile ? "1rem" : "2rem",
-          mt: 10,
+          mt: 1, // Further reduced top margin
           textAlign: "center",
           p: 3,
           display: "flex",
@@ -140,9 +140,9 @@ const Wallet = () => {
   return (
     <Card
       sx={{
-        margin: isMobile ? "1rem" : "2rem",
+        margin: isMobile ? "0.5rem" : "1rem",
         backgroundColor: "#fff",
-        mt: 10,
+        mt: 1, // Further reduced top margin
       }}
     >
       <CardContent sx={{ padding: isMobile ? "12px" : "24px" }}>

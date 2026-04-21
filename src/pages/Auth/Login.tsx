@@ -93,7 +93,6 @@ const Login = () => {
         background: "linear-gradient(135deg, #0a2558 0%, #153b93 100%)",
         position: "relative",
         overflow: "hidden",
-        mt: { xs: 5, md: 8 }
       }}
     >
       {/* Abstract Background Design Elements for modern feel */}
@@ -122,7 +121,7 @@ const Login = () => {
         }}
       />
 
-      <Container component="main" maxWidth="xs" sx={{ position: "relative", zIndex: 1, mt: { xs: -4, md: -8 } }}>
+      <Container component="main" maxWidth="xs" sx={{ position: "relative", zIndex: 1 }}>
         <Paper
           elevation={24}
           sx={{

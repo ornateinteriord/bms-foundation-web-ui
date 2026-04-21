@@ -168,7 +168,10 @@ const ShouldHideSidebar = () => {
 };
 
 const ShouldHideNavbar = () => {
-  return false;
+  const location = useLocation();
+  // Comment out login from nav bar - hide navbar on public/auth pages
+  const noNavbarPaths = ["/", "/login", "/register", "/recover-password", "/reset-password", "/forgot-password"];
+  return noNavbarPaths.includes(location.pathname);
 };
 
 const ShouldShowFooter = () => {
@@ -214,12 +217,13 @@ const RoutesProvider = ({
   const hideSidebar = ShouldHideSidebar();
   const hideNavbar = ShouldHideNavbar();
   const shouldShowFooter = ShouldShowFooter();
+  // On public/auth pages, navbar is hidden — content takes full screen with no offset
   const { isLoggedIn, userRole } = useAuth();
   const isAdmin = userRole === "ADMIN";
 
   return (
     <>
-      <Navbar shouldHide={hideNavbar} />
+      <Navbar shouldHide={hideNavbar} onToggleSidebar={() => setIsOpen(!isOpen)} />
       <ChatNotificationListener />
 
       <div
@@ -244,10 +248,12 @@ const RoutesProvider = ({
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",
-            backgroundColor: "#f4f7f9",
-            minHeight: "calc(100vh - 64px)",
-            paddingTop: !hideSidebar ? (window.innerWidth < 900 ? "56px" : "64px") : "0", // Add padding only for internal pages with fixed navbar
-            paddingBottom: !isAdmin && isLoggedIn ? "64px" : "0"
+            // Transparent on public pages so Login/Register bg fills the whole screen
+            backgroundColor: hideNavbar ? "transparent" : "#f4f7f9",
+            minHeight: "100vh",
+            // No padding offset when navbar is hidden (public pages)
+            paddingTop: hideNavbar ? "0" : (!hideSidebar ? (window.innerWidth < 900 ? "46px" : "56px") : "0"),
+            paddingBottom: !isAdmin && isLoggedIn ? "10px" : "0"
           }}
         >
           <Routes>
