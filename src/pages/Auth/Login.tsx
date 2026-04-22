@@ -149,26 +149,6 @@ const Login = () => {
             <ForgotPasswordForm onBackToLogin={() => setIsResetMode(false)} />
           ) : (
             <>
-              <Typography
-                component="h1"
-                variant="h5"
-            sx={{
-              color: "#0a2558", // Deep Navy target
-              fontWeight: 800,
-              textAlign: "center",
-              mb: 1,
-              letterSpacing: "-0.5px"
-            }}
-          >
-            Welcome Back
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "#64748b", textAlign: "center", mb: 3, fontWeight: 500 }}
-          >
-            Securely login to your foundation dashboard
-          </Typography>
-
           <Box
             component="form"
             onSubmit={handleSubmit}

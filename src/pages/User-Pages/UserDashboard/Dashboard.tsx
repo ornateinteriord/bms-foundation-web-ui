@@ -56,7 +56,15 @@ const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [paymentProcessed, setPaymentProcessed] = useState(false);
-  const [showQuickAccess, setShowQuickAccess] = useState(false);
+  const showQuickAccess = searchParams.get('view') === 'quickaccess';
+
+  const setShowQuickAccess = (show: boolean) => {
+    if (show) {
+      setSearchParams({ view: 'quickaccess' });
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const memberId = TokenService.getMemberId();
   const { data: walletOverview } = useGetWalletOverview(memberId);
@@ -67,6 +75,7 @@ const UserDashboard = () => {
 
   const totalPrincipal = Number(walletOverview?.totalPackages || 0);
   const totalRoiPaidValue = Number(walletOverview?.roiBenefits || 0);
+  const roiLevelBenefits = Number(walletOverview?.roiLevelBenefits || 0);
 
   // Wallet starts at Total Principal and decreases as ROI is paid.
   const displayWallet = Math.max(0, totalPrincipal - totalRoiPaidValue);
@@ -151,119 +160,121 @@ const UserDashboard = () => {
 
   const Header = () => (
     <Box sx={{
-      position: 'relative',
       mb: 2,
       mt: { xs: 2, md: 3 },
       background: 'linear-gradient(135deg, #0a2558 0%, #1e3a8a 100%)',
-      p: { xs: 2.5, md: 3.5 },
+      p: { xs: 2, md: 3.5 },
       borderRadius: '28px',
       color: 'white',
       boxShadow: '0 15px 45px rgba(10, 37, 88, 0.25)',
-      display: 'flex',
-      flexDirection: { xs: 'column', md: 'row' },
-      justifyContent: 'space-between',
-      alignItems: { xs: 'flex-start', md: 'center' },
-      gap: 2
     }}>
-      {/* Clickable Wallet Shortcut */}
-      <Box
-        onClick={() => navigate('/user/wallet')}
-        sx={{
-          position: 'absolute',
-          top: 15,
-          right: 20,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          bgcolor: 'rgba(255,255,255,0.1)',
-          px: 1.5,
-          py: 0.5,
-          borderRadius: '12px',
-          cursor: 'pointer',
-          border: '1px solid rgba(255,255,255,0.1)',
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.2s',
-          '&:hover': {
-            bgcolor: 'rgba(255,255,255,0.2)',
-            transform: 'translateY(-2px)'
-          },
-          '&:active': { transform: 'scale(0.95)' }
-        }}
-      >
-        <AccountBalanceWalletIcon sx={{ fontSize: 18, color: '#FFC000' }} />
-        <Typography sx={{ fontWeight: 900, fontSize: '0.85rem' }}>
-          ₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+      {/* Row 1: Avatar + (Name/ID/Wallet Column) */}
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2.5 }}>
         <Avatar
           sx={{
-            width: { xs: 70, md: 90 },
-            height: { xs: 70, md: 90 },
+            width: { xs: 62, md: 80 },
+            height: { xs: 62, md: 80 },
             bgcolor: 'rgba(255,255,255,0.15)',
             border: '3px solid rgba(255,255,255,0.3)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+            flexShrink: 0,
+            mt: 0.5
           }}
           src={memberDetails?.profile_image || ""}
         >
-          {!memberDetails?.profile_image && (memberDetails?.Name?.[0] || <AccountCircleIcon sx={{ fontSize: 40 }} />)}
+          {!memberDetails?.profile_image && (memberDetails?.Name?.[0] || <AccountCircleIcon sx={{ fontSize: 36 }} />)}
         </Avatar>
-        <Box>
-          <Typography variant="h5" sx={{ fontWeight: 900, mb: 0.2, letterSpacing: '-0.5px' }}>
-            {memberDetails?.Name || (isMemberLoading ? "..." : "")}
+
+        {/* Name + ID + Wallet Info Column */}
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: '-0.5px', lineHeight: 1.2, mb: 0.5, fontSize: { xs: '1.2rem', md: '1.5rem' } }}>
+            {memberDetails?.Name || (isMemberLoading ? '...' : '')}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.9 }}>
-            <VerifiedUserIcon sx={{ fontSize: 16, color: '#10b981' }} />
-            <Typography variant="body2" sx={{ fontWeight: 800, letterSpacing: '0.5px' }}>
-              ID: {memberDetails?.Member_id || memberId || ""}
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, opacity: 0.9, mb: 1.5 }}>
+            <VerifiedUserIcon sx={{ fontSize: 14, color: '#10b981' }} />
+            <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: '0.5px' }}>
+              ID: {memberDetails?.Member_id || memberId || ''}
+            </Typography>
+          </Box>
+
+          {/* Wallet Badge — Now below Name & ID */}
+          <Box
+            onClick={() => navigate('/user/wallet')}
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.8,
+              bgcolor: 'rgba(255,255,255,0.12)',
+              px: { xs: 1.5, md: 2 },
+              py: 0.8,
+              borderRadius: '12px',
+              cursor: 'pointer',
+              border: '1px solid rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(10px)',
+              alignSelf: 'flex-start',
+              transition: 'all 0.2s',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.22)', transform: 'translateY(-2px)' },
+              '&:active': { transform: 'scale(0.95)' }
+            }}
+          >
+            <AccountBalanceWalletIcon sx={{ fontSize: 18, color: '#FFC000' }} />
+            <Typography sx={{ fontWeight: 900, fontSize: { xs: '0.95rem', md: '1.1rem' }, whiteSpace: 'nowrap' }}>
+              ₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
             </Typography>
           </Box>
         </Box>
       </Box>
 
-      <Stack direction="row" spacing={1} sx={{ width: { xs: '100%', md: 'auto' } }}>
+      {/* Row 2: Buttons + CB icon — all same height */}
+      <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'stretch' }}>
+        {/* FD BOND */}
         <Button
           variant="contained"
-          size="small"
-          fullWidth={window.innerWidth < 900}
           onClick={() => navigate('/user/addon-packages')}
           startIcon={<NoteAddIcon sx={{ fontSize: '1rem !important' }} />}
           sx={{
-            borderRadius: '12px',
+            flex: 1,
+            borderRadius: '14px',
             textTransform: 'none',
             fontWeight: 900,
             bgcolor: 'white',
             color: '#0a2558',
-            px: 1.7,
-            py: 0.7,
-            fontSize: '12.2px',
+            fontSize: '12.5px',
+            whiteSpace: 'nowrap',
+            py: 1.1,
+            minWidth: 0,
             '&:hover': { bgcolor: '#f1f5f9' },
             boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
           }}
         >
           FD BOND
         </Button>
+
+        {/* QUICK ACCESS — mobile only */}
         <Button
           variant="contained"
-          size="small"
           onClick={() => setShowQuickAccess(!showQuickAccess)}
           startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1rem !important' }} />}
           sx={{
-            display: { xs: 'flex', md: 'none' }, // Only show on mobile/tablet
-            borderRadius: '12px',
+            display: { xs: 'flex', md: 'none' },
+            flex: 1,
+            borderRadius: '14px',
             textTransform: 'none',
             fontWeight: 900,
             bgcolor: '#3b82f6',
-            px: 1.7,
-            py: 0.5,
-            fontSize: '12.2px',
+            fontSize: '12.5px',
+            whiteSpace: 'nowrap',
+            py: 1.1,
+            minWidth: 0,
             border: '2px solid rgba(255,255,255,0.2)',
             boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
           }}
         >
           {showQuickAccess ? 'BACK' : 'QUICK ACCESS'}
         </Button>
-      </Stack>
+
+      </Box>
     </Box>
   );
 
@@ -298,19 +309,21 @@ const UserDashboard = () => {
           width: '100%',
           display: { xs: showQuickAccess ? 'none' : 'block', md: 'block' }
         }}>
-          {/* Banner */}
+          {/* CB Banner - Desktop only (mobile version is inside the header) */}
           <Box
             onClick={() => navigate('/user/chat')}
             sx={{
+              display: { xs: 'none', md: 'block' },
               width: '100%',
-              height: { xs: '100px', md: '180px' },
+              height: '160px',
               mb: 4,
               borderRadius: '28px',
               overflow: 'hidden',
-              boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
+              boxShadow: '0 15px 35px rgba(23, 16, 16, 0.12)',
               cursor: 'pointer',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              '&:hover': { transform: 'translateY(-6px)', boxShadow: '0 20px 45px rgba(0,0,0,0.18)' }
+              '&:hover': { transform: 'translateY(-6px)', boxShadow: '0 20px 45px rgba(0,0,0,0.18)' },
+
             }}
           >
             <img src="/cb.png" alt="BMS Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -318,9 +331,31 @@ const UserDashboard = () => {
 
           {/* Quick Services Grid */}
           <Box sx={{ mb: 6 }}>
-            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 3, letterSpacing: '0.5px' }}>
-              QUICK SERVICES
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 2, mb: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', letterSpacing: '0.5px' }}>
+                QUICK SERVICES
+              </Typography>
+              <Box
+                onClick={() => navigate('/user/chat')}
+                sx={{
+                  cursor: 'pointer',
+                  width: 90,
+                  height: 60,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '14px',
+                  bgcolor: 'white',
+                  border: '1.5px solid rgba(10,37,88,0.1)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.07)',
+                  transition: 'all 0.25s',
+                  '&:hover': { transform: 'scale(1.08)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)' },
+                  '&:active': { transform: 'scale(0.95)' }
+                }}
+              >
+                <img src="/cb.png" alt="BMS Chat" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.4)' }} />
+              </Box>
+            </Box>
             <Box sx={{
               display: 'grid',
               gridTemplateColumns: { xs: 'repeat(4, 1fr)', lg: 'repeat(4, 1fr)', xl: 'repeat(6, 1fr)' },
@@ -500,16 +535,20 @@ const UserDashboard = () => {
                   </Typography>
                   <Stack spacing={2} sx={{ mt: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Wallet</Typography>
-                      <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569' }}>Daily ROI</Typography>
+                      <Typography sx={{ fontWeight: 900, color: '#d97706' }}>₹{totalRoiPaidValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS ROI Benefits</Typography>
+                      <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{roiLevelBenefits.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS Level Benefits</Typography>
                       <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{Number(walletOverview?.levelBenefits || 0).toLocaleString('en-IN')}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569' }}>Daily ROI</Typography>
-                      <Typography sx={{ fontWeight: 900, color: '#d97706' }}>₹{totalRoiPaidValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Wallet</Typography>
+                      <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                     </Box>
                   </Stack>
                 </Box>
@@ -522,7 +561,7 @@ const UserDashboard = () => {
                   <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, p: 2, px: 4, bgcolor: '#0a2558', borderRadius: '20px', color: 'white' }}>
                     <CurrencyRupeeIcon sx={{ fontSize: 28 }} />
                     <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </Typography>
                   </Box>
                 </Box>
