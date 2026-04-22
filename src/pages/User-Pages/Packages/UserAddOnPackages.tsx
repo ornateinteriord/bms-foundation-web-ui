@@ -56,10 +56,10 @@ export const UserAddOnPackages = () => {
   }
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, mt: 7 }}>
+    <Box sx={{ p: { xs: 2, md: 4 }, mt: { xs: 3, md: 7 } }}>
       {/* ── ROW 1: CENTERED REQUEST FORM ── */}
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 6 }}>
-        <Typography variant="h5" sx={{ mb: 2, color: '#0a2558', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: '#0a2558', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <AddCircleOutlineIcon sx={{ fontSize: 28, color: '#ed6c02' }} />
           Request Add-On Package
         </Typography>
@@ -133,7 +133,7 @@ export const UserAddOnPackages = () => {
                   '&:hover': { backgroundColor: '#153b93' }
                 }}
               >
-                {isSubmitting ? 'Submitting Request...' : 'Submit Add-On Request'}
+                {isSubmitting ? 'Submitting Request...' : 'Submit Deposit Request'}
               </Button>
             </Box>
           </CardContent>
@@ -144,7 +144,7 @@ export const UserAddOnPackages = () => {
       <Box sx={{ mb: 4 }}>
         <Typography variant="h5" sx={{ color: '#0a2558', fontWeight: 900, letterSpacing: -0.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <Box sx={{ width: 4, height: 24, backgroundColor: '#ed6c02', borderRadius: 1 }} />
-          My Add-On Packages
+          My Deposits
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5, ml: 2, fontWeight: 500 }}>
           Manage your primary investment and independent add-on tracks.
@@ -195,7 +195,7 @@ export const UserAddOnPackages = () => {
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Box>
                           <Typography variant="caption" sx={{ fontSize: '0.75rem', fontWeight: 800, color: pkg.isPrimary ? '#0a2558' : 'text.secondary', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                            {pkg.isPrimary ? 'Primary Package' : `Add-On #${index}`}
+                            {pkg.isPrimary ? 'Primary Package' : `My Deposit #${index}`}
                           </Typography>
                           <Typography variant="h5" sx={{ fontWeight: 900, fontSize: '1.4rem', color: '#0a2558', lineHeight: 1.2, mt: 0.5 }}>
                             ₹{pkgAmount.toLocaleString('en-IN')}
@@ -211,7 +211,7 @@ export const UserAddOnPackages = () => {
 
                       <Divider sx={{ mb: 2 }} />
                       <Box sx={{ mb: 2 }}>
-                        <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'text.secondary', display: 'block', fontWeight: 600 }}>Daily ROI Payout</Typography>
+                        <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'text.secondary', display: 'block', fontWeight: 600 }}>Daily ROI</Typography>
                         <Typography variant="h6" sx={{ fontWeight: 800, color: '#1565c0', fontSize: '1.1rem' }}>
                           ₹{pkgDailyROI.toLocaleString('en-IN')}
                         </Typography>
