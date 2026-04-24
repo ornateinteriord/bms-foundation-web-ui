@@ -5,6 +5,12 @@
 		},
 		{
 			"path": "../../../../../../BMS_Bizz_Server/BICCSL-Server"
+		},
+		{
+			"path": "../../../../../../Nidhi-Backend/MSI-Server"
+		},
+		{
+			"path": "../../../../../../Nidhi-ltd-c/nidhi-ltd"
 		}
 	],
 	"settings": {}

@@ -2,7 +2,7 @@ import './sidebar.scss';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserSideBarMenuItems, AdminSideBarMenuItems } from './SidebarUtils'
+import { UserSideBarMenuItems, AdminSideBarMenuItems, Admin01SideBarMenuItems, AgentSideBarMenuItems } from './SidebarUtils'
 import { Avatar, Toolbar, Typography } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons';
@@ -45,7 +45,11 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
       onClose();
     }
   };
-  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems : UserSideBarMenuItems;
+  const menuItems =
+    role === "ADMIN_01" ? Admin01SideBarMenuItems :
+      role === "ADMIN" ? AdminSideBarMenuItems :
+        role === "AGENT" ? AgentSideBarMenuItems :
+          UserSideBarMenuItems;
   const userId = TokenService.getUserId()
   const memberMutatation = useGetMemberDetails(userId!)
   const { data: fethedUser, isLoading, isError, error } = memberMutatation
@@ -59,13 +63,21 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
 
 
 
+  const isNidhiRole = role === "ADMIN_01" || role === "AGENT";
+
   return (
     <motion.div
       className={`sidebar ${isOpen ? 'open' : 'closed'}`}
       initial={{ width: 0 }}
       animate={{ width: isOpen ? 250 : 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      style={{ zIndex: 100 }}
+      style={{
+        zIndex: 100,
+        background: isNidhiRole ? '#081b42' : undefined,
+        boxShadow: isOpen && isNidhiRole ? '4px 0 20px rgba(0, 0, 0, 0.4)' : 'none',
+        overflow: 'hidden',
+        borderRight: isNidhiRole ? '1px solid rgba(255,255,255,0.1)' : 'none'
+      }}
     >
       <Toolbar className="navbar-toolbar" />
       <AnimatePresence>
@@ -76,102 +88,219 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}
+            style={{
+              padding: isNidhiRole ? '10px 20px 0px 20px' : undefined,
+              flexDirection: isNidhiRole ? undefined : 'column',
+              alignItems: isNidhiRole ? undefined : 'flex-start',
+              gap: '5px'
+            }}
           >
-            {/* <div style={{ padding: '0 15px', marginBottom: '10px' }}>
-              <Box component="img" src={BMSLogo} alt="BMS Logo" sx={{ width: '150px', height: { xs: '40px', sm: '60px' } }} />
-            </div> */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Avatar
                 alt="User Avatar"
                 src={fethedUser?.profile_image || ''}
-                sx={{ width: 50, height: 50, background: deepOrange[500] }}
+                sx={isNidhiRole ? {
+                  width: 44,
+                  height: 44,
+                  background: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                  border: '2px solid white',
+                } : { width: 50, height: 50, background: deepOrange[500] }}
               >
                 {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
               </Avatar>
-              <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
-                <Typography>Welcome,</Typography>
-                <Typography style={{ fontWeight: 'bold' }}>{fethedUser?.Name}</Typography>
+              <div className="welcome-text" style={{ padding: '0 10px', color: isNidhiRole ? '#fff' : undefined }}>
+                <Typography style={isNidhiRole ? {
+                  fontWeight: 'bold',
+                  color: 'white',
+                  fontSize: '0.9rem',
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
+                  lineHeight: '1.2',
+                } : {}}>Welcome,</Typography>
+                <Typography style={isNidhiRole ? {
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '0.75rem',
+                  fontWeight: '400',
+                  marginTop: '0px',
+                } : { fontWeight: 'bold' }}>
+                  {fethedUser?.Name || name}
+                  {isNidhiRole && <><br />ID: {fethedUser?.Member_id || fethedUser?.member_id || fethedUser?.username || fethedUser?.id || ''}</>}
+                </Typography>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <div style={{ height: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '80px' }}>
+      <div style={{
+        height: 'calc(100vh - 100px)',
+        overflowY: 'auto',
+        paddingTop: isNidhiRole ? '0px' : undefined,
+        paddingLeft: isNidhiRole ? '10px' : undefined,
+        paddingRight: isNidhiRole ? '10px' : undefined,
+        paddingBottom: '80px'
+      }}>
+
         <AnimatePresence>
           {menuItems.filter((item: SideBarMenuItemType) => {
-            // Hide "Add-On Packages" if user is not active
             if (role === "USER" && item.name === "Add-On Packages" && fethedUser?.status !== 'active') {
               return false;
             }
             return true;
-          }).map((item: SideBarMenuItemType) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div
-                onClick={() => {
-                  if (item.isExpandable) {
-                    handleToggle(item.name);
-                  } else {
-                    navigate(item.path!);
-                    handleSelect(item.name);
-                  }
-                }}
-                className={`menu-item ${selectedItem === item.name ? 'selected' : ''}`}
-              >
-                {item.icon} {item.name}
+          }).map((item: SideBarMenuItemType) => {
+            const isSelected = selectedItem === item.name;
+            const backgroundColor = isSelected && isNidhiRole
+              ? 'rgba(255, 255, 255, 0.2)'
+              : 'transparent';
 
-                {item.isExpandable && (
-                  <span style={{ marginLeft: 'auto' }} onClick={(e) => {
-                    e.stopPropagation();
-                    handleToggle(item.name);
-                  }}>
-                    {expandedItem === item.name ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                  </span>
-                )}
-              </div>
-              {item.isExpandable && (
-                <motion.div
-                  className="sub-items"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{
-                    height: (expandedItem === item.name || closingItem === item.name) ? 'auto' : 0,
-                    opacity: expandedItem === item.name ? 1 : 0
+            return (
+              <motion.div
+                key={item.name}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div
+                  onClick={() => {
+                    if (item.isExpandable) {
+                      handleToggle(item.name);
+                    } else {
+                      navigate(item.path!);
+                      handleSelect(item.name);
+                    }
                   }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  className={`menu-item ${isSelected ? 'selected' : ''}`}
+                  style={isNidhiRole ? {
+                    background: backgroundColor,
+                    borderRadius: '12px',
+                    marginBottom: '4px',
+                    border: isSelected
+                      ? '1px solid rgba(255, 255, 255, 0.3)'
+                      : '1px solid transparent',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: isSelected ? 'blur(10px)' : 'none',
+                    padding: '10px 16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    minHeight: '48px',
+                  } : {}}
                 >
-                  <AnimatePresence>
-                    {(expandedItem === item.name || closingItem === item.name) && item.subItems?.map(subItem => (
-                      <motion.div
-                        key={subItem.name}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Link
-                          to={subItem.path ?? '#'}
-                          className={`sub-item ${location.pathname === subItem.path ? 'selected' : ''}`}
-                          onClick={() => {
-                            handleSelect(item.name);
-                          }}
-                        >
-                          <span className="sub-item-icon">{subItem.icon}</span>
-                          <span className="sub-item-name">{subItem.name}</span>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
-              )}
-            </motion.div>
-          ))}
+                  <span style={isNidhiRole ? {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    color: isSelected ? 'white' : 'rgba(255, 255, 255, 0.9)',
+                    fontWeight: isSelected ? '600' : '500',
+                    flex: 1,
+                  } : {}}>
+                    {item.icon}
+                    <span style={isNidhiRole ? { flex: 1 } : {}}>{item.name}</span>
+                  </span>
+
+                  {item.isExpandable && (
+                    <span
+                      style={isNidhiRole ? {
+                        marginLeft: 'auto',
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      } : { marginLeft: 'auto' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggle(item.name);
+                      }}
+                    >
+                      {expandedItem === item.name ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    </span>
+                  )}
+                </div>
+                {item.isExpandable && (
+                  <motion.div
+                    className="sub-items"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{
+                      height: (expandedItem === item.name || closingItem === item.name) ? 'auto' : 0,
+                      opacity: expandedItem === item.name ? 1 : 0
+                    }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={isNidhiRole ? {
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      borderRadius: '8px',
+                      margin: '4px 0 4px 8px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                    } : {}}
+                  >
+                    <AnimatePresence>
+                      {(expandedItem === item.name || closingItem === item.name) && item.subItems?.map(subItem => {
+                        const isSubItemActive = location.pathname === subItem.path;
+                        const subItemBackground = isSubItemActive && isNidhiRole
+                          ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%)'
+                          : 'transparent';
+
+                        return (
+                          <motion.div
+                            key={subItem.name}
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Link
+                              to={subItem.path ?? '#'}
+                              className={`sub-item ${isSubItemActive ? 'selected' : ''}`}
+                              onClick={() => {
+                                handleSelect(item.name);
+                              }}
+                              style={isNidhiRole ? {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '10px 12px',
+                                color: isSubItemActive ? 'white' : 'rgba(255, 255, 255, 0.8)',
+                                background: subItemBackground,
+                                borderRadius: '6px',
+                                margin: '2px 8px',
+                                textDecoration: 'none',
+                                transition: 'all 0.3s ease',
+                                cursor: 'pointer',
+                              } : {}}
+                            >
+                              <span
+                                className="sub-item-icon"
+                                style={isNidhiRole ? {
+                                  color: isSubItemActive ? 'white' : 'rgba(255, 255, 255, 0.7)',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  width: '20px',
+                                } : {}}
+                              >
+                                {subItem.icon}
+                              </span>
+                              <span
+                                className="sub-item-name"
+                                style={isNidhiRole ? {
+                                  fontWeight: isSubItemActive ? '600' : '500',
+                                  fontSize: '0.875rem',
+                                  flex: 1,
+                                } : {}}
+                              >
+                                {subItem.name}
+                              </span>
+                            </Link>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </motion.div>
+                )}
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
         {isLoading && <LoadingComponent />}
       </div>

@@ -95,6 +95,10 @@ export const useLoginMutation = () => {
           navigate("/user/dashboard", { replace: true });
         } else if (role === "ADMIN") {
           navigate("/admin/dashboard", { replace: true });
+        } else if (role === "ADMIN_01") {
+          navigate("/admin_01/dashboard", { replace: true });
+        } else if (role === "AGENT") {
+          navigate("/agent/dashboard", { replace: true });
         } else {
           console.error("Invalid role:", role);
           localStorage.clear()

@@ -34,7 +34,7 @@ interface NavbarProps {
 const Navbar = ({ shouldHide, onToggleSidebar }: NavbarProps) => {
   const navigate = useNavigate();
   const { isLoggedIn, userRole } = useAuth();
-  const isAdmin = userRole === "ADMIN";
+  const isAdmin = userRole === "ADMIN" || userRole === "ADMIN_01" || userRole === "AGENT";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Always call hooks before any early return (Rules of Hooks)
