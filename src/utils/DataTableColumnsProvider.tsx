@@ -281,6 +281,67 @@ export const getTransactionColumns = () => [
   },
 ];
 
+export const getBankTransactionColumns = () => [
+  {
+    name: "Date",
+    selector: (row: any) => getFormattedDate(row.transaction_date),
+    sortable: true,
+  },
+  {
+    name: "Description",
+    selector: (row: any) => row.description,
+    sortable: true,
+  },
+  {
+    name: "Reference No",
+    selector: (row: any) => row.reference_no || "-",
+    sortable: true,
+  },
+  {
+    name: "Credit",
+    selector: (row: any) => row.ew_credit ? `₹ ${parseFloat(row.ew_credit).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Debit",
+    selector: (row: any) => row.ew_debit ? `₹ ${parseFloat(row.ew_debit).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status,
+    sortable: true,
+  },
+];
+
+export const getJournalEntriesColumns = () => [
+  {
+    name: "Date",
+    selector: (row: any) => getFormattedDate(row.date),
+    sortable: true,
+  },
+  {
+    name: "Description",
+    selector: (row: any) => row.description,
+    sortable: true,
+  },
+  {
+    name: "Account",
+    selector: (row: any) => row.account_name,
+    sortable: true,
+  },
+  {
+    name: "Debit",
+    selector: (row: any) => `₹ ${parseFloat(row.debit || 0).toLocaleString()}`,
+    sortable: true,
+  },
+  {
+    name: "Credit",
+    selector: (row: any) => `₹ ${parseFloat(row.credit || 0).toLocaleString()}`,
+    sortable: true,
+  },
+];
+
 
 
 export const getWalletColumns = () => [

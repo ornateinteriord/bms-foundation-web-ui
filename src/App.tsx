@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import "./index.css";
-import { Dialog, DialogContent, CircularProgress } from "@mui/material";
+import { CircularProgress, Box } from "@mui/material";
 
 import Members, {
   ActiveMembers,
@@ -96,6 +96,55 @@ const WithdrawPending = lazy(() => import("./pages/Admin-Pages/WithdrawPending/W
 const AdminAddOnRequests = lazy(() => import("./pages/Admin-Pages/Packages/AdminAddOnRequests"));
 const AdminChat = lazy(() => import("./pages/Admin-Pages/AdminChat/AdminChat"));
 
+// Admin_01 Pages
+const Admin01Dashboard = lazy(() => import("./pages/Admin-Pages/Admin01Dashboard/Dashboard"));
+const Admin01Members = lazy(() => import("./pages/Administration/Members"));
+const Admin01Interests = lazy(() => import("./pages/Administration/Interests"));
+
+// Agent Pages
+const AgentDashboard = lazy(() => import("./pages/Agent/AgentDashboard"));
+const AgentProfile = lazy(() => import("./pages/Agent/Profile"));
+const AgentCollections = lazy(() => import("./pages/Agent/Collections"));
+const AgentAddNew = lazy(() => import("./pages/Agent/AddNew"));
+const AgentReport = lazy(() => import("./pages/Agent/Report"));
+
+// Admin Banking
+const BankingAgents = lazy(() => import("./pages/Administration/Agents"));
+const AdminReceipts = lazy(() => import("./pages/Admin-Pages/Banking/Receipts"));
+const AdminPayments = lazy(() => import("./pages/Admin-Pages/Banking/Payments"));
+const AdminCashTransaction = lazy(() => import("./pages/Admin-Pages/Banking/CashTransaction"));
+const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
+const AdminWithdrawalRequests = lazy(() => import("./pages/Admin-Pages/Withdrawal/WithdrawalRequests"));
+
+const SBOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/SBOpening"));
+const CAOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/CAOpening"));
+const SBDetails = lazy(() => import("./pages/Admin-Pages/AccountDetails/SBDetails"));
+const CADetails = lazy(() => import("./pages/Admin-Pages/AccountDetails/CADetails"));
+const CloseSBTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseSBTable"));
+const CloseCATable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseCATable"));
+const CloseLoanTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseLoanTable"));
+const CloseODTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseODTable"));
+
+const RDViewAll = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDViewAll"));
+const FDViewAll = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDViewAll"));
+const PigmyViewAll = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyViewAll"));
+const MISViewAll = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISViewAll"));
+
+const RDOpening = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDOpening"));
+const FDOpening = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDOpening"));
+const PigmyOpening = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyOpening"));
+const MISOpening = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISOpening"));
+
+const RDPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDPreMaturity"));
+const RDPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDPayMaturity"));
+const FDPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDPreMaturity"));
+const FDPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDPayMaturity"));
+const PigmyPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyPreMaturity"));
+const PigmyPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyPayMaturity"));
+const MISPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISPreMaturity"));
+const MISPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISPayMaturity"));
+
+
 
 // user pages
 const UserDashboard = lazy(
@@ -153,11 +202,20 @@ const LoansRepaymentsList = lazy(() => import("./pages/Loans/Repaymentlist/Loans
 
 export const LoadingComponent = () => {
   return (
-    <Dialog open={true}>
-      <DialogContent>
-        <CircularProgress />
-      </DialogContent>
-    </Dialog>
+    <Box sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      width: '100vw',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      zIndex: 9999,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)'
+    }}>
+      <CircularProgress sx={{ color: '#1a237e' }} />
+    </Box>
   );
 };
 
@@ -220,6 +278,9 @@ const RoutesProvider = ({
   // On public/auth pages, navbar is hidden — content takes full screen with no offset
   const { isLoggedIn, userRole } = useAuth();
   const isAdmin = userRole === "ADMIN";
+  const isAgent = userRole === "AGENT";
+  const isAdmin01 = userRole === "ADMIN_01";
+  const showSidebar = isAdmin || isAgent || isAdmin01;
 
   return (
     <>
@@ -234,17 +295,19 @@ const RoutesProvider = ({
           minHeight: "100vh"
         }}
       >
-        {!hideSidebar && isAdmin && (
+        {!hideSidebar && showSidebar && (
           <Sidebar
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
             role={userRole}
           />
         )}
+
         <div
           style={{
             flex: 1,
-            marginLeft: !hideSidebar && isAdmin && isOpen ? "250px" : "0",
+            marginLeft: !hideSidebar && showSidebar && isOpen ? "250px" : "0",
+
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",
@@ -252,7 +315,7 @@ const RoutesProvider = ({
             backgroundColor: hideNavbar ? "transparent" : "#f4f7f9",
             minHeight: "100vh",
             // No padding offset when navbar is hidden (public pages)
-            paddingTop: hideNavbar ? "0" : (!hideSidebar ? (window.innerWidth < 900 ? "46px" : "56px") : "0"),
+            paddingTop: hideNavbar ? "0" : (!hideSidebar ? (window.innerWidth < 900 ? "56px" : "64px") : "0"),
             paddingBottom: !isAdmin && isLoggedIn ? "10px" : "0"
           }}
         >
@@ -351,9 +414,64 @@ const RoutesProvider = ({
               <Route path="/admin/withdraw-pending" element={<WithdrawPending />} />
               <Route path="/admin/chat" element={<AdminChat />} />
 
+            </Route>
 
+            {/* admin 01 routes */}
+            <Route element={<ProtectedRoute allowedRoles={["ADMIN_01"]} />}>
+              <Route path="/admin_01/dashboard" element={<Admin01Dashboard />} />
+              <Route path="/admin_01/members" element={<Admin01Members />} />
+              <Route path="/banking/interestrate" element={<Admin01Interests />} />
+              {/* Admin Banking Routes */}
+              <Route path="/banking/agents" element={<BankingAgents />} />
+              <Route path="/agentassignemt/agent-assignment" element={<AgentAssignment />} />
+              <Route path="/admin/withdrawal-requests" element={<AdminWithdrawalRequests />} />
+              <Route path="/admin/banking/receipts" element={<AdminReceipts />} />
+              <Route path="/admin/banking/payments" element={<AdminPayments />} />
+              <Route path="/admin/banking/cash-transaction" element={<AdminCashTransaction />} />
+              
+              {/* Accounts */}
+              <Route path="/SBaccount/sb-opening" element={<SBOpening />} />
+              <Route path="/CAaccount/ca-opening" element={<CAOpening />} />
+              <Route path="/SBaccount/search-sb-acc" element={<SBDetails />} />
+              <Route path="/CAaccount/search-ca-acc" element={<CADetails />} />
+              <Route path="/SBaccount/close-sb" element={<CloseSBTable />} />
+              <Route path="/CAaccount/close-ca" element={<CloseCATable />} />
+              <Route path="/loan-close" element={<CloseLoanTable />} />
+              <Route path="/od-close" element={<CloseODTable />} />
+              
+              {/* View All */}
+              <Route path="/banking/rd-viewall" element={<RDViewAll />} />
+              <Route path="/banking/fd-viewall" element={<FDViewAll />} />
+              <Route path="/banking/pigmy-viewall" element={<PigmyViewAll />} />
+              <Route path="/banking/mis-viewall" element={<MISViewAll />} />
+              
+              {/* Prematurity & Pay Maturity */}
+              <Route path="/banking/rd-prematurity" element={<RDPreMaturity />} />
+              <Route path="/banking/rd-pay-maturity" element={<RDPayMaturity />} />
+              <Route path="/banking/fd-prematurity" element={<FDPreMaturity />} />
+              <Route path="/banking/fd-pay-maturity" element={<FDPayMaturity />} />
+              <Route path="/banking/pigmy-prematurity" element={<PigmyPreMaturity />} />
+              <Route path="/banking/pigmy-pay-maturity" element={<PigmyPayMaturity />} />
+              <Route path="/banking/mis-prematurity" element={<MISPreMaturity />} />
+              <Route path="/banking/mis-pay-maturity" element={<MISPayMaturity />} />
+              
+              {/* account Opening */}
+              <Route path="/banking/rd-opening" element={<RDOpening />} />
+              <Route path="/banking/fd-opening" element={<FDOpening />} />
+              <Route path="/banking/pigmy-opening" element={<PigmyOpening />} />
+              <Route path="/banking/mis-opening" element={<MISOpening />} />
 
             </Route>
+
+            {/* agent routes */}
+            <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}>
+              <Route path="/agent/dashboard" element={<AgentDashboard />} />
+              <Route path="/agent/profile" element={<AgentProfile />} />
+              <Route path="/agent/collections" element={<AgentCollections />} />
+              <Route path="/agent/add-new" element={<AgentAddNew />} />
+              <Route path="/agent/report" element={<AgentReport />} />
+            </Route>
+
             <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
               <Route path="/admin/member/pending" element={<LoansMemberPending />} />
               <Route path="/admin/member/processed" element={<LoansMemberProcessed />} />
