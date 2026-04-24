@@ -18,6 +18,7 @@ const Chat: React.FC = () => {
     const [isLoadingMessages, setIsLoadingMessages] = useState(false);
     const [showChatWindow, setShowChatWindow] = useState(false);
     const [showNewChatDialog, setShowNewChatDialog] = useState(false);
+    const [directMembers, setDirectMembers] = useState<any[]>([]);
 
     const { messages, setMessages, isConnected, isTyping, sendMessage, sendTypingIndicator } = useChatSocket(selectedRoomId);
 
@@ -50,6 +51,20 @@ const Chat: React.FC = () => {
             }
         };
         if (currentUserId) fetchRooms();
+    }, [currentUserId]);
+
+    useEffect(() => {
+        const fetchDirectMembers = async () => {
+            try {
+                const response = await get(`/user/sponsers/${currentUserId}`);
+                if (response.success) {
+                    setDirectMembers(response.sponsoredUsers || []);
+                }
+            } catch (error) {
+                console.error('Failed to fetch direct members:', error);
+            }
+        };
+        if (currentUserId) fetchDirectMembers();
     }, [currentUserId]);
 
     useEffect(() => {
@@ -88,13 +103,36 @@ const Chat: React.FC = () => {
     };
 
     const selectedRoom = rooms.find((r) => r.roomId === selectedRoomId);
+    
+    // Merge actual rooms with direct members who don't have a room yet
+    const allDisplayRooms = [...rooms];
+    
+    directMembers.forEach(member => {
+        const roomId = [currentUserId, member.Member_id].sort().join('_');
+        const exists = rooms.some(r => r.roomId === roomId);
+        
+        if (!exists) {
+            allDisplayRooms.push({
+                roomId: roomId,
+                participants: [currentUserId, member.Member_id],
+                participantDetails: [
+                    { memberId: currentUserId, name: 'Me', role: 'USER', profileImage: '' },
+                    { memberId: member.Member_id, name: member.Name, role: 'USER', profileImage: member.profile_image || '' }
+                ],
+                lastMessage: 'Start a new conversation',
+                lastMessageTime: '',
+                unreadCount: 0
+            });
+        }
+    });
+
     const otherParticipant = selectedRoom?.participantDetails.find((p) => p.memberId !== currentUserId);
 
     return (
         <Box sx={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', mt: 0.5 }}>
             <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
                 <Box sx={{ width: { xs: '100%', lg: 400 }, flexShrink: 0, display: { xs: showChatWindow ? 'none' : 'block', lg: 'block' } }}>
-                    <ChatList rooms={rooms.filter(r => !r.roomId.includes('ADMIN_'))} selectedRoomId={selectedRoomId} onSelectRoom={handleSelectRoom} isLoading={isLoadingRooms} currentUserId={currentUserId} onNewChat={() => setShowNewChatDialog(true)} />
+                    <ChatList rooms={allDisplayRooms.filter(r => !r.roomId.includes('ADMIN_'))} selectedRoomId={selectedRoomId} onSelectRoom={handleSelectRoom} isLoading={isLoadingRooms} currentUserId={currentUserId} onNewChat={() => setShowNewChatDialog(true)} />
                 </Box>
                 <Box sx={{ flex: 1, display: { xs: !showChatWindow && !selectedRoomId ? 'none' : 'flex', lg: 'flex' } }}>
                     {selectedRoomId ? (
