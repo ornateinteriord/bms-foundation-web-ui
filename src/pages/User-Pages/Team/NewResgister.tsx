@@ -19,7 +19,6 @@ import {
   DialogContent,
   DialogActions,
   Typography,
-  Autocomplete,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
@@ -77,7 +76,7 @@ const NewResgister: React.FC = () => {
         Sponsor_code: user.Member_id,
         Sponsor_name: user.Name,
         spackage: 'BMS Plan',
-        ...(formData.packageAmount ? { package_value: Number(formData.packageAmount) } : {}),
+        // ...(formData.packageAmount ? { package_value: Number(formData.packageAmount) } : {}),
         ...formData
       }, {
         onSuccess: (response) => {
@@ -330,6 +329,7 @@ const NewResgister: React.FC = () => {
                   }}
                 />
 
+                {/* Package Amount - Commented out for now
                 <Autocomplete
                   freeSolo
                   options={["1000", "2000", "5000", "10000", "25000", "50000", "100000", "250000", "500000", "1000000", "2500000"]}
@@ -351,6 +351,7 @@ const NewResgister: React.FC = () => {
                     />
                   )}
                 />
+                */}
                 <TextField
                   label="Password"
                   name="password"

@@ -21,7 +21,6 @@ import {
   DialogContent,
   DialogActions,
   Grid,
-  Autocomplete,
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
@@ -48,7 +47,7 @@ const Register = () => {
     confirmPassword: "",
     mobileno: "",
     pincode: "",
-    packageAmount: "",
+    // packageAmount: "",
   });
 
 
@@ -179,7 +178,7 @@ const Register = () => {
         Sponsor_code: formData.Sponsor_code,
         Sponsor_name: formData.Sponsor_name,
         spackage: 'BMS Plan',
-        ...(formData.packageAmount ? { package_value: Number(formData.packageAmount) } : {}),
+        // ...(formData.packageAmount ? { package_value: Number(formData.packageAmount) } : {}),
         ...formData
       };
 
@@ -569,7 +568,7 @@ const Register = () => {
                   />
                 </Grid>
 
-                {/* Package Amount */}
+                {/* Package Amount - Commented out for now
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     freeSolo
@@ -599,6 +598,7 @@ const Register = () => {
                     )}
                   />
                 </Grid>
+                */}
 
 
                 {/* Gender */}
