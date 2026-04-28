@@ -60,7 +60,7 @@ const Interests: React.FC = () => {
 
   // Transform API data to table format
   const rawData = (interestsData?.data && interestsData.data.length > 0) ? interestsData.data : MANUAL_INTERESTS;
-  
+
   const interests = rawData.map((interest: any) => ({
     id: interest._id || '',
     interest_id: interest.interest_id,
@@ -104,15 +104,15 @@ const Interests: React.FC = () => {
       sortable: true,
       minWidth: 120,
       renderCell: (row: any) => (
-        <Chip 
-            label={row.plan_type} 
-            size="small" 
-            sx={{ 
-                backgroundColor: '#f1f5f9', 
-                color: '#475569', 
-                fontWeight: 600,
-                borderRadius: 1
-            }} 
+        <Chip
+          label={row.plan_type}
+          size="small"
+          sx={{
+            backgroundColor: '#f1f5f9',
+            color: '#475569',
+            fontWeight: 600,
+            borderRadius: 1
+          }}
         />
       ),
     },
@@ -148,10 +148,10 @@ const Interests: React.FC = () => {
       ),
     },
     {
-        id: 'ref_id',
-        label: 'Ref ID',
-        minWidth: 100,
-        align: 'center' as const,
+      id: 'ref_id',
+      label: 'Ref ID',
+      minWidth: 100,
+      align: 'center' as const,
     },
     {
       id: 'status',
@@ -289,18 +289,18 @@ const Interests: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 4 }}>
         <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
-            <Box sx={{ 
-                p: 1, 
-                borderRadius: 1, 
-                backgroundColor: '#e0e7ff', 
-                color: '#4338ca',
-                display: 'flex'
-            }}>
-                <PercentIcon />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e' }}>
-                Interest Management
-            </Typography>
+          <Box sx={{
+            p: 1,
+            borderRadius: 1,
+            backgroundColor: '#e0e7ff',
+            color: '#4338ca',
+            display: 'flex'
+          }}>
+            <PercentIcon />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e' }}>
+            Interest Management
+          </Typography>
         </Stack>
         <Typography variant="body1" sx={{ color: '#64748b' }}>
           Configure and manage interest rates for FD, RD, PIGMY and other schemes.
