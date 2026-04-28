@@ -84,6 +84,8 @@ const UserDashboard = () => {
   const extraROI = Math.max(0, totalRoiPaidValue - totalPrincipal);
   const displayDeposit = Math.max(0, totalPrincipal - extraROI);
 
+  const hasActivePackage = totalPrincipal > 0;
+
   useEffect(() => {
     const paymentParams = parsePaymentRedirectParams(searchParams);
     if (paymentParams.order_id && paymentParams.payment_status && !paymentProcessed) {
@@ -198,31 +200,33 @@ const UserDashboard = () => {
             </Typography>
           </Box>
 
-          {/* Wallet Badge — Now below Name & ID */}
-          <Box
-            onClick={() => navigate('/user/wallet')}
-            sx={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 0.8,
-              bgcolor: 'rgba(255,255,255,0.12)',
-              px: { xs: 1.5, md: 2 },
-              py: 0.8,
-              borderRadius: '12px',
-              cursor: 'pointer',
-              border: '1px solid rgba(255,255,255,0.15)',
-              backdropFilter: 'blur(10px)',
-              alignSelf: 'flex-start',
-              transition: 'all 0.2s',
-              '&:hover': { bgcolor: 'rgba(255,255,255,0.22)', transform: 'translateY(-2px)' },
-              '&:active': { transform: 'scale(0.95)' }
-            }}
-          >
-            <AccountBalanceWalletIcon sx={{ fontSize: 18, color: '#FFC000' }} />
-            <Typography sx={{ fontWeight: 900, fontSize: { xs: '0.95rem', md: '1.1rem' }, whiteSpace: 'nowrap' }}>
-              ₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </Typography>
-          </Box>
+          {/* Wallet Badge — Now below Name & ID — Hidden if no package */}
+          {hasActivePackage && (
+            <Box
+              onClick={() => navigate('/user/wallet')}
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.8,
+                bgcolor: 'rgba(255,255,255,0.12)',
+                px: { xs: 1.5, md: 2 },
+                py: 0.8,
+                borderRadius: '12px',
+                cursor: 'pointer',
+                border: '1px solid rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(10px)',
+                alignSelf: 'flex-start',
+                transition: 'all 0.2s',
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.22)', transform: 'translateY(-2px)' },
+                '&:active': { transform: 'scale(0.95)' }
+              }}
+            >
+              <AccountBalanceWalletIcon sx={{ fontSize: 18, color: '#FFC000' }} />
+              <Typography sx={{ fontWeight: 900, fontSize: { xs: '0.95rem', md: '1.1rem' }, whiteSpace: 'nowrap' }}>
+                ₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
 
@@ -251,28 +255,30 @@ const UserDashboard = () => {
           FD BOND
         </Button>
 
-        {/* QUICK ACCESS — mobile only */}
-        <Button
-          variant="contained"
-          onClick={() => setShowQuickAccess(!showQuickAccess)}
-          startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1rem !important' }} />}
-          sx={{
-            display: { xs: 'flex', md: 'none' },
-            flex: 1,
-            borderRadius: '14px',
-            textTransform: 'none',
-            fontWeight: 900,
-            bgcolor: '#3b82f6',
-            fontSize: '12.5px',
-            whiteSpace: 'nowrap',
-            py: 1.1,
-            minWidth: 0,
-            border: '2px solid rgba(255,255,255,0.2)',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-          }}
-        >
-          {showQuickAccess ? 'BACK' : 'QUICK ACCESS'}
-        </Button>
+        {/* QUICK ACCESS — mobile only — Hidden if no package */}
+        {hasActivePackage && (
+          <Button
+            variant="contained"
+            onClick={() => setShowQuickAccess(!showQuickAccess)}
+            startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1rem !important' }} />}
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              flex: 1,
+              borderRadius: '14px',
+              textTransform: 'none',
+              fontWeight: 900,
+              bgcolor: '#3b82f6',
+              fontSize: '12.5px',
+              whiteSpace: 'nowrap',
+              py: 1.1,
+              minWidth: 0,
+              border: '2px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+            }}
+          >
+            {showQuickAccess ? 'BACK' : 'QUICK ACCESS'}
+          </Button>
+        )}
 
       </Box>
     </Box>

@@ -129,8 +129,17 @@ const Chat: React.FC = () => {
     const otherParticipant = selectedRoom?.participantDetails.find((p) => p.memberId !== currentUserId);
 
     return (
-        <Box sx={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', mt: 0.5 }}>
-            <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <Box sx={{ 
+            height: { 
+                xs: 'calc(100dvh - 56px - 70px)', // Using dvh for better mobile support
+                md: 'calc(100vh - 64px)'
+            }, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            mt: 0, 
+            overflow: 'hidden' 
+        }}>
+            <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
                 <Box sx={{ width: { xs: '100%', lg: 400 }, flexShrink: 0, display: { xs: showChatWindow ? 'none' : 'block', lg: 'block' } }}>
                     <ChatList rooms={allDisplayRooms.filter(r => !r.roomId.includes('ADMIN_'))} selectedRoomId={selectedRoomId} onSelectRoom={handleSelectRoom} isLoading={isLoadingRooms} currentUserId={currentUserId} onNewChat={() => setShowNewChatDialog(true)} />
                 </Box>

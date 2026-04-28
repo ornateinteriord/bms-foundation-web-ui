@@ -26,14 +26,15 @@ const ChatHeader = styled(AppBar)(({ theme }) => ({
     background: theme.palette.background.paper,
     color: theme.palette.text.primary,
     boxShadow: theme.shadows[1],
+    position: 'static', // Ensure it works with flex flow
 }));
 
 const MessagesContainer = styled(Box)(({ theme }) => ({
     flex: 1,
     overflowY: 'auto',
+    minHeight: 0, // Critical for scrolling inside flex
     padding: theme.spacing(3),
     backgroundColor: theme.palette.mode === 'dark' ? '#0b141a' : '#e5ddd5',
-    // backgroundImage: `url(/chat-bg.png)`, // Removed source-specific asset
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
@@ -82,8 +83,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }, [messages]);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <ChatHeader position="sticky" elevation={0} sx={{ top: 0, zIndex: 10 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+            <ChatHeader position="static" elevation={0} sx={{ zIndex: 10 }}>
                 <Toolbar>
                     {onBack && (
                         <IconButton
@@ -141,7 +142,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     </>
                 )}
             </MessagesContainer>
-            <MessageInput onSendMessage={onSendMessage} onTyping={onTyping} disabled={!isConnected} placeholder={isConnected ? 'Type a message...' : 'Connecting...'} />
+            <Box sx={{ bgcolor: 'background.paper' }}>
+                <MessageInput onSendMessage={onSendMessage} onTyping={onTyping} disabled={!isConnected} placeholder={isConnected ? 'Type a message...' : 'Connecting...'} />
+            </Box>
         </Box>
     );
 };
