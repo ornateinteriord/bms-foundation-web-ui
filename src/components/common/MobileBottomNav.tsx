@@ -19,6 +19,8 @@ const MobileBottomNav: React.FC = () => {
     else if (location.pathname.includes('/user/account/profile')) setValue(3);
   }, [location.pathname]);
 
+  if (location.pathname.includes('/user/chat')) return null;
+
   return (
     <Box sx={{ display: { xs: 'block', md: 'none' } }}>
       <Paper 

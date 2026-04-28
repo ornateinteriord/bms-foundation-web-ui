@@ -131,7 +131,7 @@ const Chat: React.FC = () => {
     return (
         <Box sx={{ 
             height: { 
-                xs: 'calc(100dvh - 56px - 70px)', // Using dvh for better mobile support
+                xs: 'calc(100dvh - 56px)', // Removed 70px since bottom nav is hidden
                 md: 'calc(100vh - 64px)'
             }, 
             display: 'flex', 
