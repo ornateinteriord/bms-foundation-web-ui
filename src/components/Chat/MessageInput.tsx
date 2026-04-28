@@ -269,11 +269,11 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
                         <Typography variant="body2" sx={{ color: 'error.contrastText', fontWeight: 600, flex: 1, textAlign: 'center' }}>
                             Recording: {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')}
                         </Typography>
-                        <IconButton 
-                            onClick={stopRecording} 
-                            size="small" 
-                            sx={{ 
-                                bgcolor: 'error.contrastText', 
+                        <IconButton
+                            onClick={stopRecording}
+                            size="small"
+                            sx={{
+                                bgcolor: 'error.contrastText',
                                 color: 'error.main',
                                 '&:hover': { bgcolor: 'error.contrastText', opacity: 0.9 }
                             }}
@@ -283,11 +283,11 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
                     </Box>
                 )}
             </Box>
-            <Popover 
-                open={Boolean(emojiAnchor)} 
-                anchorEl={emojiAnchor} 
-                onClose={() => setEmojiAnchor(null)} 
-                anchorOrigin={{ vertical: 'top', horizontal: 'left' }} 
+            <Popover
+                open={Boolean(emojiAnchor)}
+                anchorEl={emojiAnchor}
+                onClose={() => setEmojiAnchor(null)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                 PaperProps={{ sx: { borderRadius: 3, boxShadow: 3 } }}
             >
@@ -307,9 +307,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
                     <Button onClick={handleSendAudio} variant="contained" disabled={isSending} sx={{ borderRadius: 2, px: 3 }}>Send</Button>
                 </DialogActions>
             </Dialog>
-            <Dialog 
-                fullScreen 
-                open={showFilePreview} 
+            <Dialog
+                fullScreen
+                open={showFilePreview}
                 onClose={() => !isSending && setShowFilePreview(false)}
                 PaperProps={{
                     sx: { bgcolor: '#000', color: '#fff' }
@@ -337,10 +337,10 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
                     <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2, overflow: 'hidden' }}>
                         {selectedFile && (
                             ALLOWED_IMAGE_TYPES.includes(selectedFile.type) && previewUrl ? (
-                                <img 
-                                    src={previewUrl} 
-                                    alt="Preview" 
-                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} 
+                                <img
+                                    src={previewUrl}
+                                    alt="Preview"
+                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                                 />
                             ) : (
                                 <Box sx={{ textAlign: 'center' }}>
@@ -365,21 +365,21 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
                                 onChange={handleInputChange}
                                 placeholder="Add a caption..."
                                 disabled={isSending}
-                                sx={{ 
-                                    '& .MuiOutlinedInput-root': { 
-                                        bgcolor: 'rgba(255,255,255,0.1)', 
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        bgcolor: 'rgba(255,255,255,0.1)',
                                         color: '#fff',
                                         borderRadius: '24px'
-                                    } 
+                                    }
                                 }}
                             />
-                            <IconButton 
-                                onClick={handleSend} 
+                            <IconButton
+                                onClick={handleSend}
                                 disabled={isSending}
-                                sx={{ 
-                                    bgcolor: 'primary.main', 
-                                    color: '#fff', 
-                                    width: 50, 
+                                sx={{
+                                    bgcolor: 'primary.main',
+                                    color: '#fff',
+                                    width: 50,
                                     height: 50,
                                     '&:hover': { bgcolor: 'primary.dark' }
                                 }}
