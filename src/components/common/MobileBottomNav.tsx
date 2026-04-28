@@ -96,8 +96,8 @@ const MobileBottomNav: React.FC = () => {
           />
         </BottomNavigation>
       </Paper>
-      {/* Spacer to prevent content from being hidden behind nav */}
-      <Box sx={{ height: 64 }} />
+      {/* Spacer to prevent content from being hidden behind nav — Skip on Chat page */}
+      {!location.pathname.includes('/user/chat') && <Box sx={{ height: 64 }} />}
     </Box>
   );
 };
