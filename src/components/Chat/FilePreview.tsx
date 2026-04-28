@@ -17,6 +17,9 @@ const PreviewContainer = styled(Paper)(({ theme }) => ({
     borderRadius: theme.spacing(2),
     backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100],
     border: `1px solid ${theme.palette.divider}`,
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
 }));
 
 const formatFileSize = (bytes: number): string => {

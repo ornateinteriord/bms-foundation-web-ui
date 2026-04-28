@@ -56,11 +56,11 @@ const UserDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [paymentProcessed, setPaymentProcessed] = useState(false);
-  const showQuickAccess = searchParams.get('view') === 'quickaccess';
+  const showQuickAccess = searchParams.get('view') === 'od';
 
   const setShowQuickAccess = (show: boolean) => {
     if (show) {
-      setSearchParams({ view: 'quickaccess' });
+      setSearchParams({ view: 'od' });
     } else {
       setSearchParams({});
     }
@@ -192,7 +192,7 @@ const UserDashboard = () => {
           <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: '-0.5px', lineHeight: 1.2, mb: 0.5, fontSize: { xs: '1.2rem', md: '1.5rem' } }}>
             {memberDetails?.Name || (isMemberLoading ? '...' : '')}
           </Typography>
-          
+
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, opacity: 0.9, mb: 1.5 }}>
             <VerifiedUserIcon sx={{ fontSize: 14, color: '#10b981' }} />
             <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: '0.5px' }}>
@@ -260,7 +260,7 @@ const UserDashboard = () => {
           <Button
             variant="contained"
             onClick={() => setShowQuickAccess(!showQuickAccess)}
-            startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1rem !important' }} />}
+            startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1.2rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.2rem !important' }} />}
             sx={{
               display: { xs: 'flex', md: 'none' },
               flex: 1,
@@ -268,7 +268,7 @@ const UserDashboard = () => {
               textTransform: 'none',
               fontWeight: 900,
               bgcolor: '#3b82f6',
-              fontSize: '12.5px',
+              fontSize: '16.5px',
               whiteSpace: 'nowrap',
               py: 1.1,
               minWidth: 0,
@@ -276,7 +276,7 @@ const UserDashboard = () => {
               boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
             }}
           >
-            {showQuickAccess ? 'BACK' : 'QUICK ACCESS'}
+            {showQuickAccess ? 'BACK' : 'OD'}
           </Button>
         )}
 

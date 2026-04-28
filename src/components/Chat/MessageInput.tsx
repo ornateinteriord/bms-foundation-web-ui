@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Box, TextField, IconButton, CircularProgress, Popover, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { Send, EmojiEmotions, AttachFile, Mic, Stop, Close } from '@mui/icons-material';
+import { Box, TextField, IconButton, CircularProgress, Popover, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button, Backdrop } from '@mui/material';
+import { Send, EmojiEmotions, AttachFile, Mic, Stop, Close, ArrowBack, InsertDriveFile } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { toast } from 'react-toastify';
-import FilePreview from './FilePreview';
+import { get } from '../../api/Api';
 
 interface MessageInputProps {
     onSendMessage: (text: string, attachment?: { imageUrl: string; messageType: string; fileName: string; fileSize: number }) => void;
@@ -32,16 +32,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
 }));
 
-const SendButton = styled(IconButton)(({ theme }) => ({
-    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-    color: '#fff',
-    '&:hover': { background: 'linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)', transform: 'scale(1.05)' },
-    '&:active': { transform: 'scale(0.95)' },
-    '&.Mui-disabled': { background: theme.palette.action.disabledBackground, color: theme.palette.action.disabled },
-    transition: 'all 0.2s ease',
-    boxShadow: theme.shadows[2],
-}));
-
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, disabled = false, placeholder = 'Type a message...' }) => {
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
@@ -49,6 +39,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
     const [emojiAnchor, setEmojiAnchor] = useState<HTMLButtonElement | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [showFilePreview, setShowFilePreview] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [recordingTime, setRecordingTime] = useState(0);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -116,45 +107,74 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
     };
 
     const uploadToImageKit = async (file: File) => {
-        const apiUrl = import.meta.env.VITE_MLM_API_URL || 'http://localhost:5051';
-        const authResponse = await fetch(`${apiUrl}/image-kit-auth`);
-        const authParams = await authResponse.json();
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('fileName', file.name);
-        formData.append('publicKey', import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
-        formData.append('signature', authParams.signature);
-        formData.append('expire', authParams.expire);
-        formData.append('token', authParams.token);
-        formData.append('folder', '/chat-attachments');
-        const uploadResponse = await fetch('https://upload.imagekit.io/api/v1/files/upload', { method: 'POST', body: formData });
-        const result = await uploadResponse.json();
-        return { url: result.url, fileName: file.name, fileSize: file.size };
+        try {
+            const authParams = await get('/image-kit-auth');
+            if (!authParams || !authParams.signature) {
+                throw new Error('Invalid authentication parameters received');
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('fileName', file.name);
+            formData.append('publicKey', import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
+            formData.append('signature', authParams.signature);
+            formData.append('expire', authParams.expire);
+            formData.append('token', authParams.token);
+            formData.append('folder', '/chat-attachments');
+
+            const uploadResponse = await fetch('https://upload.imagekit.io/api/v1/files/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!uploadResponse.ok) {
+                const errorData = await uploadResponse.json();
+                throw new Error(errorData.message || 'Upload failed');
+            }
+
+            const result = await uploadResponse.json();
+            return { url: result.url, fileName: file.name, fileSize: file.size };
+        } catch (error: any) {
+            console.error('Upload Error:', error);
+            throw new Error(error.message || 'Failed to upload file');
+        }
     };
 
     const handleSend = async () => {
-        if ((!message.trim() && !selectedFile) || disabled || isSending) return;
+        const trimmedMessage = message.trim();
+        if ((!trimmedMessage && !selectedFile) || disabled || isSending) return;
+
         setIsSending(true);
         try {
             let attachment;
             if (selectedFile) {
                 setIsUploading(true);
-                const uploadResult = await uploadToImageKit(selectedFile);
-                attachment = {
-                    imageUrl: uploadResult.url,
-                    messageType: ALLOWED_IMAGE_TYPES.includes(selectedFile.type) ? 'image' : 'file',
-                    fileName: uploadResult.fileName,
-                    fileSize: uploadResult.fileSize,
-                };
+                try {
+                    const uploadResult = await uploadToImageKit(selectedFile);
+                    attachment = {
+                        imageUrl: uploadResult.url,
+                        messageType: ALLOWED_IMAGE_TYPES.includes(selectedFile.type) ? 'image' : 'file',
+                        fileName: uploadResult.fileName,
+                        fileSize: uploadResult.fileSize,
+                    };
+                } catch (uploadError: any) {
+                    toast.error(uploadError.message || 'File upload failed');
+                    setIsSending(false);
+                    setIsUploading(false);
+                    return;
+                }
                 setIsUploading(false);
             }
-            await onSendMessage(message.trim(), attachment);
+
+            await onSendMessage(trimmedMessage, attachment);
             setMessage('');
             setSelectedFile(null);
             setPreviewUrl(null);
+            setShowFilePreview(false);
             if (onTyping) onTyping(false);
-        } catch (error) {
-            toast.error('Failed to send message');
+        } catch (error: any) {
+            console.error('Send error:', error);
+            toast.error(error.message || 'Failed to send message');
         } finally {
             setIsSending(false);
             setIsUploading(false);
@@ -181,9 +201,8 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
     };
 
     return (
-        <Box sx={{ p: 2, bgcolor: 'background.paper', borderTop: 1, borderColor: 'divider' }}>
-            {selectedFile && <FilePreview file={selectedFile} previewUrl={previewUrl} onRemove={() => { setSelectedFile(null); setPreviewUrl(null); }} />}
-            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.5 }}>
+        <Box sx={{ p: 2, bgcolor: 'background.paper', borderTop: 1, borderColor: 'divider', width: '100%', boxSizing: 'border-box' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
                 {!isRecording ? (
                     <>
                         <IconButton size="medium" onClick={(e) => setEmojiAnchor(e.currentTarget)}><EmojiEmotions /></IconButton>
@@ -194,48 +213,182 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, onTyping, di
                             const file = e.target.files?.[0];
                             if (file) {
                                 setSelectedFile(file);
+                                setShowFilePreview(true);
                                 if (ALLOWED_IMAGE_TYPES.includes(file.type)) {
                                     const reader = new FileReader();
                                     reader.onloadend = () => setPreviewUrl(reader.result as string);
                                     reader.readAsDataURL(file);
                                 }
                             }
+                            e.target.value = '';
                         }} style={{ display: 'none' }} />
-                        <StyledTextField fullWidth multiline maxRows={4} value={message} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())} placeholder={placeholder} disabled={disabled || isSending} size="small" inputRef={inputRef} />
-                        {message.trim() || selectedFile ? (
-                            <SendButton onClick={handleSend} disabled={isSending}>
-                                {isSending ? <CircularProgress size={20} sx={{ color: '#fff' }} /> : <Send />}
-                            </SendButton>
-                        ) : (
-                            <IconButton onClick={startRecording} disabled={disabled} sx={{ bgcolor: 'primary.main', color: '#fff', '&:hover': { bgcolor: 'primary.dark' } }}><Mic /></IconButton>
-                        )}
+                        <StyledTextField
+                            sx={{ flex: 1 }}
+                            multiline
+                            maxRows={4}
+                            value={message}
+                            onChange={handleInputChange}
+                            onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
+                            placeholder={placeholder}
+                            disabled={disabled || isSending}
+                            size="small"
+                            inputRef={inputRef}
+                            InputProps={{
+                                endAdornment: (
+                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                        {message.trim() || selectedFile ? (
+                                            <IconButton
+                                                onClick={handleSend}
+                                                disabled={isSending}
+                                                size="small"
+                                                sx={{
+                                                    color: 'primary.main',
+                                                    '&:hover': { color: 'primary.dark' }
+                                                }}
+                                            >
+                                                {isSending ? <CircularProgress size={20} /> : <Send />}
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton
+                                                onClick={startRecording}
+                                                disabled={disabled}
+                                                size="small"
+                                                sx={{ color: 'text.secondary' }}
+                                            >
+                                                <Mic />
+                                            </IconButton>
+                                        )}
+                                    </Box>
+                                )
+                            }}
+                        />
                     </>
                 ) : (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: 'error.light', borderRadius: '24px', px: 2, py: 1, flex: 1 }}>
-                        <IconButton size="small" onClick={cancelRecording} sx={{ color: 'error.contrastText' }}><Close /></IconButton>
-                        <Typography variant="body1" sx={{ color: 'error.contrastText', fontWeight: 600, flex: 1, textAlign: 'center' }}>
-                            {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: 'error.light', borderRadius: '24px', px: 2, py: 0.5, flex: 1, minHeight: 40 }}>
+                        <IconButton size="small" onClick={cancelRecording} sx={{ color: 'error.contrastText' }}><Close fontSize="small" /></IconButton>
+                        <Typography variant="body2" sx={{ color: 'error.contrastText', fontWeight: 600, flex: 1, textAlign: 'center' }}>
+                            Recording: {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')}
                         </Typography>
-                        <SendButton onClick={stopRecording} size="medium"><Stop /></SendButton>
+                        <IconButton 
+                            onClick={stopRecording} 
+                            size="small" 
+                            sx={{ 
+                                bgcolor: 'error.contrastText', 
+                                color: 'error.main',
+                                '&:hover': { bgcolor: 'error.contrastText', opacity: 0.9 }
+                            }}
+                        >
+                            <Stop fontSize="small" />
+                        </IconButton>
                     </Box>
                 )}
             </Box>
-            <Popover open={Boolean(emojiAnchor)} anchorEl={emojiAnchor} onClose={() => setEmojiAnchor(null)} anchorOrigin={{ vertical: 'top', horizontal: 'left' }} transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
-                <Box sx={{ p: 1.5, display: 'flex', flexWrap: 'wrap', gap: 0.5, width: 300 }}>
+            <Popover 
+                open={Boolean(emojiAnchor)} 
+                anchorEl={emojiAnchor} 
+                onClose={() => setEmojiAnchor(null)} 
+                anchorOrigin={{ vertical: 'top', horizontal: 'left' }} 
+                transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                PaperProps={{ sx: { borderRadius: 3, boxShadow: 3 } }}
+            >
+                <Box sx={{ p: 1.5, display: 'flex', flexWrap: 'wrap', gap: 0.5, width: 280 }}>
                     {EMOJI_CATEGORIES.flatMap(c => c.emojis).map((emoji, i) => (
-                        <Typography key={i} onClick={() => { setMessage(prev => prev + emoji); setEmojiAnchor(null); inputRef.current?.focus(); }} sx={{ fontSize: '24px', cursor: 'pointer', p: 0.5, '&:hover': { transform: 'scale(1.2)' } }}>{emoji}</Typography>
+                        <Typography key={i} onClick={() => { setMessage(prev => prev + emoji); setEmojiAnchor(null); inputRef.current?.focus(); }} sx={{ fontSize: '24px', cursor: 'pointer', p: 0.5, borderRadius: 1, '&:hover': { bgcolor: 'action.hover', transform: 'scale(1.2)' }, transition: 'all 0.2s' }}>{emoji}</Typography>
                     ))}
                 </Box>
             </Popover>
-            <Dialog open={showAudioPreview} onClose={() => !isSending && setShowAudioPreview(false)} maxWidth="xs" fullWidth>
+            <Dialog open={showAudioPreview} onClose={() => !isSending && setShowAudioPreview(false)} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
                 <DialogTitle>Preview Voice Message</DialogTitle>
                 <DialogContent>
                     {audioBlob && <audio controls style={{ width: '100%', marginTop: '10px' }} src={URL.createObjectURL(audioBlob)} />}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={cancelRecording} disabled={isSending}>Discard</Button>
-                    <Button onClick={handleSendAudio} variant="contained" disabled={isSending}>Send</Button>
+                <DialogActions sx={{ px: 3, pb: 2 }}>
+                    <Button onClick={cancelRecording} disabled={isSending} sx={{ borderRadius: 2 }}>Discard</Button>
+                    <Button onClick={handleSendAudio} variant="contained" disabled={isSending} sx={{ borderRadius: 2, px: 3 }}>Send</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog 
+                fullScreen 
+                open={showFilePreview} 
+                onClose={() => !isSending && setShowFilePreview(false)}
+                PaperProps={{
+                    sx: { bgcolor: '#000', color: '#fff' }
+                }}
+            >
+                <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {/* Header */}
+                    <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <IconButton onClick={() => setShowFilePreview(false)} sx={{ color: '#fff' }} disabled={isSending}>
+                            <ArrowBack />
+                        </IconButton>
+                        <Typography variant="h6">Preview</Typography>
+                    </Box>
+
+                    {/* Backdrop for sending status */}
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute', flexDirection: 'column', gap: 2, bgcolor: 'rgba(0,0,0,0.7)' }}
+                        open={isSending}
+                    >
+                        <CircularProgress color="inherit" />
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>Sending...</Typography>
+                    </Backdrop>
+
+                    {/* Content */}
+                    <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2, overflow: 'hidden' }}>
+                        {selectedFile && (
+                            ALLOWED_IMAGE_TYPES.includes(selectedFile.type) && previewUrl ? (
+                                <img 
+                                    src={previewUrl} 
+                                    alt="Preview" 
+                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} 
+                                />
+                            ) : (
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <InsertDriveFile sx={{ fontSize: 100, mb: 2, opacity: 0.7 }} />
+                                    <Typography variant="h6">{selectedFile.name}</Typography>
+                                    <Typography variant="body2" sx={{ opacity: 0.6 }}>
+                                        {Math.round(selectedFile.size / 1024)} KB
+                                    </Typography>
+                                </Box>
+                            )
+                        )}
+                    </Box>
+
+                    {/* Footer - Caption Input */}
+                    <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, maxWidth: 800, mx: 'auto' }}>
+                            <StyledTextField
+                                fullWidth
+                                multiline
+                                maxRows={4}
+                                value={message}
+                                onChange={handleInputChange}
+                                placeholder="Add a caption..."
+                                disabled={isSending}
+                                sx={{ 
+                                    '& .MuiOutlinedInput-root': { 
+                                        bgcolor: 'rgba(255,255,255,0.1)', 
+                                        color: '#fff',
+                                        borderRadius: '24px'
+                                    } 
+                                }}
+                            />
+                            <IconButton 
+                                onClick={handleSend} 
+                                disabled={isSending}
+                                sx={{ 
+                                    bgcolor: 'primary.main', 
+                                    color: '#fff', 
+                                    width: 50, 
+                                    height: 50,
+                                    '&:hover': { bgcolor: 'primary.dark' }
+                                }}
+                            >
+                                {isSending ? <CircularProgress size={24} color="inherit" /> : <Send />}
+                            </IconButton>
+                        </Box>
+                    </Box>
+                </Box>
             </Dialog>
         </Box>
     );

@@ -142,7 +142,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     </>
                 )}
             </MessagesContainer>
-            <Box sx={{ bgcolor: 'background.paper' }}>
+            <Box sx={{ bgcolor: 'background.paper', width: '100%', overflow: 'hidden' }}>
                 <MessageInput onSendMessage={onSendMessage} onTyping={onTyping} disabled={!isConnected} placeholder={isConnected ? 'Type a message...' : 'Connecting...'} />
             </Box>
         </Box>
