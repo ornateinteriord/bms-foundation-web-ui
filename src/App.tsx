@@ -16,6 +16,7 @@ import Members, {
   ActiveMembers,
   InActiveMembers,
   PendingMembers,
+  PermissionsMembers,
 } from "./pages/Admin-Pages/Members/Members";
 import {
   GeneratePackages,
@@ -352,6 +353,10 @@ const RoutesProvider = ({
               <Route
                 path="/admin/members/inactive"
                 element={<InActiveMembers />}
+              />
+              <Route
+                path="/admin/members/permissions"
+                element={<PermissionsMembers />}
               />
 
               {/* admin addon routes */}

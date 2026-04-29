@@ -7,13 +7,13 @@ import {
   Radio, RadioGroup, FormControlLabel, FormControl, FormLabel,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CheckCircle } from '@mui/icons-material';
-import { DASHBOARD_CUTSOM_STYLE, getMembersColumns, getPendingMembersColumns } from '../../../utils/DataTableColumnsProvider';
+import { CheckCircle, WarningAmber } from '@mui/icons-material';
+import { DASHBOARD_CUTSOM_STYLE, getMembersColumns, getPendingMembersColumns, getPermissionsColumns } from '../../../utils/DataTableColumnsProvider';
 import './Members.scss'
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useGetAllMembersDetails } from '../../../api/Admin';
+import { useGetAllMembersDetails, useUpdateMemberStatus } from '../../../api/Admin';
 import { useNavigate } from 'react-router-dom';
 import useSearch from '../../../hooks/SearchQuery';
 import { useActivatePackage } from '../../../api/Memeber';
@@ -81,7 +81,7 @@ const MemberTable = ({
 
   return (
     <>
-      <Grid className="filter-container" sx={{ margin: '2rem', mt: 12 }}>
+      <Grid className="filter-container" sx={{ margin: '2rem', mt: 2 }}>
         <Typography variant="h4">
           {title}
         </Typography>
@@ -375,15 +375,15 @@ export const PendingMembers = () => {
               value={activationType}
               onChange={(e) => setActivationType(e.target.value as 'with' | 'without')}
             >
-              <FormControlLabel 
-                value="with" 
-                control={<Radio sx={{ color: primaryColor, '&.Mui-checked': { color: primaryColor } }} />} 
-                label={<Typography variant="body2" fontWeight={600}>With Package</Typography>} 
+              <FormControlLabel
+                value="with"
+                control={<Radio sx={{ color: primaryColor, '&.Mui-checked': { color: primaryColor } }} />}
+                label={<Typography variant="body2" fontWeight={600}>With Package</Typography>}
               />
-              <FormControlLabel 
-                value="without" 
-                control={<Radio sx={{ color: primaryColor, '&.Mui-checked': { color: primaryColor } }} />} 
-                label={<Typography variant="body2" fontWeight={600}>Without Package</Typography>} 
+              <FormControlLabel
+                value="without"
+                control={<Radio sx={{ color: primaryColor, '&.Mui-checked': { color: primaryColor } }} />}
+                label={<Typography variant="body2" fontWeight={600}>Without Package</Typography>}
               />
             </RadioGroup>
           </FormControl>
@@ -457,6 +457,182 @@ export const PendingMembers = () => {
             {isActivating ? 'Activating...' : 'Confirm Activation'}
           </Button>
         </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+export const PermissionsMembers = () => {
+  const { data: members, isLoading } = useGetAllMembersDetails();
+  const { mutate: updateStatus, isPending: isUpdating } = useUpdateMemberStatus();
+
+  // Confirmation dialog state
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<{ id: string, name: string, currentStatus: string } | null>(null);
+
+  const handleToggleClick = (memberId: string, currentStatus: string, name: string) => {
+    setSelectedMember({ id: memberId, name: name, currentStatus });
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmToggle = () => {
+    if (!selectedMember) return;
+
+    const newStatus = selectedMember.currentStatus === 'active' ? 'Inactive' : 'active';
+    updateStatus({ memberId: selectedMember.id, status: newStatus }, {
+      onSuccess: () => {
+        toast.success(`Member status updated to ${newStatus}`);
+        setConfirmOpen(false);
+        setSelectedMember(null);
+      },
+      onError: () => {
+        setConfirmOpen(false);
+      }
+    });
+  };
+
+  // Update handleToggleStatus wrapper for the column definition
+  const onToggleRequest = (memberId: string, currentStatus: string) => {
+    const member = filteredData.find(m => m.Member_id === memberId);
+    handleToggleClick(memberId, currentStatus, member?.Name || 'Member');
+  };
+
+  // Filter members who are "ROI Active" (have a package)
+  const filteredData = Array.isArray(members)
+    ? members.filter((member: any) => member.upgrade_status === 'Active' || member.package_value > 0)
+      .map((member: any, index: number) => ({
+        ...member,
+        sNo: index + 1,
+      }))
+    : [];
+
+  return (
+    <>
+      <Grid className="filter-container" sx={{ margin: '2rem', mt: 2 }}>
+        <Typography variant="h4">Member Permissions</Typography>
+      </Grid>
+      <Card sx={{ margin: '2rem', mt: 2 }}>
+        <CardContent>
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{
+                backgroundColor: '#0a2558',
+                color: '#fff',
+                '& .MuiSvgIcon-root': { color: '#fff' }
+              }}
+            >
+              List of ROI Active Members
+            </AccordionSummary>
+            <AccordionDetails>
+              <DataTable
+                columns={getPermissionsColumns(onToggleRequest, isUpdating)}
+                data={filteredData}
+                pagination
+                customStyles={DASHBOARD_CUTSOM_STYLE}
+                paginationPerPage={25}
+                progressPending={isLoading}
+                progressComponent={
+                  <CircularProgress size={"4rem"} sx={{ color: "#0a2558" }} />
+                }
+                paginationRowsPerPageOptions={[25, 50, 100]}
+                highlightOnHover
+              />
+            </AccordionDetails>
+          </Accordion>
+        </CardContent>
+      </Card>
+
+      {/* ── Status Toggle Confirmation Dialog (Modern) ── */}
+      <Dialog
+        open={confirmOpen}
+        onClose={() => !isUpdating && setConfirmOpen(false)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '20px',
+            padding: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+            overflow: 'visible'
+          }
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', py: 2 }}>
+          {/* Top Icon Circle */}
+          <Box sx={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 3,
+            backgroundColor: selectedMember?.currentStatus === 'active' ? '#fff0f0' : '#f0fff4',
+            color: selectedMember?.currentStatus === 'active' ? '#ff4d4d' : '#2ecc71',
+            boxShadow: '0 10px 20px rgba(0,0,0,0.05)'
+          }}>
+            {selectedMember?.currentStatus === 'active' ?
+              <WarningAmber sx={{ fontSize: '40px' }} /> :
+              <CheckCircle sx={{ fontSize: '40px' }} />
+            }
+          </Box>
+
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a237e', mb: 1.5 }}>
+            {selectedMember?.currentStatus === 'active' ? 'Disable Member?' : 'Enable Member?'}
+          </Typography>
+
+          <Typography variant="body1" sx={{ color: '#5f6368', px: 2, mb: 4, lineHeight: 1.6 }}>
+            Are you sure you want to {selectedMember?.currentStatus === 'active' ? 'deactivate' : 'activate'}{' '}
+            <strong>{selectedMember?.name}</strong>?
+            <br />
+            <Box component="span" sx={{ fontSize: '0.9rem', opacity: 0.8, mt: 1, display: 'block' }}>
+              {selectedMember?.currentStatus === 'active'
+                ? 'This action will pause all financial ROI benefits for this account.'
+                : 'This will resume all financial ROI benefits and access for this account.'}
+            </Box>
+          </Typography>
+
+          <Box sx={{ display: 'flex', gap: 2, width: '100%', px: 2 }}>
+            <Button
+              fullWidth
+              onClick={() => setConfirmOpen(false)}
+              disabled={isUpdating}
+              variant="outlined"
+              sx={{
+                borderRadius: '12px',
+                py: 1.5,
+                textTransform: 'none',
+                fontWeight: 600,
+                borderColor: '#e0e0e0',
+                color: '#5f6368',
+                '&:hover': { backgroundColor: '#f8f9fa', borderColor: '#d0d0d0' }
+              }}
+            >
+              No, Keep it
+            </Button>
+            <Button
+              fullWidth
+              onClick={handleConfirmToggle}
+              disabled={isUpdating}
+              variant="contained"
+              sx={{
+                borderRadius: '12px',
+                py: 1.5,
+                textTransform: 'none',
+                fontWeight: 600,
+                boxShadow: 'none',
+                backgroundColor: selectedMember?.currentStatus === 'active' ? '#ff4d4d' : '#2ecc71',
+                '&:hover': {
+                  backgroundColor: selectedMember?.currentStatus === 'active' ? '#e60000' : '#27ae60',
+                  boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
+                }
+              }}
+            >
+              {isUpdating ? <CircularProgress size={24} color="inherit" /> : `Yes, ${selectedMember?.currentStatus === 'active' ? 'Disable' : 'Enable'}`}
+            </Button>
+          </Box>
+        </Box>
       </Dialog>
     </>
   );

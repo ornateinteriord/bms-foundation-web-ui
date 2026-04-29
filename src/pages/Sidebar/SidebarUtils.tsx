@@ -168,6 +168,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
         path: "/admin/kyc-approval",
         icon: <VerifiedUserIcon />,
       },
+      {
+        name: "Permissions",
+        path: "/admin/members/permissions",
+        icon: <LockIcon />,
+      },
     ],
   },
 
