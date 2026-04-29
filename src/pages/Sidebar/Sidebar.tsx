@@ -142,7 +142,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
 
         <AnimatePresence>
           {menuItems.filter((item: SideBarMenuItemType) => {
-            if (role === "USER" && item.name === "Add-On Packages" && fethedUser?.status !== 'active') {
+            if (role === "USER" && item.name === "Add-On Packages" && fethedUser?.upgrade_status !== 'Active') {
               return false;
             }
             return true;

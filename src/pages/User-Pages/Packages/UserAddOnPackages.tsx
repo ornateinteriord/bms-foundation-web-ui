@@ -158,8 +158,22 @@ export const UserAddOnPackages = () => {
       ) : (
         <Grid container spacing={3}>
           {(() => {
+            // Check if the primary package is already in the add-ons list (new logic)
+            const primaryInAddOns = addOns.find((a: any) => a.package_id?.startsWith('PKG-P-'));
+            
+            // If we found it in the list, we don't need to manually create the primaryPkg object
+            // But we should mark it as primary for styling
+            let finalAddOns = [...addOns];
+            if (primaryInAddOns) {
+              finalAddOns = addOns.map((a: any) => 
+                a.package_id === primaryInAddOns.package_id ? { ...a, isPrimary: true } : a
+              );
+            }
+
             const totalAddOnAmount = addOns.reduce((sum: number, a: any) => sum + (a.amount || a.requested_amount || 0), 0);
-            const baseAmount = (user.package_value || 0) - totalAddOnAmount;
+            
+            // For legacy users, we still need to calculate the base amount if it's not in the add-on table
+            const baseAmount = (user.package_value || 0) - (primaryInAddOns ? 0 : totalAddOnAmount);
 
             const primaryPkg = {
               request_id: 'PRIMARY',
@@ -171,7 +185,8 @@ export const UserAddOnPackages = () => {
               roi_start_date: user.roi_start_date || user.Date_of_joining,
             };
 
-            const allPackages = [primaryPkg, ...addOns];
+            // If primary is already in add-ons, just use the mapped list, otherwise prepend the manual primaryPkg
+            const allPackages = primaryInAddOns ? finalAddOns : [primaryPkg, ...addOns];
 
             return allPackages.map((pkg: any, index: number) => {
               const pkgAmount = pkg.amount || pkg.requested_amount || 0;
