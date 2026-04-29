@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -25,6 +26,9 @@ import { openBondCertificate } from '../../../utils/BondCertificateGenerator';
 
 export const UserAddOnPackages = () => {
   const { user } = useContext(UserContext);
+  const [searchParams] = useSearchParams();
+  const view = searchParams.get('view'); // 'fd' or 'addon'
+
   const [packageAmount, setPackageAmount] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -57,99 +61,103 @@ export const UserAddOnPackages = () => {
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 }, mt: { xs: 3, md: 7 } }}>
-      {/* ── ROW 1: CENTERED REQUEST FORM ── */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 6 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: '#0a2558', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <AddCircleOutlineIcon sx={{ fontSize: 28, color: '#ed6c02' }} />
-          Request Add-On Package
-        </Typography>
-        <Card sx={{
-          boxShadow: '0 8px 32px rgba(10,37,88,0.08)',
-          borderRadius: '16px',
-          border: '1px dashed #90a4d4',
-          backgroundColor: '#fdfdff',
-          maxWidth: 500,
-          width: '100%'
-        }}>
-          <CardContent sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2.5 }}>
-              <AccountBalanceWalletIcon sx={{ fontSize: 32, color: '#ed6c02', mr: 2, mt: 0.5 }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.85rem', lineHeight: 1.5 }}>
-                Purchase an independent add-on package with its own 300-day ROI cycle.
-                Runs parallel to your primary investment!
-              </Typography>
-            </Box>
+      {/* ── ROW 1: CENTERED REQUEST FORM (Only if view is 'addon' or empty) ── */}
+      {(!view || view === 'addon') && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: view === 'addon' ? 0 : 6 }}>
+          <Typography variant="h6" sx={{ mb: 2, color: '#0a2558', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <AddCircleOutlineIcon sx={{ fontSize: 28, color: '#ed6c02' }} />
+            Request Add-On Package
+          </Typography>
+          <Card sx={{
+            boxShadow: '0 8px 32px rgba(10,37,88,0.08)',
+            borderRadius: '16px',
+            border: '1px dashed #90a4d4',
+            backgroundColor: '#fdfdff',
+            maxWidth: 500,
+            width: '100%'
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2.5 }}>
+                <AccountBalanceWalletIcon sx={{ fontSize: 32, color: '#ed6c02', mr: 2, mt: 0.5 }} />
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.85rem', lineHeight: 1.5 }}>
+                  Purchase an independent add-on package with its own 300-day ROI cycle.
+                  Runs parallel to your primary investment!
+                </Typography>
+              </Box>
 
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <Autocomplete
-                freeSolo
-                options={["1000", "2000", "5000", "10000", "25000", "50000", "100000", "250000", "500000", "1000000", "2500000"]}
-                value={packageAmount}
-                onChange={(_, newValue) => setPackageAmount(newValue || '')}
-                onInputChange={(_, newInputValue) => setPackageAmount(newInputValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    required
-                    label="Amount (₹)"
-                    variant="outlined"
-                    size="medium"
-                    placeholder="e.g. 10000"
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: (
-                        <>
-                          <InputAdornment position="start">
-                            <PaymentsIcon sx={{ color: '#0a2558', fontSize: 20 }} />
-                          </InputAdornment>
-                          {params.InputProps.startAdornment}
-                        </>
-                      )
-                    }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        backgroundColor: 'white',
-                      },
-                    }}
-                  />
-                )}
-              />
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <Autocomplete
+                  freeSolo
+                  options={["1000", "2000", "5000", "10000", "25000", "50000", "100000", "250000", "500000", "1000000", "2500000"]}
+                  value={packageAmount}
+                  onChange={(_, newValue) => setPackageAmount(newValue || '')}
+                  onInputChange={(_, newInputValue) => setPackageAmount(newInputValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      required
+                      label="Amount (₹)"
+                      variant="outlined"
+                      size="medium"
+                      placeholder="e.g. 10000"
+                      InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                          <>
+                            <InputAdornment position="start">
+                              <PaymentsIcon sx={{ color: '#0a2558', fontSize: 20 }} />
+                            </InputAdornment>
+                            {params.InputProps.startAdornment}
+                          </>
+                        )
+                      }}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "12px",
+                          backgroundColor: 'white',
+                        },
+                      }}
+                    />
+                  )}
+                />
 
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                disabled={!packageAmount || isSubmitting}
-                sx={{
-                  mt: 2,
-                  py: 1.5,
-                  backgroundColor: '#0a2558',
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '1rem',
-                  textTransform: 'none',
-                  borderRadius: '12px',
-                  '&:hover': { backgroundColor: '#153b93' }
-                }}
-              >
-                {isSubmitting ? 'Submitting Request...' : 'Submit Deposit Request'}
-              </Button>
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  disabled={!packageAmount || isSubmitting}
+                  sx={{
+                    mt: 2,
+                    py: 1.5,
+                    backgroundColor: '#0a2558',
+                    color: 'white',
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    textTransform: 'none',
+                    borderRadius: '12px',
+                    '&:hover': { backgroundColor: '#153b93' }
+                  }}
+                >
+                  {isSubmitting ? 'Submitting Request...' : 'Submit Deposit Request'}
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      )}
 
-      {/* ── ROW 2: ACTIVE PORTFOLIO (PRIMARY + ADD-ONS) ── */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" sx={{ color: '#0a2558', fontWeight: 900, letterSpacing: -0.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box sx={{ width: 4, height: 24, backgroundColor: '#ed6c02', borderRadius: 1 }} />
-          My Deposits
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5, ml: 2, fontWeight: 500 }}>
-          Manage your primary investment and independent add-on tracks.
-        </Typography>
-      </Box>
+      {/* ── ROW 2: ACTIVE PORTFOLIO (Only if view is 'fd' or empty) ── */}
+      {(!view || view === 'fd') && (
+        <>
+          <Box sx={{ mb: 4, mt: view === 'fd' ? 0 : 4 }}>
+            <Typography variant="h5" sx={{ color: '#0a2558', fontWeight: 900, letterSpacing: -0.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Box sx={{ width: 4, height: 24, backgroundColor: '#ed6c02', borderRadius: 1 }} />
+              My Deposits
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5, ml: 2, fontWeight: 500 }}>
+              Manage your primary investment and independent add-on tracks.
+            </Typography>
+          </Box>
 
       {addOnsLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
@@ -305,10 +313,12 @@ export const UserAddOnPackages = () => {
               );
             });
           })()}
-        </Grid>
-      )}
-    </Box>
-  );
+          </Grid>
+        )}
+      </>
+    )}
+  </Box>
+);
 };
 
 export default UserAddOnPackages;

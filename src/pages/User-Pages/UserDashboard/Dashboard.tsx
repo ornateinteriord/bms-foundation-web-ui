@@ -138,7 +138,7 @@ const UserDashboard = () => {
         { label: "Profile", icon: <AccountCircleIcon />, route: "/user/account/profile", color: "#3b82f6" },
         { label: "KYC", icon: <VerifiedUserIcon />, route: "/user/account/kyc", color: "#10b981" },
         { label: "Password", icon: <LockIcon />, route: "/user/account/change-password", color: "#f59e0b" },
-        ...(isPackageActive ? [{ label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages", color: "#3b82f6" }] : []),
+        ...(isPackageActive ? [{ label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages?view=addon", color: "#3b82f6" }] : []),
       ]
     },
     {
@@ -202,7 +202,7 @@ const UserDashboard = () => {
           </Box>
 
           {/* Wallet Badge — Now below Name & ID — Hidden if not Active package */}
-          {isPackageActive && (
+          {isPackageActive && isUserActive && (
             <Box
               onClick={() => navigate('/user/wallet')}
               sx={{
@@ -237,7 +237,7 @@ const UserDashboard = () => {
         {isUserActive && (
           <Button
             variant="contained"
-            onClick={() => navigate('/user/addon-packages')}
+            onClick={() => navigate('/user/addon-packages?view=fd')}
             startIcon={<NoteAddIcon sx={{ fontSize: '1rem !important' }} />}
             sx={{
               flex: 1,
@@ -560,25 +560,29 @@ const UserDashboard = () => {
                       <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS Level Benefits</Typography>
                       <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{Number(walletOverview?.levelBenefits || 0).toLocaleString('en-IN')}</Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Wallet</Typography>
-                      <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
-                    </Box>
+                    {isUserActive && (
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Wallet</Typography>
+                        <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
+                      </Box>
+                    )}
                   </Stack>
                 </Box>
 
-                {/* 3rd Section: Big Balance */}
-                <Box sx={{ textAlign: 'center', pt: 1 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#64748b', letterSpacing: '1px', mb: 1 }}>
-                    WALLET BALANCE
-                  </Typography>
-                  <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, p: 2, px: 4, bgcolor: '#0a2558', borderRadius: '20px', color: 'white' }}>
-                    <CurrencyRupeeIcon sx={{ fontSize: 28 }} />
-                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {/* 3rd Section: Big Balance — Hidden if Inactive */}
+                {isUserActive && (
+                  <Box sx={{ textAlign: 'center', pt: 1 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#64748b', letterSpacing: '1px', mb: 1 }}>
+                      WALLET BALANCE
                     </Typography>
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, p: 2, px: 4, bgcolor: '#0a2558', borderRadius: '20px', color: 'white' }}>
+                      <CurrencyRupeeIcon sx={{ fontSize: 28 }} />
+                      <Typography variant="h4" sx={{ fontWeight: 800 }}>
+                        {Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
+                )}
               </Stack>
             </Paper>
           </Box>

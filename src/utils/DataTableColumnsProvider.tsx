@@ -492,6 +492,72 @@ export const getMembersColumns = (
     }
   ];
 
+export const getPermissionsColumns = (
+  handleToggleStatus: (memberId: string, currentStatus: string) => void,
+  isUpdating: boolean
+) => [
+    {
+      name: "SNo",
+      selector: (row: any) => row.sNo,
+      sortable: true,
+      width: "70px",
+    },
+    {
+      name: "Member ID",
+      selector: (row: any) => row.Member_id,
+      sortable: true,
+    },
+    {
+      name: "Name",
+      selector: (row: any) => row.Name ?? "-",
+      sortable: true,
+    },
+    {
+      name: "Package",
+      selector: (row: any) => row.package_value ?? row.spackage ?? "-",
+      sortable: true,
+      cell: (row: any) => {
+        const amt = row.package_value ?? row.spackage;
+        return amt ? `₹${amt}` : "-";
+      },
+    },
+    {
+      name: "Status",
+      selector: (row: any) => row.status,
+      sortable: true,
+      cell: (row: any) => (
+        <div
+          style={{
+            color: row.status === 'active' ? 'green' : 'red',
+            fontWeight: 'bold',
+          }}
+        >
+          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+        </div>
+      ),
+    },
+    {
+      name: "Action",
+      cell: (row: any) => (
+        <Button
+          onClick={() => handleToggleStatus(row.Member_id, row.status)}
+          disabled={isUpdating}
+          variant="contained"
+          sx={{
+            backgroundColor: row.status === 'active' ? '#fa5252' : '#51cf66',
+            "&:hover": { backgroundColor: row.status === 'active' ? '#e03131' : '#40c057' },
+            color: "#fff",
+            padding: "2px 10px",
+            minWidth: "100px",
+            textTransform: "capitalize"
+          }}
+        >
+          {row.status === 'active' ? 'Inactivate' : 'Activate'}
+        </Button>
+      ),
+    },
+  ];
+
 export const getPendingMembersColumns = (
   handleActivateClick: (member: any) => void,
   isActivating: boolean

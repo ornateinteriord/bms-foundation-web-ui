@@ -6,17 +6,24 @@ import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { useGetMemberDetails } from '../../api/Memeber';
+import TokenService from '../../api/token/tokenService';
+
 const MobileBottomNav: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState('');
+
+  const memberId = TokenService.getMemberId();
+  const { data: memberDetails } = useGetMemberDetails(memberId);
+  const isUserActive = memberDetails?.status === 'active';
 
   // Sync state with current path
   React.useEffect(() => {
-    if (location.pathname.includes('/user/dashboard')) setValue(0);
-    else if (location.pathname.includes('/user/wallet')) setValue(1);
-    else if (location.pathname.includes('/user/chat')) setValue(2);
-    else if (location.pathname.includes('/user/account/profile')) setValue(3);
+    if (location.pathname.includes('/user/dashboard')) setValue('/user/dashboard');
+    else if (location.pathname.includes('/user/wallet')) setValue('/user/wallet');
+    else if (location.pathname.includes('/user/chat')) setValue('/user/chat');
+    else if (location.pathname.includes('/user/account/profile')) setValue('/user/account/profile');
   }, [location.pathname]);
 
   if (location.pathname.includes('/user/chat')) return null;
@@ -40,12 +47,7 @@ const MobileBottomNav: React.FC = () => {
           value={value}
           onChange={(_event, newValue) => {
             setValue(newValue);
-            switch (newValue) {
-              case 0: navigate('/user/dashboard'); break;
-              case 1: navigate('/user/wallet'); break;
-              case 2: navigate('/user/chat'); break;
-              case 3: navigate('/user/account/profile'); break;
-            }
+            navigate(newValue);
           }}
           sx={{
             height: 70,
@@ -81,20 +83,26 @@ const MobileBottomNav: React.FC = () => {
           }}
         >
           <BottomNavigationAction 
+            value="/user/dashboard"
             label="Home" 
-            icon={<Box className={value === 0 ? "indicator" : ""}>{<HomeIcon />}</Box>} 
+            icon={<Box className={value === "/user/dashboard" ? "indicator" : ""}>{<HomeIcon />}</Box>} 
           />
+          {isUserActive && (
+            <BottomNavigationAction 
+              value="/user/wallet"
+              label="Wallet" 
+              icon={<Box className={value === "/user/wallet" ? "indicator" : ""}>{<AccountBalanceWalletIcon />}</Box>} 
+            />
+          )}
           <BottomNavigationAction 
-            label="Wallet" 
-            icon={<Box className={value === 1 ? "indicator" : ""}>{<AccountBalanceWalletIcon />}</Box>} 
-          />
-          <BottomNavigationAction 
+            value="/user/chat"
             label="Chat" 
-            icon={<Box className={value === 2 ? "indicator" : ""}>{<ChatIcon />}</Box>} 
+            icon={<Box className={value === "/user/chat" ? "indicator" : ""}>{<ChatIcon />}</Box>} 
           />
           <BottomNavigationAction 
+            value="/user/account/profile"
             label="Profile" 
-            icon={<Box className={value === 3 ? "indicator" : ""}>{<PersonIcon />}</Box>} 
+            icon={<Box className={value === "/user/account/profile" ? "indicator" : ""}>{<PersonIcon />}</Box>} 
           />
         </BottomNavigation>
       </Paper>
