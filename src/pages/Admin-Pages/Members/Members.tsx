@@ -3,7 +3,8 @@ import {
   Card, CardContent, Accordion, AccordionSummary, AccordionDetails,
   TextField, Typography, Button, Grid, CircularProgress,
   Dialog, DialogTitle, DialogContent, DialogActions,
-  Box, Divider,
+  Box, Divider, Autocomplete,
+  Radio, RadioGroup, FormControlLabel, FormControl, FormLabel,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CheckCircle } from '@mui/icons-material';
@@ -222,25 +223,59 @@ export const PendingMembers = () => {
   const { memberdata, isLoading } = useMembers("Pending");
   const { mutate: activatePackage, isPending: isActivating } = useActivatePackage();
 
+  const packageOptions = [
+    { label: 'None (No Package)', value: 'NONE' },
+    { label: '1000 Package', value: '1000' },
+    { label: '2000 Package', value: '2000' },
+    { label: '5000 Package', value: '5000' },
+    { label: '10000 Package', value: '10000' },
+    { label: '25000 Package', value: '25000' },
+    { label: '50000 Package', value: '50000' },
+    { label: '100000 Package', value: '100000' },
+    { label: '250000 Package', value: '250000' },
+    { label: '500000 Package', value: '500000' },
+    { label: '1000000 Package', value: '1000000' },
+    { label: '2500000 Package', value: '2500000' },
+  ];
+
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [packageAmount, setPackageAmount] = useState<string>('');
+  const [activationType, setActivationType] = useState<'with' | 'without'>('with');
 
   const handleActivateClick = (member: any) => {
     setSelectedMember(member);
-    // Pre-fill with whatever amount is stored on the member
-    const stored = member.package_value ?? member.spackage ?? '';
-    setPackageAmount(stored !== null && stored !== undefined ? String(stored) : '');
+    // Don't pre-fill package amount to ensure "Select Package" is shown
+    setPackageAmount('');
+    setActivationType('with');
     setDialogOpen(true);
   };
 
   const handleConfirm = () => {
     if (!selectedMember) return;
 
+    if (activationType === 'without') {
+      activatePackage(
+        { memberId: selectedMember.Member_id, packageType: 'NONE' },
+        {
+          onSuccess: () => {
+            setDialogOpen(false);
+            setSelectedMember(null);
+            setPackageAmount('');
+            toast.success(`${selectedMember.Name} activated successfully without a package.`);
+          },
+          onError: () => {
+            setDialogOpen(false);
+          },
+        }
+      );
+      return;
+    }
+
     const amt = Number(packageAmount);
     if (!amt || amt <= 0) {
-      toast.error('Please enter a valid package amount.');
+      toast.error('Please enter a valid package amount or select None.');
       return;
     }
 
@@ -332,23 +367,70 @@ export const PendingMembers = () => {
             </Grid>
           </Box>
 
+          {/* Activation Type Selection */}
+          <FormControl component="fieldset" sx={{ mb: 3 }}>
+            <FormLabel component="legend" sx={{ fontWeight: 600, color: primaryColor, mb: 1 }}>Activation Type</FormLabel>
+            <RadioGroup
+              row
+              value={activationType}
+              onChange={(e) => setActivationType(e.target.value as 'with' | 'without')}
+            >
+              <FormControlLabel 
+                value="with" 
+                control={<Radio sx={{ color: primaryColor, '&.Mui-checked': { color: primaryColor } }} />} 
+                label={<Typography variant="body2" fontWeight={600}>With Package</Typography>} 
+              />
+              <FormControlLabel 
+                value="without" 
+                control={<Radio sx={{ color: primaryColor, '&.Mui-checked': { color: primaryColor } }} />} 
+                label={<Typography variant="body2" fontWeight={600}>Without Package</Typography>} 
+              />
+            </RadioGroup>
+          </FormControl>
+
           {/* Editable Package Amount */}
-          <TextField
-            label="Package Amount (₹)"
-            type="number"
-            fullWidth
-            value={packageAmount}
-            onChange={(e) => setPackageAmount(e.target.value)}
-            helperText="Enter the correct package amount for this member"
-            inputProps={{ min: 1 }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: primaryColor },
-                '&:hover fieldset': { borderColor: primaryColor },
-                '&.Mui-focused fieldset': { borderColor: primaryColor },
-              },
-            }}
-          />
+          {activationType === 'with' && (
+            <Autocomplete
+              freeSolo
+              options={packageOptions}
+              getOptionLabel={(option: any) => (typeof option === 'string' ? option : option.label)}
+              value={packageOptions.find(o => o.value === packageAmount) || packageAmount}
+              onChange={(_, newValue: any) => {
+                if (typeof newValue === 'string') {
+                  setPackageAmount(newValue);
+                } else if (newValue && newValue.value) {
+                  setPackageAmount(newValue.value);
+                } else {
+                  setPackageAmount('');
+                }
+              }}
+              onInputChange={(_, newInputValue) => {
+                // If it looks like one of our options, find it
+                const matched = packageOptions.find(o => o.label === newInputValue);
+                if (matched) {
+                  setPackageAmount(matched.value);
+                } else {
+                  setPackageAmount(newInputValue);
+                }
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Package"
+                  fullWidth
+                  placeholder="e.g. 1000"
+                  helperText="Select a standard package or type a custom amount"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: primaryColor },
+                      '&:hover fieldset': { borderColor: primaryColor },
+                      '&.Mui-focused fieldset': { borderColor: primaryColor },
+                    },
+                  }}
+                />
+              )}
+            />
+          )}
 
         </DialogContent>
 

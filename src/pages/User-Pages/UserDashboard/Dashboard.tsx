@@ -84,7 +84,8 @@ const UserDashboard = () => {
   const extraROI = Math.max(0, totalRoiPaidValue - totalPrincipal);
   const displayDeposit = Math.max(0, totalPrincipal - extraROI);
 
-  const hasActivePackage = totalPrincipal > 0;
+  const isUserActive = memberDetails?.status === 'active';
+  const isPackageActive = memberDetails?.upgrade_status === 'Active';
 
   useEffect(() => {
     const paymentParams = parsePaymentRedirectParams(searchParams);
@@ -137,7 +138,7 @@ const UserDashboard = () => {
         { label: "Profile", icon: <AccountCircleIcon />, route: "/user/account/profile", color: "#3b82f6" },
         { label: "KYC", icon: <VerifiedUserIcon />, route: "/user/account/kyc", color: "#10b981" },
         { label: "Password", icon: <LockIcon />, route: "/user/account/change-password", color: "#f59e0b" },
-        { label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages", color: "#3b82f6" },
+        ...(isPackageActive ? [{ label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages", color: "#3b82f6" }] : []),
       ]
     },
     {
@@ -200,8 +201,8 @@ const UserDashboard = () => {
             </Typography>
           </Box>
 
-          {/* Wallet Badge — Now below Name & ID — Hidden if no package */}
-          {hasActivePackage && (
+          {/* Wallet Badge — Now below Name & ID — Hidden if not Active package */}
+          {isPackageActive && (
             <Box
               onClick={() => navigate('/user/wallet')}
               sx={{
@@ -232,43 +233,50 @@ const UserDashboard = () => {
 
       {/* Row 2: Buttons + CB icon — all same height */}
       <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'stretch' }}>
-        {/* FD BOND */}
-        <Button
-          variant="contained"
-          onClick={() => navigate('/user/addon-packages')}
-          startIcon={<NoteAddIcon sx={{ fontSize: '1rem !important' }} />}
-          sx={{
-            flex: 1,
-            borderRadius: '14px',
-            textTransform: 'none',
-            fontWeight: 900,
-            bgcolor: 'white',
-            color: '#0a2558',
-            fontSize: '12.5px',
-            whiteSpace: 'nowrap',
-            py: 1.1,
-            minWidth: 0,
-            '&:hover': { bgcolor: '#f1f5f9' },
-            boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-          }}
-        >
-          FD BOND
-        </Button>
-
-        {/* QUICK ACCESS — mobile only — Hidden if no package */}
-        {hasActivePackage && (
+        {/* FD BOND — Visible if user is active */}
+        {isUserActive && (
           <Button
             variant="contained"
-            onClick={() => setShowQuickAccess(!showQuickAccess)}
-            startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1.2rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.2rem !important' }} />}
+            onClick={() => navigate('/user/addon-packages')}
+            startIcon={<NoteAddIcon sx={{ fontSize: '1rem !important' }} />}
             sx={{
-              display: { xs: 'flex', md: 'none' },
+              flex: 1,
+              borderRadius: '14px',
+              textTransform: 'none',
+              fontWeight: 900,
+              bgcolor: 'white',
+              color: '#0a2558',
+              fontSize: '12.5px',
+              whiteSpace: 'nowrap',
+              py: 1.1,
+              minWidth: 0,
+              '&:hover': { bgcolor: '#f1f5f9' },
+              boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+            }}
+          >
+            FD BOND
+          </Button>
+        )}
+
+        {/* OVER DRAFT — Toggle for upgraded users, Redirect for others */}
+        {isUserActive && (
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (isPackageActive) {
+                setShowQuickAccess(!showQuickAccess);
+              } else {
+                navigate('/user/overdraft');
+              }
+            }}
+            startIcon={(isPackageActive && showQuickAccess) ? <ArrowBackIcon sx={{ fontSize: '1.2rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.2rem !important' }} />}
+            sx={{
               flex: 1,
               borderRadius: '14px',
               textTransform: 'none',
               fontWeight: 900,
               bgcolor: '#3b82f6',
-              fontSize: '16.5px',
+              fontSize: '14px',
               whiteSpace: 'nowrap',
               py: 1.1,
               minWidth: 0,
@@ -276,7 +284,7 @@ const UserDashboard = () => {
               boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
             }}
           >
-            {showQuickAccess ? 'BACK' : 'OD'}
+            {(isPackageActive && showQuickAccess) ? 'BACK' : 'OVER DRAFT'}
           </Button>
         )}
 
@@ -412,7 +420,7 @@ const UserDashboard = () => {
         {/* Right Column / Mobile Conditional View */}
         <Box sx={{
           width: { xs: '100%', md: '380px', lg: '440px' },
-          display: { xs: showQuickAccess ? 'flex' : 'none', md: 'flex' },
+          display: { xs: showQuickAccess ? 'flex' : 'none', md: isUserActive ? 'flex' : 'none' },
           flexDirection: 'column',
           gap: 4,
           position: { md: 'sticky' },
@@ -420,7 +428,7 @@ const UserDashboard = () => {
         }}>
           {/* Mobile Only: Quick Access Header */}
           <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 1, display: { xs: 'block', md: 'none' } }}>
-            QUICK ACCESS
+            OVER DRAFT
           </Typography>
 
           <Box sx={{ flex: 1 }}>
