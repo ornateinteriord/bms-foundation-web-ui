@@ -1,13 +1,16 @@
 import { jwtDecode } from "jwt-decode";
 
 class TokenService {
-  static setToken(token: string): void {
-
-    localStorage.setItem("token", token);
+  static setToken(token: string, persist: boolean = true): void {
+    sessionStorage.setItem("token", token);
+    if (persist) {
+      localStorage.setItem("token", token);
+    }
+    window.dispatchEvent(new Event("token-change"));
   }
 
   static getToken(): string | null {
-    return localStorage.getItem("token");
+    return sessionStorage.getItem("token") || localStorage.getItem("token");
   }
 
   static decodeToken(): { id: string; role: string, memberId?: string, userId?: string, user_name?: string } | null {
@@ -41,13 +44,13 @@ class TokenService {
   }
 
   static getBranchCode(): string | null {
-    // For now, return a default branch code
-    // In the future, this could be from user's profile or token
     return 'BRN001';
   }
 
   static removeToken(): void {
+    sessionStorage.removeItem("token");
     localStorage.removeItem("token");
+    window.dispatchEvent(new Event("token-change"));
   }
 }
 
