@@ -47,6 +47,7 @@ const Login = lazy(() => import("./pages/Auth/Login"));
 const Register = lazy(() => import("./pages/Auth/Register"));
 const RecoverPassword = lazy(() => import("./pages/Auth/RecoverPassword"))
 const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"))
+const Impersonate = lazy(() => import("./pages/Auth/Impersonate"));
 const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
 const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
@@ -322,6 +323,7 @@ const RoutesProvider = ({
           }}
         >
           <Routes>
+            <Route path="/impersonate" element={<Impersonate />} />
             {/* public routes */}
             <Route element={<PublicRoute />}>
               <Route index element={<Login />} />

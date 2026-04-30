@@ -3,13 +3,22 @@ import { disconnectSocket } from "../../utils/socket";
 
 
 class TokenService {
-  static setToken(token: string): void {
+  static setToken(token: string, persist: boolean = true): void {
+    // Always set in sessionStorage for the current session/tab
     sessionStorage.setItem("token", token);
+    
+    // Only set in localStorage if persistence is requested (standard login)
+    if (persist) {
+      localStorage.setItem("token", token);
+    }
+    
     window.dispatchEvent(new Event("token-change"));
   }
 
   static getToken(): string | null {
-    return sessionStorage.getItem("token");
+    // Prioritize sessionStorage (impersonated or temporary session)
+    // Fallback to localStorage (persisted admin/user session)
+    return sessionStorage.getItem("token") || localStorage.getItem("token");
   }
 
   static decodeToken(): { id: string; role: string; memberId: string } | null {
@@ -40,7 +49,7 @@ class TokenService {
 
   static removeToken(): void {
     sessionStorage.removeItem("token");
-    localStorage.removeItem("token"); // Cleanup legacy/fallback
+    localStorage.removeItem("token");
     disconnectSocket();
     window.dispatchEvent(new Event("token-change"));
   }

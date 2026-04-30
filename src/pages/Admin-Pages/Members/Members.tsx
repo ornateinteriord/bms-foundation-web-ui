@@ -3,7 +3,7 @@ import {
   Card, CardContent, Accordion, AccordionSummary, AccordionDetails,
   TextField, Typography, Button, Grid, CircularProgress,
   Dialog, DialogTitle, DialogContent, DialogActions,
-  Box, Divider, Autocomplete,
+  Box, Divider,
   Radio, RadioGroup, FormControlLabel, FormControl, FormLabel,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -13,7 +13,7 @@ import './Members.scss'
 import { MuiDatePicker } from '../../../components/common/DateFilterComponent';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useGetAllMembersDetails, useUpdateMemberStatus } from '../../../api/Admin';
+import { useGetAllMembersDetails, useUpdateMemberStatus, useImpersonate } from '../../../api/Admin';
 import { useNavigate } from 'react-router-dom';
 import useSearch from '../../../hooks/SearchQuery';
 import { useActivatePackage } from '../../../api/Memeber';
@@ -28,6 +28,7 @@ interface MemberTableProps {
   isLoading?: boolean;
   onActivate?: (member: any) => void;
   isActivating?: boolean;
+  showDashboard?: boolean;
 }
 
 const MemberTable = ({
@@ -39,7 +40,8 @@ const MemberTable = ({
   showActivate = false,
   isLoading = false,
   onActivate,
-  isActivating = false
+  isActivating = false,
+  showDashboard = false
 }: MemberTableProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
@@ -47,7 +49,32 @@ const MemberTable = ({
   const [toDate, setToDate] = useState<string | null>(null);
   const { searchQuery, setSearchQuery, filteredData } = useSearch(data)
 
+  const [dashboardDialogOpen, setDashboardDialogOpen] = useState(false);
+  const [memberToImpersonate, setMemberToImpersonate] = useState<any>(null);
+  const { mutate: impersonate, isPending: isImpersonating } = useImpersonate();
+
   const navigate = useNavigate()
+
+  const handleDashboardClick = (member: any) => {
+    setMemberToImpersonate(member);
+    setDashboardDialogOpen(true);
+  };
+
+  const confirmImpersonation = () => {
+    if (!memberToImpersonate) return;
+
+    impersonate(memberToImpersonate.Member_id, {
+      onSuccess: (response) => {
+        if (response.success && response.token) {
+          setDashboardDialogOpen(false);
+          // Open the impersonation route in a new tab with the token
+          const url = `${window.location.origin}/impersonate?token=${response.token}`;
+          window.open(url, '_blank');
+          setMemberToImpersonate(null);
+        }
+      }
+    });
+  };
 
   const handleEditClick = (memberId: string) => {
     setIsEdit(true);
@@ -75,7 +102,12 @@ const MemberTable = ({
     if (showActivate && onActivate) {
       return getPendingMembersColumns(handleActivateClick, isActivating);
     } else {
-      return getMembersColumns(showEdit, handleEditClick, showView ? handleViewClick : undefined);
+      return getMembersColumns(
+        showEdit, 
+        handleEditClick, 
+        showView ? handleViewClick : undefined, 
+        showDashboard ? handleDashboardClick : undefined
+      );
     }
   };
 
@@ -139,6 +171,53 @@ const MemberTable = ({
           </Accordion>
         </CardContent>
       </Card>
+
+      {/* ── Go to Dashboard Confirmation Dialog ── */}
+      <Dialog
+        open={dashboardDialogOpen}
+        onClose={() => !isImpersonating && setDashboardDialogOpen(false)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: { borderRadius: '16px', p: 1 }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700, color: '#0a2558', pb: 1 }}>
+          Go to Dashboard?
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ color: '#555', mb: 2 }}>
+            Do you want to open the dashboard for member <strong>{memberToImpersonate?.Name} ({memberToImpersonate?.Member_id})</strong> in a new tab?
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            This will allow you to view the application as this member.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
+          <Button
+            onClick={() => setDashboardDialogOpen(false)}
+            disabled={isImpersonating}
+            variant="outlined"
+            sx={{ borderRadius: '8px', textTransform: 'none' }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={confirmImpersonation}
+            disabled={isImpersonating}
+            variant="contained"
+            sx={{
+              backgroundColor: '#0a2558',
+              '&:hover': { backgroundColor: '#081d47' },
+              borderRadius: '8px',
+              textTransform: 'none',
+              px: 3
+            }}
+          >
+            {isImpersonating ? <CircularProgress size={20} color="inherit" /> : 'Go to Dashboard'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
@@ -200,6 +279,7 @@ export const ActiveMembers = () => {
       title="Active Members"
       summaryTitle="List of Active Members"
       showView
+      showDashboard
       data={memberdata}
       isLoading={isLoading}
     />
@@ -223,20 +303,6 @@ export const PendingMembers = () => {
   const { memberdata, isLoading } = useMembers("Pending");
   const { mutate: activatePackage, isPending: isActivating } = useActivatePackage();
 
-  const packageOptions = [
-    { label: 'None (No Package)', value: 'NONE' },
-    { label: '1000 Package', value: '1000' },
-    { label: '2000 Package', value: '2000' },
-    { label: '5000 Package', value: '5000' },
-    { label: '10000 Package', value: '10000' },
-    { label: '25000 Package', value: '25000' },
-    { label: '50000 Package', value: '50000' },
-    { label: '100000 Package', value: '100000' },
-    { label: '250000 Package', value: '250000' },
-    { label: '500000 Package', value: '500000' },
-    { label: '1000000 Package', value: '1000000' },
-    { label: '2500000 Package', value: '2500000' },
-  ];
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -388,47 +454,24 @@ export const PendingMembers = () => {
             </RadioGroup>
           </FormControl>
 
-          {/* Editable Package Amount */}
+          {/* Manual Package Amount Entry */}
           {activationType === 'with' && (
-            <Autocomplete
-              freeSolo
-              options={packageOptions}
-              getOptionLabel={(option: any) => (typeof option === 'string' ? option : option.label)}
-              value={packageOptions.find(o => o.value === packageAmount) || packageAmount}
-              onChange={(_, newValue: any) => {
-                if (typeof newValue === 'string') {
-                  setPackageAmount(newValue);
-                } else if (newValue && newValue.value) {
-                  setPackageAmount(newValue.value);
-                } else {
-                  setPackageAmount('');
-                }
+            <TextField
+              label="Package Amount"
+              fullWidth
+              type="number"
+              value={packageAmount}
+              onChange={(e) => setPackageAmount(e.target.value)}
+              placeholder="e.g. 1000"
+              helperText="Enter the package amount to activate this member"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: primaryColor },
+                  '&:hover fieldset': { borderColor: primaryColor },
+                  '&.Mui-focused fieldset': { borderColor: primaryColor },
+                },
+                '& .MuiInputLabel-root.Mui-focused': { color: primaryColor }
               }}
-              onInputChange={(_, newInputValue) => {
-                // If it looks like one of our options, find it
-                const matched = packageOptions.find(o => o.label === newInputValue);
-                if (matched) {
-                  setPackageAmount(matched.value);
-                } else {
-                  setPackageAmount(newInputValue);
-                }
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select Package"
-                  fullWidth
-                  placeholder="e.g. 1000"
-                  helperText="Select a standard package or type a custom amount"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: primaryColor },
-                      '&:hover fieldset': { borderColor: primaryColor },
-                      '&.Mui-focused fieldset': { borderColor: primaryColor },
-                    },
-                  }}
-                />
-              )}
             />
           )}
 
@@ -480,7 +523,7 @@ export const PermissionsMembers = () => {
 
     const isActive = selectedMember.currentStatus.toLowerCase() === 'active';
     const newStatus = isActive ? 'Inactive' : 'Active';
-    
+
     // Use upgrade_status for this specific ROI permissions page
     updateStatus({ memberId: selectedMember.id, upgrade_status: newStatus }, {
       onSuccess: () => {

@@ -20,6 +20,22 @@ export const useUpdatePassword = () =>{
   })
 }
 
+export const useImpersonate = () => {
+  return useMutation({
+    mutationFn: async (memberId: string) => {
+      return await post("/auth/impersonate", { memberId });
+    },
+    onSuccess: (response) => {
+      if (!response.success) {
+        toast.error(response.message);
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Impersonation failed");
+    }
+  });
+};
+
 export const useGetAllMembersDetails = () =>{
     return useQuery({
         queryKey:["allMembers"],

@@ -1,5 +1,6 @@
 import { Button, IconButton } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Edit } from "lucide-react";
 import { getFormattedDate } from './common';
 import { MemberDetails } from "../store/store";
@@ -410,7 +411,8 @@ export const getAdminDashboardTableColumns: any = () => [
 export const getMembersColumns = (
   showEdit: boolean,
   handleEditClick: (memberId: string) => void,
-  handleViewClick?: (memberId: string) => void
+  handleViewClick?: (memberId: string) => void,
+  handleDashboardClick?: (member: any) => void
 ) => [
     {
       name: "SNo",
@@ -420,6 +422,11 @@ export const getMembersColumns = (
     {
       name: "Member",
       selector: (row: any) => row.Member_id,
+      sortable: true,
+    },
+    {
+      name: "Name",
+      selector: (row: any) => row.Name ?? "-",
       sortable: true,
     },
     {
@@ -469,6 +476,15 @@ export const getMembersColumns = (
       name: 'Actions',
       cell: (row: any) => (
         <div style={{ display: 'flex', gap: '8px' }}>
+          {handleDashboardClick && (
+            <IconButton
+              onClick={() => handleDashboardClick(row)}
+              style={{ color: '#0ea5e9', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+              title="Go to Dashboard"
+            >
+              <DashboardIcon />
+            </IconButton>
+          )}
           {handleViewClick && (
             <IconButton
               onClick={() => handleViewClick(row.Member_id)}
