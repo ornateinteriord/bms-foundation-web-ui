@@ -523,36 +523,39 @@ export const getPermissionsColumns = (
     },
     {
       name: "Status",
-      selector: (row: any) => row.status,
+      selector: (row: any) => row.upgrade_status || row.status,
       sortable: true,
-      cell: (row: any) => (
-        <div
-          style={{
-            color: row.status === 'active' ? 'green' : 'red',
-            fontWeight: 'bold',
-          }}
-        >
-          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
-        </div>
-      ),
+      cell: (row: any) => {
+        const status = row.upgrade_status || row.status;
+        return (
+          <div
+            style={{
+              color: status === 'Active' || status === 'active' ? 'green' : 'red',
+              fontWeight: 'bold',
+            }}
+          >
+            {(status || "").charAt(0).toUpperCase() + (status || "").slice(1)}
+          </div>
+        );
+      },
     },
     {
       name: "Action",
       cell: (row: any) => (
         <Button
-          onClick={() => handleToggleStatus(row.Member_id, row.status)}
+          onClick={() => handleToggleStatus(row.Member_id, row.upgrade_status || row.status)}
           disabled={isUpdating}
           variant="contained"
           sx={{
-            backgroundColor: row.status === 'active' ? '#fa5252' : '#51cf66',
-            "&:hover": { backgroundColor: row.status === 'active' ? '#e03131' : '#40c057' },
+            backgroundColor: (row.upgrade_status === 'Active' || row.status === 'active') ? '#fa5252' : '#51cf66',
+            "&:hover": { backgroundColor: (row.upgrade_status === 'Active' || row.status === 'active') ? '#e03131' : '#40c057' },
             color: "#fff",
             padding: "2px 10px",
             minWidth: "100px",
             textTransform: "capitalize"
           }}
         >
-          {row.status === 'active' ? 'Inactivate' : 'Activate'}
+          {(row.upgrade_status === 'Active' || row.status === 'active') ? 'Inactivate' : 'Activate'}
         </Button>
       ),
     },

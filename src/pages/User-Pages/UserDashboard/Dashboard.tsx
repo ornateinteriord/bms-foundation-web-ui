@@ -201,7 +201,7 @@ const UserDashboard = () => {
             </Typography>
           </Box>
 
-          {/* Wallet Badge — Now below Name & ID — Hidden if not Active package */}
+          {/* Wallet Badge — Now below Name & ID — Hidden if not Active package or Inactive ROI */}
           {isPackageActive && isUserActive && (
             <Box
               onClick={() => navigate('/user/wallet')}
@@ -258,8 +258,8 @@ const UserDashboard = () => {
           </Button>
         )}
 
-        {/* OVER DRAFT — Toggle for upgraded users, Redirect for others */}
-        {isUserActive && (
+        {/* OVER DRAFT — Toggle for upgraded users, Redirect for others — Hidden if ROI Inactive */}
+        {isUserActive && isPackageActive && (
           <Button
             variant="contained"
             onClick={() => {
@@ -420,7 +420,7 @@ const UserDashboard = () => {
         {/* Right Column / Mobile Conditional View */}
         <Box sx={{
           width: { xs: '100%', md: '380px', lg: '440px' },
-          display: { xs: showQuickAccess ? 'flex' : 'none', md: isUserActive ? 'flex' : 'none' },
+          display: { xs: showQuickAccess ? 'flex' : 'none', md: (isUserActive && isPackageActive) ? 'flex' : 'none' },
           flexDirection: 'column',
           gap: 4,
           position: { md: 'sticky' },
@@ -569,8 +569,8 @@ const UserDashboard = () => {
                   </Stack>
                 </Box>
 
-                {/* 3rd Section: Big Balance — Hidden if Inactive */}
-                {isUserActive && (
+                {/* 3rd Section: Big Balance — Hidden if Inactive ROI or User */}
+                {isUserActive && isPackageActive && (
                   <Box sx={{ textAlign: 'center', pt: 1 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#64748b', letterSpacing: '1px', mb: 1 }}>
                       WALLET BALANCE

@@ -232,8 +232,8 @@ export const useUpdateMemberStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ memberId, status }: { memberId: any; status: any }) => {
-      const response = await put(`/admin/update-status/${memberId}`, { status });
+    mutationFn: async ({ memberId, status, upgrade_status }: { memberId: any; status?: any; upgrade_status?: any }) => {
+      const response = await put(`/admin/update-status/${memberId}`, { status, upgrade_status });
       return response.data;
     },
     onSuccess: () => {

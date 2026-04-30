@@ -478,10 +478,13 @@ export const PermissionsMembers = () => {
   const handleConfirmToggle = () => {
     if (!selectedMember) return;
 
-    const newStatus = selectedMember.currentStatus === 'active' ? 'Inactive' : 'active';
-    updateStatus({ memberId: selectedMember.id, status: newStatus }, {
+    const isActive = selectedMember.currentStatus.toLowerCase() === 'active';
+    const newStatus = isActive ? 'Inactive' : 'Active';
+    
+    // Use upgrade_status for this specific ROI permissions page
+    updateStatus({ memberId: selectedMember.id, upgrade_status: newStatus }, {
       onSuccess: () => {
-        toast.success(`Member status updated to ${newStatus}`);
+        toast.success(`ROI status updated to ${newStatus}`);
         setConfirmOpen(false);
         setSelectedMember(null);
       },
@@ -499,7 +502,7 @@ export const PermissionsMembers = () => {
 
   // Filter members who are "ROI Active" (have a package)
   const filteredData = Array.isArray(members)
-    ? members.filter((member: any) => member.upgrade_status === 'Active' || member.package_value > 0)
+    ? members.filter((member: any) => member.upgrade_status === 'Active' || member.upgrade_status === 'Inactive' || member.package_value > 0)
       .map((member: any, index: number) => ({
         ...member,
         sNo: index + 1,
@@ -568,29 +571,23 @@ export const PermissionsMembers = () => {
             alignItems: 'center',
             justifyContent: 'center',
             mb: 3,
-            backgroundColor: selectedMember?.currentStatus === 'active' ? '#fff0f0' : '#f0fff4',
-            color: selectedMember?.currentStatus === 'active' ? '#ff4d4d' : '#2ecc71',
+            backgroundColor: selectedMember?.currentStatus.toLowerCase() === 'active' ? '#fff0f0' : '#f0fff4',
+            color: selectedMember?.currentStatus.toLowerCase() === 'active' ? '#ff4d4d' : '#2ecc71',
             boxShadow: '0 10px 20px rgba(0,0,0,0.05)'
           }}>
-            {selectedMember?.currentStatus === 'active' ?
+            {selectedMember?.currentStatus.toLowerCase() === 'active' ?
               <WarningAmber sx={{ fontSize: '40px' }} /> :
               <CheckCircle sx={{ fontSize: '40px' }} />
             }
           </Box>
 
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#1a237e', mb: 1.5 }}>
-            {selectedMember?.currentStatus === 'active' ? 'Disable Member?' : 'Enable Member?'}
+            {selectedMember?.currentStatus.toLowerCase() === 'active' ? 'Inactive Member?' : 'Active Member?'}
           </Typography>
 
           <Typography variant="body1" sx={{ color: '#5f6368', px: 2, mb: 4, lineHeight: 1.6 }}>
-            Are you sure you want to {selectedMember?.currentStatus === 'active' ? 'deactivate' : 'activate'}{' '}
-            <strong>{selectedMember?.name}</strong>?
-            <br />
-            <Box component="span" sx={{ fontSize: '0.9rem', opacity: 0.8, mt: 1, display: 'block' }}>
-              {selectedMember?.currentStatus === 'active'
-                ? 'This action will pause all financial ROI benefits for this account.'
-                : 'This will resume all financial ROI benefits and access for this account.'}
-            </Box>
+            Are you sure you want to {selectedMember?.currentStatus.toLowerCase() === 'active' ? 'Inactive' : 'Active'}{' '}
+            this member <strong>{selectedMember?.name}</strong>?
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 2, width: '100%', px: 2 }}>
