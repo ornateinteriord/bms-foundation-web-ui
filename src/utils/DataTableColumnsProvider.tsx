@@ -514,10 +514,10 @@ export const getPermissionsColumns = (
     },
     {
       name: "Package",
-      selector: (row: any) => row.package_value ?? row.spackage ?? "-",
+      selector: (row: any) => row.total_package_value ?? row.package_value ?? row.spackage ?? "-",
       sortable: true,
       cell: (row: any) => {
-        const amt = row.package_value ?? row.spackage;
+        const amt = row.total_package_value ?? row.package_value ?? row.spackage;
         return amt ? `₹${amt}` : "-";
       },
     },
