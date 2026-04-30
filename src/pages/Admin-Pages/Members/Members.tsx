@@ -484,7 +484,7 @@ export const PermissionsMembers = () => {
     // Use upgrade_status for this specific ROI permissions page
     updateStatus({ memberId: selectedMember.id, upgrade_status: newStatus }, {
       onSuccess: () => {
-        toast.success(`ROI status updated to ${newStatus}`);
+        toast.success(`Member ${newStatus === 'Active' ? 'activated' : 'inactive'} success`);
         setConfirmOpen(false);
         setSelectedMember(null);
       },
