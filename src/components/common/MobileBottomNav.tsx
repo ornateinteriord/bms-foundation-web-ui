@@ -16,7 +16,7 @@ const MobileBottomNav: React.FC = () => {
 
   const memberId = TokenService.getMemberId();
   const { data: memberDetails } = useGetMemberDetails(memberId);
-  const isUserActive = memberDetails?.status === 'active';
+  const isROIActive = memberDetails?.upgrade_status === 'Active';
 
   // Sync state with current path
   React.useEffect(() => {
@@ -30,16 +30,16 @@ const MobileBottomNav: React.FC = () => {
 
   return (
     <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-      <Paper 
-        sx={{ 
-          position: 'fixed', 
-          bottom: 0, 
-          left: 0, 
-          right: 0, 
+      <Paper
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
           zIndex: 1000,
           borderTop: '1px solid #e0e0e0',
           boxShadow: '0 -4px 10px rgba(0,0,0,0.05)'
-        }} 
+        }}
         elevation={3}
       >
         <BottomNavigation
@@ -82,27 +82,27 @@ const MobileBottomNav: React.FC = () => {
             }
           }}
         >
-          <BottomNavigationAction 
+          <BottomNavigationAction
             value="/user/dashboard"
-            label="Home" 
-            icon={<Box className={value === "/user/dashboard" ? "indicator" : ""}>{<HomeIcon />}</Box>} 
+            label="Home"
+            icon={<Box className={value === "/user/dashboard" ? "indicator" : ""}>{<HomeIcon />}</Box>}
           />
-          {isUserActive && (
-            <BottomNavigationAction 
+          {isROIActive && (
+            <BottomNavigationAction
               value="/user/wallet"
-              label="Wallet" 
-              icon={<Box className={value === "/user/wallet" ? "indicator" : ""}>{<AccountBalanceWalletIcon />}</Box>} 
+              label="Wallet"
+              icon={<Box className={value === "/user/wallet" ? "indicator" : ""}>{<AccountBalanceWalletIcon />}</Box>}
             />
           )}
-          <BottomNavigationAction 
+          <BottomNavigationAction
             value="/user/chat"
-            label="Chat" 
-            icon={<Box className={value === "/user/chat" ? "indicator" : ""}>{<ChatIcon />}</Box>} 
+            label="Chat"
+            icon={<Box className={value === "/user/chat" ? "indicator" : ""}>{<ChatIcon />}</Box>}
           />
-          <BottomNavigationAction 
+          <BottomNavigationAction
             value="/user/account/profile"
-            label="Profile" 
-            icon={<Box className={value === "/user/account/profile" ? "indicator" : ""}>{<PersonIcon />}</Box>} 
+            label="Profile"
+            icon={<Box className={value === "/user/account/profile" ? "indicator" : ""}>{<PersonIcon />}</Box>}
           />
         </BottomNavigation>
       </Paper>
