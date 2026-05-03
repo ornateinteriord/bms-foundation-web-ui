@@ -432,7 +432,7 @@ export const Admin01SideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Calculator", path: "/banking/pigmy-calculator", icon: <LucideIcons.Calculator /> },
     ],
   },
-  {
+  /* {
     name: "MIS",
     icon: <ShowChartIcon />,
     isExpandable: true,
@@ -443,7 +443,7 @@ export const Admin01SideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Pay Maturity", path: "/banking/mis-pay-maturity", icon: <PaymentsIcon /> },
       { name: "Calculator", path: "/banking/mis-calculator", icon: <LucideIcons.Calculator /> },
     ],
-  },
+  }, */
 ];
 
 export const AgentSideBarMenuItems: SideBarMenuItemType[] = [
