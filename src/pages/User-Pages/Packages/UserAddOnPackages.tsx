@@ -181,10 +181,8 @@ export const UserAddOnPackages = () => {
               );
             }
 
-            const totalAddOnAmount = addOns.reduce((sum: number, a: any) => sum + (a.amount || a.requested_amount || 0), 0);
-            
-            // For legacy users, we still need to calculate the base amount if it's not in the add-on table
-            const baseAmount = (user.package_value || 0) - (primaryInAddOns ? 0 : totalAddOnAmount);
+            // The primary package amount is exactly the user's base package_value
+            const baseAmount = user.package_value || 0;
 
             const primaryPkg = {
               request_id: 'PRIMARY',
@@ -197,7 +195,14 @@ export const UserAddOnPackages = () => {
             };
 
             // If primary is already in add-ons, just use the mapped list, otherwise prepend the manual primaryPkg
-            const allPackages = primaryInAddOns ? finalAddOns : [primaryPkg, ...addOns];
+            let allPackages = primaryInAddOns ? finalAddOns : [primaryPkg, ...addOns];
+            
+            // Ensure primary package is always first
+            allPackages.sort((a: any, b: any) => {
+              if (a.isPrimary && !b.isPrimary) return -1;
+              if (!a.isPrimary && b.isPrimary) return 1;
+              return 0;
+            });
 
             return allPackages.map((pkg: any, index: number) => {
               const pkgAmount = pkg.amount || pkg.requested_amount || 0;
