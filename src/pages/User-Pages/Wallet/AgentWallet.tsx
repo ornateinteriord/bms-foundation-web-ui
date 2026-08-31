@@ -289,6 +289,7 @@ const AgentWallet = () => {
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     <strong>Withdrawal Policy:</strong>
                   </Typography>
+                  <Typography variant="body2">• Withdrawals only allowed between 1st and 5th of the month</Typography>
                   <Typography variant="body2">• 0% TDS / Deduction for Agent Commission</Typography>
                   <Typography variant="body2">• Minimum withdrawal: ₹100</Typography>
                   <Typography variant="body2">• Request will be processed within 24-48 hours</Typography>

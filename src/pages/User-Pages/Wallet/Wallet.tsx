@@ -387,6 +387,7 @@ const Wallet = () => {
                   </Typography>
                   <Box sx={{ display: "flex", gap: 4, flexDirection: isMobile ? "column" : "row" }}>
                     <Box>
+                      <Typography variant="body2">• Withdrawals only allowed between 1st and 5th of the month</Typography>
                       <Typography variant="body2">• 5% TDS applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹100</Typography>
                       <Typography variant="body2">• One withdrawal per day allowed</Typography>
