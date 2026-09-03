@@ -209,10 +209,10 @@ export const UserAddOnPackages = () => {
               const pkgId = pkg.package_id || pkg.request_id || 'N/A';
               const totalDays = pkg.isFD 
                 ? (moment(pkg.date_of_maturity).diff(moment(pkg.roi_start_date), 'days') || 1)
-                : 100;
+                : 300;
               const pkgProgress = pkg.roi_payout_count ? Math.min((pkg.roi_payout_count / totalDays) * 100, 100) : 0;
               const pkgTarget = pkg.roi_payout_target || (pkgAmount * 2);
-              const pkgDailyROI = pkgTarget > 0 ? parseFloat((pkgTarget / 100).toFixed(2)) : 0;
+              const pkgDailyROI = pkgTarget > 0 ? parseFloat((pkgTarget / 300).toFixed(2)) : 0;
 
               return (
                 <Grid item xs={12} sm={6} md={4} key={pkgId}>
@@ -258,7 +258,7 @@ export const UserAddOnPackages = () => {
 
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
-                          {pkg.isFD ? `Matures ${moment(pkg.date_of_maturity).format('DD MMM YYYY')}` : `Day ${pkg.roi_payout_count} of 100`}
+                          {pkg.isFD ? `Matures ${moment(pkg.date_of_maturity).format('DD MMM YYYY')}` : `Day ${pkg.roi_payout_count || 0} of ${totalDays}`}
                         </Typography>
                         <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 700 }}>{pkgProgress.toFixed(0)}%</Typography>
                       </Box>

@@ -169,7 +169,7 @@ const UserDashboard = () => {
         { label: "Profile", icon: <AccountCircleIcon />, route: "/user/account/profile", color: "#3b82f6" },
         { label: "KYC", icon: <VerifiedUserIcon />, route: "/user/account/kyc", color: "#10b981" },
         { label: "Password", icon: <LockIcon />, route: "/user/account/change-password", color: "#f59e0b" },
-        ...(isPackageActive ? [{ label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages?view=addon", color: "#3b82f6" }] : []),
+        { label: "Add Deposit", icon: <InventoryIcon />, route: "/user/addon-packages?view=addon", color: "#3b82f6" },
       ]
     },
     {
@@ -314,17 +314,13 @@ const UserDashboard = () => {
         )}
 
         {/* OVER DRAFT */}
-        {isUserActive && isPackageActive && (
+        {isUserActive && (
           <Button
             variant="contained"
             onClick={() => {
-              if (isPackageActive) {
-                setShowQuickAccess(!showQuickAccess);
-              } else {
-                navigate('/user/overdraft');
-              }
+              setShowQuickAccess(!showQuickAccess);
             }}
-            startIcon={(isPackageActive && showQuickAccess) ? <ArrowBackIcon sx={{ fontSize: '1.3rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.3rem !important' }} />}
+            startIcon={showQuickAccess ? <ArrowBackIcon sx={{ fontSize: '1.3rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.3rem !important' }} />}
             sx={{
               flex: 1,
               borderRadius: '16px',
@@ -345,7 +341,7 @@ const UserDashboard = () => {
               }
             }}
           >
-            {(isPackageActive && showQuickAccess) ? 'BACK' : 'OVER DRAFT'}
+            {showQuickAccess ? 'BACK' : 'OVER DRAFT'}
           </Button>
         )}
       </Box>
@@ -491,7 +487,7 @@ const UserDashboard = () => {
         {/* Right Column / Mobile Conditional View */}
         <Box sx={{
           width: { xs: '100%', md: '380px', lg: '440px' },
-          display: { xs: showQuickAccess ? 'flex' : 'none', md: (isUserActive && isPackageActive) ? 'flex' : 'none' },
+          display: { xs: showQuickAccess ? 'flex' : 'none', md: isUserActive ? 'flex' : 'none' },
           flexDirection: 'column',
           gap: 4,
           position: { md: 'sticky' },
