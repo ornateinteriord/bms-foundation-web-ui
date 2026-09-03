@@ -9,7 +9,7 @@ const Footer = () => {
         <Box
             component="footer"
             sx={{
-                background: "linear-gradient(135deg, #0a2558 0%, #0f172a 50%, #020617 100%)",
+                background: "linear-gradient(135deg, #09090b 0%, #0f172a 50%, #020617 100%)",
                 color: "white",
                 pt: { xs: 4, md: 6 },
                 pb: { xs: 3, md: 4 },
@@ -20,7 +20,7 @@ const Footer = () => {
             }}
         >
             {/* Subtle background glow effect */}
-            <Box sx={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, background: "radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
+            <Box sx={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, background: "radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
 
             <Container maxWidth="xl">
                 <Grid container spacing={3}>
@@ -31,7 +31,7 @@ const Footer = () => {
                             sx={{
                                 fontWeight: 900,
                                 mb: 3,
-                                background: "linear-gradient(to right, #fff, #94a3b8)",
+                                background: "linear-gradient(to right, #fff, #fb923c)",
                                 WebkitBackgroundClip: "text",
                                 WebkitTextFillColor: "transparent",
                                 letterSpacing: "-1px",
@@ -41,7 +41,7 @@ const Footer = () => {
                             BLUSKY MICRO SERVICES FOUNDATION
                         </Typography>
                         <Box sx={{ p: 2, borderRadius: "12px", bgcolor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", display: "inline-block", mb: 2 }}>
-                            <Typography variant="caption" sx={{ opacity: 0.8, fontWeight: 700, letterSpacing: "1px", color: "#60a5fa" }}>
+                            <Typography variant="caption" sx={{ opacity: 0.8, fontWeight: 700, letterSpacing: "1px", color: "#fb923c" }}>
                                 CIN: U85300DC2022NPL407403 / ROC
                             </Typography>
                         </Box>
@@ -55,11 +55,11 @@ const Footer = () => {
                         <Grid container spacing={3}>
                             {/* Location Section */}
                             <Grid item xs={12} sm={4}>
-                                <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#3b82f6", letterSpacing: "2px" }}>
+                                <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#f97316", letterSpacing: "2px" }}>
                                     Visit Us
                                 </Typography>
                                 <Box sx={{ display: "flex", gap: 2 }}>
-                                    <MapPin size={24} color="#60a5fa" style={{ flexShrink: 0 }} />
+                                    <MapPin size={24} color="#fb923c" style={{ flexShrink: 0 }} />
                                     <Box>
                                         <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5 }}>Head Office</Typography>
                                         <Typography variant="body2" sx={{ opacity: 0.7, lineHeight: 1.6 }}>
@@ -73,16 +73,16 @@ const Footer = () => {
 
                             {/* Contact Section */}
                             <Grid item xs={12} sm={4}>
-                                <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#3b82f6", letterSpacing: "2px" }}>
+                                <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#f97316", letterSpacing: "2px" }}>
                                     Get In Touch
                                 </Typography>
                                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                                        <Box sx={{ p: 1, borderRadius: "8px", bgcolor: "rgba(96, 165, 250, 0.1)" }}><Phone size={18} color="#60a5fa" /></Box>
+                                        <Box sx={{ p: 1, borderRadius: "8px", bgcolor: "rgba(249, 115, 22, 0.1)" }}><Phone size={18} color="#fb923c" /></Box>
                                         <Typography variant="body2" sx={{ fontWeight: 600 }}>+91 7337679780</Typography>
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                                        <Box sx={{ p: 1, borderRadius: "8px", bgcolor: "rgba(96, 165, 250, 0.1)" }}><Mail size={18} color="#60a5fa" /></Box>
+                                        <Box sx={{ p: 1, borderRadius: "8px", bgcolor: "rgba(249, 115, 22, 0.1)" }}><Mail size={18} color="#fb923c" /></Box>
                                         <Typography variant="body2" sx={{ fontWeight: 600 }}>BMSFundation@gmail.com</Typography>
                                     </Box>
                                 </Box>
@@ -90,7 +90,7 @@ const Footer = () => {
 
                             {/* Connect Section */}
                             <Grid item xs={12} sm={4}>
-                                <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#3b82f6", letterSpacing: "2px" }}>
+                                <Typography variant="overline" sx={{ fontWeight: 900, mb: 3, display: "block", color: "#f97316", letterSpacing: "2px" }}>
                                     Follow Us
                                 </Typography>
                                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
@@ -103,10 +103,10 @@ const Footer = () => {
                                                 border: "1px solid rgba(255,255,255,0.08)",
                                                 transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                                                 "&:hover": {
-                                                    bgcolor: "#3b82f6",
+                                                    bgcolor: "#f97316",
                                                     color: "white",
                                                     transform: "translateY(-5px) rotate(8deg)",
-                                                    boxShadow: "0 10px 20px rgba(59, 130, 246, 0.3)"
+                                                    boxShadow: "0 10px 20px rgba(249, 115, 22, 0.3)"
                                                 },
                                             }}
                                         >
@@ -151,8 +151,8 @@ const Footer = () => {
                                 }}
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.opacity = "1";
-                                    e.currentTarget.style.color = "#60a5fa";
-                                    e.currentTarget.style.borderBottomColor = "#60a5fa";
+                                    e.currentTarget.style.color = "#fb923c";
+                                    e.currentTarget.style.borderBottomColor = "#fb923c";
                                 }}
                                 onMouseLeave={(e) => {
                                     e.currentTarget.style.opacity = "0.5";

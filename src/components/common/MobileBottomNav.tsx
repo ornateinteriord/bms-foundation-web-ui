@@ -37,10 +37,11 @@ const MobileBottomNav: React.FC = () => {
           left: 0,
           right: 0,
           zIndex: 1000,
-          borderTop: '1px solid #e0e0e0',
-          boxShadow: '0 -4px 10px rgba(0,0,0,0.05)'
+          borderTop: '1px solid rgba(249, 115, 22, 0.2)',
+          boxShadow: '0 -4px 10px rgba(0,0,0,0.5)',
+          backgroundColor: '#0f172a'
         }}
-        elevation={3}
+        elevation={0}
       >
         <BottomNavigation
           showLabels
@@ -51,13 +52,14 @@ const MobileBottomNav: React.FC = () => {
           }}
           sx={{
             height: 70,
+            backgroundColor: '#0f172a',
             '& .MuiBottomNavigationAction-root': {
-              color: '#9e9e9e',
+              color: '#94a3b8',
               minWidth: 0,
               padding: '6px 0',
             },
             '& .Mui-selected': {
-              color: '#0a2558 !important',
+              color: '#f97316 !important',
               '& .MuiBottomNavigationAction-label': {
                 fontWeight: 800,
                 fontSize: '0.75rem',
@@ -68,8 +70,8 @@ const MobileBottomNav: React.FC = () => {
                 paddingTop: '16px',
               },
               '& .indicator': {
-                backgroundColor: '#0a2558',
-                color: 'white',
+                backgroundColor: '#f97316',
+                color: '#ffffff',
                 borderRadius: '12px',
                 padding: '4px',
                 width: '40px',

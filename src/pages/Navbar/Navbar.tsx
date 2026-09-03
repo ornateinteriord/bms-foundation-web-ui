@@ -5,6 +5,7 @@ import {
   Menu as MenuIcon,
   Settings,
   User,
+  Home,
 } from "lucide-react";
 import "./navbar.scss";
 import {
@@ -21,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import useAuth from "../../hooks/use-auth";
 import TokenService from "../../api/token/tokenService";
-import { deepOrange } from "@mui/material/colors";
 import { useState } from "react";
 import { useGetMemberDetails } from "../../api/Memeber";
 
@@ -65,9 +65,9 @@ const Navbar = ({ shouldHide, onToggleSidebar }: NavbarProps) => {
         position="fixed"
         elevation={0}
         sx={{
-          background: "#081b42", // Darkened version of #0D2B68
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          background: "#020617", // Very dark slate for dark theme
+          borderBottom: '1px solid rgba(249, 115, 22, 0.2)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
           zIndex: (theme) => theme.zIndex.drawer + 1
         }}
       >
@@ -105,6 +105,18 @@ const Navbar = ({ shouldHide, onToggleSidebar }: NavbarProps) => {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
             {isLoggedIn && (
+              <IconButton 
+                onClick={() => navigate(isAdmin ? "/admin/dashboard" : "/user/dashboard")} 
+                sx={{ 
+                  color: "white", 
+                  bgcolor: "rgba(255,255,255,0.05)",
+                  '&:hover': { bgcolor: "rgba(255,255,255,0.15)" }
+                }}
+              >
+                <Home size={25} />
+              </IconButton>
+            )}
+            {isLoggedIn && (
               <Box 
                 onClick={handleMenuOpen} 
                 sx={{ 
@@ -124,12 +136,12 @@ const Navbar = ({ shouldHide, onToggleSidebar }: NavbarProps) => {
                   sx={{
                     width: { xs: 32, md: 38 },
                     height: { xs: 32, md: 38 },
-                    bgcolor: '#FFC000', 
-                    color: '#0a2558',
+                    bgcolor: '#f97316', 
+                    color: '#020617',
                     fontWeight: 900,
                     fontSize: { xs: '0.85rem', md: '1rem' },
-                    border: '2px solid rgba(255,255,255,0.4)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                    border: '2px solid rgba(249, 115, 22, 0.5)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.5)'
                   }}
                 >
                   {memberDetails?.Name?.charAt(0).toUpperCase() || 'U'}
@@ -171,15 +183,15 @@ const Navbar = ({ shouldHide, onToggleSidebar }: NavbarProps) => {
                 width: 64,
                 height: 64,
                 marginBottom: "8px",
-                background: deepOrange[500],
-                border: '2px solid #0a2558'
+                background: "#f97316",
+                border: '2px solid #f97316'
               }}
             >
               {memberDetails?.Name
                 ? memberDetails.Name.charAt(0).toUpperCase()
                 : ""}
             </Avatar>
-            <Typography variant="subtitle1" sx={{ fontWeight: 900, color: '#0a2558' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, color: '#f97316' }}>
               {memberDetails?.Name || "Member"}
             </Typography>
             <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>
@@ -208,7 +220,7 @@ const Navbar = ({ shouldHide, onToggleSidebar }: NavbarProps) => {
 
           <div className="admin-panel-menuitems">
             <MenuItem onClick={handleMenuClose} sx={{ display: "flex" }}>
-              <Lock size={17} style={{ marginRight: "4px", color: "#007bff" }} />
+              <Lock size={17} style={{ marginRight: "4px", color: "#f97316" }} />
               Lock
             </MenuItem>
             <MenuItem onClick={handleLogout} sx={{ display: "flex" }}>

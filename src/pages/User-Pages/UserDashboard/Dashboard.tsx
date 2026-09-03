@@ -196,43 +196,66 @@ const UserDashboard = () => {
     <Box sx={{
       mb: 2,
       mt: { xs: 2, md: 3 },
-      background: 'linear-gradient(135deg, #0a2558 0%, #1e3a8a 100%)',
-      p: { xs: 2, md: 3.5 },
-      borderRadius: '28px',
+      position: 'relative',
+      overflow: 'hidden',
+      background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', // Indigo/Purple deep gradient
+      p: { xs: 2.5, md: 4 },
+      borderRadius: '24px',
       color: 'white',
-      boxShadow: '0 15px 45px rgba(10, 37, 88, 0.25)',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+      '&::before': { // Decorative glowing orb
+        content: '""',
+        position: 'absolute',
+        top: '-50%',
+        right: '-10%',
+        width: '300px',
+        height: '300px',
+        background: 'radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(0,0,0,0) 70%)',
+        borderRadius: '50%',
+        zIndex: 0,
+        pointerEvents: 'none',
+      }
     }}>
       {/* Row 1: Avatar + (Name/ID/Wallet Column) */}
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2.5 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, mb: 3, position: 'relative', zIndex: 1 }}>
         <Avatar
+          variant="rounded"
           sx={{
-            width: { xs: 62, md: 80 },
-            height: { xs: 62, md: 80 },
-            bgcolor: 'rgba(255,255,255,0.15)',
-            border: '3px solid rgba(255,255,255,0.3)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+            width: { xs: 70, md: 90 },
+            height: { xs: 70, md: 90 },
+            borderRadius: '18px',
+            bgcolor: 'rgba(255,255,255,0.1)',
+            border: '2px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
             flexShrink: 0,
-            mt: 0.5
+            transition: 'transform 0.3s ease',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              borderColor: 'rgba(255, 255, 255, 0.5)'
+            }
           }}
           src={memberDetails?.profile_image || ""}
         >
-          {!memberDetails?.profile_image && (memberDetails?.Name?.[0] || <AccountCircleIcon sx={{ fontSize: 36 }} />)}
+          {!memberDetails?.profile_image && (memberDetails?.Name?.[0] || <AccountCircleIcon sx={{ fontSize: 40 }} />)}
         </Avatar>
 
         {/* Name + ID + Wallet Info Column */}
-        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: '-0.5px', lineHeight: 1.2, mb: 0.5, fontSize: { xs: '1.2rem', md: '1.5rem' } }}>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.3px', lineHeight: 1.2, fontSize: { xs: '1.3rem', md: '1.7rem' }, textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
             {memberDetails?.Name || (isMemberLoading ? '...' : '')}
           </Typography>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, opacity: 0.9, mb: 1.5 }}>
-            <VerifiedUserIcon sx={{ fontSize: 14, color: '#10b981' }} />
-            <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: '0.5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, opacity: 0.9 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgba(16, 185, 129, 0.2)', borderRadius: '6px', p: 0.3 }}>
+               <VerifiedUserIcon sx={{ fontSize: 14, color: '#34d399' }} />
+            </Box>
+            <Typography variant="caption" sx={{ fontWeight: 600, letterSpacing: '1px', color: '#cbd5e1' }}>
               ID: {memberDetails?.Member_id || memberId || ''}
             </Typography>
           </Box>
 
-          {/* Wallet Badge — Now below Name & ID — Hidden if not Active package or Inactive ROI */}
+          {/* Wallet Badge */}
           {isPackageActive && isUserActive && (
             <Box
               onClick={() => navigate('/user/wallet')}
@@ -240,20 +263,21 @@ const UserDashboard = () => {
                 display: 'inline-flex',
                 width: 'fit-content',
                 alignItems: 'center',
-                gap: 0.6,
-                bgcolor: 'rgba(255,255,255,0.1)',
-                px: 1.5,
-                py: 0.5,
-                borderRadius: '10px',
+                gap: 1,
+                mt: 1,
+                bgcolor: 'rgba(0, 0, 0, 0.2)',
+                px: 2,
+                py: 0.8,
+                borderRadius: '12px',
                 cursor: 'pointer',
-                border: '1px solid rgba(255,255,255,0.15)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.2s',
-                '&:hover': { bgcolor: 'rgba(255,255,255,0.2)', transform: 'translateY(-1px)' },
+                '&:hover': { bgcolor: 'rgba(0,0,0,0.3)', transform: 'translateY(-2px)', borderColor: 'rgba(255,255,255,0.2)' },
               }}
             >
-              <AccountBalanceWalletIcon sx={{ fontSize: 16, color: '#FFC000' }} />
-              <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+              <AccountBalanceWalletIcon sx={{ fontSize: 18, color: '#fbbf24' }} />
+              <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', whiteSpace: 'nowrap', color: '#fef3c7' }}>
                 ₹{Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </Typography>
             </Box>
@@ -261,34 +285,35 @@ const UserDashboard = () => {
         </Box>
       </Box>
 
-      {/* Row 2: Buttons + CB icon — all same height */}
-      <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'stretch' }}>
-        {/* FD BOND — Visible if user is active */}
+      {/* Row 2: Buttons */}
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'stretch', position: 'relative', zIndex: 1 }}>
+        {/* FD BOND */}
         {isUserActive && (
           <Button
             variant="contained"
             onClick={() => navigate('/user/addon-packages?view=fd')}
-            startIcon={<NoteAddIcon sx={{ fontSize: '1rem !important' }} />}
+            startIcon={<NoteAddIcon sx={{ fontSize: '1.2rem !important' }} />}
             sx={{
               flex: 1,
-              borderRadius: '14px',
+              borderRadius: '16px',
               textTransform: 'none',
-              fontWeight: 900,
-              bgcolor: 'white',
-              color: '#0a2558',
-              fontSize: '12.5px',
+              fontWeight: 800,
+              bgcolor: 'rgba(255, 255, 255, 0.08)',
+              color: '#e2e8f0',
+              fontSize: '13px',
               whiteSpace: 'nowrap',
-              py: 1.1,
+              py: 1.2,
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               minWidth: 0,
-              '&:hover': { bgcolor: '#f1f5f9' },
-              boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.15)', borderColor: 'rgba(255, 255, 255, 0.3)' },
+              boxShadow: 'none'
             }}
           >
             FD BOND
           </Button>
         )}
 
-        {/* OVER DRAFT — Toggle for upgraded users, Redirect for others — Hidden if ROI Inactive */}
+        {/* OVER DRAFT */}
         {isUserActive && isPackageActive && (
           <Button
             variant="contained"
@@ -299,25 +324,30 @@ const UserDashboard = () => {
                 navigate('/user/overdraft');
               }
             }}
-            startIcon={(isPackageActive && showQuickAccess) ? <ArrowBackIcon sx={{ fontSize: '1.2rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.2rem !important' }} />}
+            startIcon={(isPackageActive && showQuickAccess) ? <ArrowBackIcon sx={{ fontSize: '1.3rem !important' }} /> : <SpeedIcon sx={{ fontSize: '1.3rem !important' }} />}
             sx={{
               flex: 1,
-              borderRadius: '14px',
+              borderRadius: '16px',
               textTransform: 'none',
-              fontWeight: 900,
-              bgcolor: '#3b82f6',
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)',
+              color: '#ffffff',
               fontSize: '14px',
               whiteSpace: 'nowrap',
-              py: 1.1,
+              py: 1.2,
               minWidth: 0,
-              border: '2px solid rgba(255,255,255,0.2)',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+              border: '1px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 4px 15px rgba(234, 88, 12, 0.3)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #fcd34d 0%, #f97316 100%)',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 6px 20px rgba(234, 88, 12, 0.4)',
+              }
             }}
           >
             {(isPackageActive && showQuickAccess) ? 'BACK' : 'OVER DRAFT'}
           </Button>
         )}
-
       </Box>
     </Box>
   );
@@ -331,7 +361,7 @@ const UserDashboard = () => {
   return (
     <Box sx={{
       pb: 6,
-      background: '#f4f7f9',
+      background: '#0f172a',
       minHeight: '100vh',
       px: { xs: 2.5, md: 5, lg: 10, xl: 16 },
       pt: { xs: 1.5, md: 4 }, // Reduced top gap for mobile, more balanced for desktop
@@ -382,7 +412,7 @@ const UserDashboard = () => {
           {/* Quick Services Grid */}
           <Box sx={{ mb: 6 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 2, mb: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', letterSpacing: '0.5px' }}>
+              <Typography variant="h6" sx={{ fontWeight: 900, color: '#f8fafc', letterSpacing: '0.5px' }}>
                 QUICK SERVICES
               </Typography>
               <Box
@@ -395,11 +425,11 @@ const UserDashboard = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: '14px',
-                  bgcolor: 'white',
-                  border: '1.5px solid rgba(10,37,88,0.1)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.07)',
+                  bgcolor: '#1e293b',
+                  border: '1px solid rgba(249, 115, 22, 0.2)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
                   transition: 'all 0.25s',
-                  '&:hover': { transform: 'scale(1.08)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)' },
+                  '&:hover': { transform: 'scale(1.08)', boxShadow: '0 8px 24px rgba(249, 115, 22, 0.15)' },
                   '&:active': { transform: 'scale(0.95)' }
                 }}
               >
@@ -424,15 +454,16 @@ const UserDashboard = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    bgcolor: 'white',
+                    bgcolor: '#1e293b',
                     color: item.color,
                     boxShadow: `0 6px 20px ${item.color}15`,
-                    '&:hover': { transform: 'translateY(-5px) scale(1.05)', boxShadow: `0 10px 30px ${item.color}25` },
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    '&:hover': { transform: 'translateY(-5px) scale(1.05)', boxShadow: `0 10px 30px ${item.color}40`, borderColor: item.color },
                     transition: 'all 0.3s'
                   }}>
                     {React.cloneElement(item.icon as React.ReactElement, { sx: { fontSize: { xs: 24, md: 32 } } })}
                   </Paper>
-                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.68rem', textAlign: 'center', color: '#334155', lineHeight: 1.2 }}>
+                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.68rem', textAlign: 'center', color: '#cbd5e1', lineHeight: 1.2 }}>
                     {item.label}
                   </Typography>
                 </Box>
@@ -442,16 +473,16 @@ const UserDashboard = () => {
 
           {/* Team Performance - In Left Column on Desktop */}
           <Box sx={{ mt: 6, display: { xs: 'none', md: 'block' } }}>
-            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 3 }}>TEAM PERFORMANCE</Typography>
-            <Paper elevation={0} sx={{ p: 4, borderRadius: '28px', bgcolor: 'white', border: '1px solid #f1f5f9', boxShadow: '0 15px 35px rgba(0,0,0,0.02)' }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: '#f8fafc', mb: 3 }}>TEAM PERFORMANCE</Typography>
+            <Paper elevation={0} sx={{ p: 4, borderRadius: '28px', bgcolor: '#1e293b', border: '1px solid #334155', boxShadow: 'none' }}>
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Team</Typography>
-                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#0a2558', mt: 1 }}>{memberDetails?.total_team || 0}</Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#f8fafc', mt: 1 }}>{memberDetails?.total_team || 0}</Typography>
                 </Box>
-                <Box sx={{ textAlign: 'center', borderLeft: '1px solid #f1f5f9' }}>
+                <Box sx={{ textAlign: 'center', borderLeft: '1px solid #334155' }}>
                   <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Directs</Typography>
-                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#0a2558', mt: 1 }}>{memberDetails?.direct_referrals?.length || 0}</Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#f8fafc', mt: 1 }}>{memberDetails?.direct_referrals?.length || 0}</Typography>
                 </Box>
               </Box>
             </Paper>
@@ -467,14 +498,14 @@ const UserDashboard = () => {
           top: { md: '80px' }
         }}>
           {/* Mobile Only: Quick Access Header */}
-          <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', mb: 1, display: { xs: 'block', md: 'none' } }}>
+          <Typography variant="h6" sx={{ fontWeight: 900, color: '#f8fafc', mb: 1, display: { xs: 'block', md: 'none' } }}>
             OVER DRAFT
           </Typography>
 
           <Box sx={{ flex: 1 }}>
             {quickAccessGroups.map((group, idx) => (
               <Box key={idx} sx={{ mb: 4 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0a2558', mb: 2, letterSpacing: '1px' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#f8fafc', mb: 2, letterSpacing: '1px' }}>
                   {group.title}
                 </Typography>
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 3 }}>
@@ -484,19 +515,19 @@ const UserDashboard = () => {
                         width: 56,
                         height: 56,
                         borderRadius: '16px',
-                        bgcolor: 'white',
+                        bgcolor: '#1e293b',
                         color: item.color,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        boxShadow: '0 6px 15px rgba(0,0,0,0.04)',
-                        border: '1px solid #f1f5f9',
-                        '&:hover': { transform: 'scale(1.1)', bgcolor: '#f8fafc' },
+                        boxShadow: 'none',
+                        border: '1px solid #334155',
+                        '&:hover': { transform: 'scale(1.1)', bgcolor: '#334155' },
                         transition: '0.2s'
                       }}>
                         {item.icon}
                       </Box>
-                      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.7rem', textAlign: 'center', color: '#475569' }}>
+                      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.7rem', textAlign: 'center', color: '#cbd5e1' }}>
                         {item.label}
                       </Typography>
                     </Box>
@@ -507,16 +538,16 @@ const UserDashboard = () => {
 
             {/* Team Performance - Mobile Only inside Quick Access */}
             <Box sx={{ mt: 2, display: { xs: 'block', md: 'none' } }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0a2558', mb: 2 }}>TEAM PERFORMANCE</Typography>
-              <Paper elevation={0} sx={{ p: 3, borderRadius: '20px', bgcolor: 'white', border: '1px solid #e2e8f0' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#f8fafc', mb: 2 }}>TEAM PERFORMANCE</Typography>
+              <Paper elevation={0} sx={{ p: 3, borderRadius: '20px', bgcolor: '#1e293b', border: '1px solid #334155' }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>Total Team</Typography>
-                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#0a2558' }}>{memberDetails?.total_team || 0}</Typography>
+                    <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 700 }}>Total Team</Typography>
+                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#f8fafc' }}>{memberDetails?.total_team || 0}</Typography>
                   </Box>
                   <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>Directs</Typography>
-                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#0a2558' }}>{memberDetails?.direct_referrals?.length || 0}</Typography>
+                    <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 700 }}>Directs</Typography>
+                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#f8fafc' }}>{memberDetails?.direct_referrals?.length || 0}</Typography>
                   </Box>
                 </Box>
               </Paper>
@@ -527,9 +558,10 @@ const UserDashboard = () => {
             <Paper elevation={0} sx={{
               p: 4,
               borderRadius: '28px',
-              background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+              background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
               color: 'white',
-              boxShadow: '0 20px 40px rgba(59, 130, 246, 0.25)'
+              border: '1px solid rgba(249, 115, 22, 0.3)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
             }}>
               <Typography variant="h5" sx={{ fontWeight: 900, mb: 3 }}>Referral link</Typography>
               <Box sx={{ display: 'flex', gap: 2 }}>
@@ -564,45 +596,45 @@ const UserDashboard = () => {
             </Paper>
 
             {/* Wallet Section - Matched to 3rd Drawing */}
-            <Typography variant="h6" sx={{ fontWeight: 900, color: '#0a2558', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '2px', mb: -2, mt: { xs: 2, md: 3 } }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: '#f8fafc', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '2px', mb: -2, mt: { xs: 2, md: 3 } }}>
               Deposit-BOND
             </Typography>
 
-            <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', bgcolor: 'white', border: '1px solid #e2e8f0', boxShadow: '0 10px 40px rgba(0,0,0,0.03)', mt: 1 }}>
+            <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', bgcolor: '#1e293b', border: '1px solid #334155', boxShadow: '0 10px 40px rgba(0,0,0,0.3)', mt: 1 }}>
               <Stack spacing={4}>
                 {/* 1st Section: Deposits */}
-                <Box sx={{ p: 3, borderRadius: '24px', bgcolor: '#f8fafc', border: '1px dashed #cbd5e1' }}>
+                <Box sx={{ p: 3, borderRadius: '24px', bgcolor: '#0f172a', border: '1px dashed #334155' }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                    <Typography sx={{ fontWeight: 800, color: '#475569' }}>MY Deposit</Typography>
-                    <Typography sx={{ fontWeight: 900, color: '#0f172a' }}>₹{displayDeposit.toLocaleString('en-IN', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</Typography>
+                    <Typography sx={{ fontWeight: 800, color: '#94a3b8' }}>MY Deposit</Typography>
+                    <Typography sx={{ fontWeight: 900, color: '#f8fafc' }}>₹{displayDeposit.toLocaleString('en-IN', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography sx={{ fontWeight: 800, color: '#475569' }}>Total Withdrawal</Typography>
+                    <Typography sx={{ fontWeight: 800, color: '#94a3b8' }}>Total Withdrawal</Typography>
                     <Typography sx={{ fontWeight: 900, color: '#ef4444' }}>₹{Number(walletOverview?.totalWithdrawal || 0).toLocaleString('en-IN')}</Typography>
                   </Box>
                 </Box>
 
                 {/* 2nd Section: Wallet Summary breakdown */}
-                <Box sx={{ p: 3, borderRadius: '24px', bgcolor: '#f1f5f9', position: 'relative' }}>
-                  <Typography variant="caption" sx={{ position: 'absolute', top: -10, left: 20, bgcolor: 'white', px: 1.5, py: 0.2, borderRadius: '10px', border: '1px solid #e2e8f0', fontWeight: 900, color: '#0a2558', fontSize: '0.65rem' }}>
+                <Box sx={{ p: 3, borderRadius: '24px', bgcolor: '#0f172a', position: 'relative' }}>
+                  <Typography variant="caption" sx={{ position: 'absolute', top: -10, left: 20, bgcolor: '#f97316', px: 1.5, py: 0.2, borderRadius: '10px', fontWeight: 900, color: '#020617', fontSize: '0.65rem' }}>
                     WALLET SUMMARY
                   </Typography>
                   <Stack spacing={2} sx={{ mt: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#475569' }}>Daily ROI</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#94a3b8' }}>Daily ROI</Typography>
                       <Typography sx={{ fontWeight: 900, color: '#d97706' }}>₹{totalRoiPaidValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS ROI Benefits</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#94a3b8' }}>BMS ROI Benefits</Typography>
                       <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{roiLevelBenefits.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS Level Benefits</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: '#94a3b8' }}>BMS Level Benefits</Typography>
                       <Typography sx={{ fontWeight: 900, color: '#10b981' }}>₹{Number(walletOverview?.levelBenefits || 0).toLocaleString('en-IN')}</Typography>
                     </Box>
                     {isUserActive && (
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#64748b' }}>BMS - Wallet</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#94a3b8' }}>BMS - Wallet</Typography>
                         <Typography sx={{ fontWeight: 900, color: '#3b82f6' }}>₹{displayWallet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                       </Box>
                     )}
@@ -612,11 +644,11 @@ const UserDashboard = () => {
                 {/* 3rd Section: Big Balance — Hidden if Inactive ROI or User */}
                 {isUserActive && isPackageActive && (
                   <Box sx={{ textAlign: 'center', pt: 1 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#64748b', letterSpacing: '1px', mb: 1 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#94a3b8', letterSpacing: '1px', mb: 1 }}>
                       WALLET BALANCE
                     </Typography>
-                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, p: 2, px: 4, bgcolor: '#0a2558', borderRadius: '20px', color: 'white' }}>
-                      <CurrencyRupeeIcon sx={{ fontSize: 28 }} />
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, p: 2, px: 4, bgcolor: '#020617', borderRadius: '20px', color: '#f8fafc', border: '1px solid #334155' }}>
+                      <CurrencyRupeeIcon sx={{ fontSize: 28, color: '#38bdf8' }} />
                       <Typography variant="h4" sx={{ fontWeight: 800 }}>
                         {Number(walletOverview?.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Typography>

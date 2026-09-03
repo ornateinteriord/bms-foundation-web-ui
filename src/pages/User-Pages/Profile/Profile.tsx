@@ -141,7 +141,11 @@ const Profile: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    updateMember.mutate(formData);
+    updateMember.mutate({
+      ...formData,
+      panImage,
+      aadhaarImage
+    });
   };
 
   // ── Document image upload handlers ──────────────────────────
