@@ -107,6 +107,14 @@ const ResetPassword = () => {
             >
               Reset Password
             </Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: "#ffffff", textAlign: "center", mb: 3, fontWeight: 500 }}
+            >
+              {step === 1 && "Enter your registered email to receive an OTP"}
+              {step === 2 && "Enter the 6-digit OTP sent to your email"}
+              {step === 3 && "Securely enter your new preferred password"}
+            </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit}

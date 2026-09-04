@@ -84,12 +84,12 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
         startIcon={<ArrowBackIcon />}
         onClick={onBackToLogin}
         sx={{
-          color: "#64748b",
+          color: "#94a3b8",
           mb: 2,
           textTransform: "none",
           fontWeight: 600,
           background: "transparent",
-          "&:hover": { color: "#0a2558", backgroundColor: "rgba(0,0,0,0.05)" }
+          "&:hover": { color: "#ffffff", backgroundColor: "rgba(255,255,255,0.05)" }
         }}
       >
         Back to Login
@@ -99,7 +99,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
         component="h1"
         variant="h5"
         sx={{
-          color: "#0a2558",
+          color: "#ffffff",
           fontWeight: 800,
           textAlign: "center",
           mb: 1,
@@ -110,7 +110,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
       </Typography>
       <Typography
         variant="body2"
-        sx={{ color: "#64748b", textAlign: "center", mb: 3, fontWeight: 500 }}
+        sx={{ color: "#ffffff", textAlign: "center", mb: 3, fontWeight: 500 }}
       >
         {step === 1 && "Enter your registered email to receive an OTP"}
         {step === 2 && "Enter the 6-digit OTP sent to your email"}
@@ -142,22 +142,45 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
               ),
             }}
             sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-                "&.Mui-focused fieldset": {
-                  borderColor: "#0a2558",
-                  borderWidth: "2px"
-                },
+              "& .MuiInputBase-input": { 
+                color: "#f8fafc",
+                "&.Mui-disabled": {
+                  color: "#f8fafc !important",
+                  WebkitTextFillColor: "#f8fafc !important"
+                }
               },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#0a2558",
-              }
+              "& .MuiInputLabel-root": { 
+                color: "#94a3b8",
+                "&.Mui-disabled": {
+                  color: "#94a3b8 !important"
+                }
+              },
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                "& fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+                "&:hover fieldset": { borderColor: "rgba(255,255,255,0.25)" },
+                "&.Mui-focused fieldset": { borderColor: "#f97316", borderWidth: "2px" },
+                "&.Mui-disabled fieldset": { borderColor: "rgba(255,255,255,0.1) !important" }
+              },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#f97316" }
             }}
           />
         )}
 
         {step >= 2 && (
-          <Box sx={{ mt: 1, mb: 1, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ 
+            mt: 1, 
+            mb: 1, 
+            display: "flex", 
+            justifyContent: "center",
+            "& input": {
+              color: "#ffffff !important",
+              WebkitTextFillColor: "#ffffff !important",
+              fontSize: "1.2rem !important",
+              fontWeight: "bold !important",
+            }
+          }}>
             <MuiOtpInput
               value={otp}
               length={6}
@@ -168,9 +191,12 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
                 sx: {
                   "& .MuiOutlinedInput-root": {
                     height: "50px",
-                    borderRadius: "8px",
+                    borderRadius: "12px",
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.5)" },
+                    "&:hover fieldset": { borderColor: "#ffffff" },
                     "&.Mui-focused fieldset": {
-                      borderColor: "#0a2558",
+                      borderColor: "#f97316",
                       borderWidth: "2px"
                     },
                   },
@@ -202,16 +228,28 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
                 ),
               }}
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "8px",
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0a2558",
-                    borderWidth: "2px"
-                  },
+                "& .MuiInputBase-input": { 
+                  color: "#f8fafc",
+                  "&.Mui-disabled": {
+                    color: "#f8fafc !important",
+                    WebkitTextFillColor: "#f8fafc !important"
+                  }
                 },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#0a2558",
-                }
+                "& .MuiInputLabel-root": { 
+                  color: "#94a3b8",
+                  "&.Mui-disabled": {
+                    color: "#94a3b8 !important"
+                  }
+                },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  backgroundColor: "rgba(0, 0, 0, 0.2)",
+                  "& fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+                  "&:hover fieldset": { borderColor: "rgba(255,255,255,0.25)" },
+                  "&.Mui-focused fieldset": { borderColor: "#f97316", borderWidth: "2px" },
+                  "&.Mui-disabled fieldset": { borderColor: "rgba(255,255,255,0.1) !important" }
+                },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#f97316" }
               }}
             />
 
@@ -237,16 +275,28 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onBackToLogin }
                 ),
               }}
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "8px",
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#0a2558",
-                    borderWidth: "2px"
-                  },
+                "& .MuiInputBase-input": { 
+                  color: "#f8fafc",
+                  "&.Mui-disabled": {
+                    color: "#f8fafc !important",
+                    WebkitTextFillColor: "#f8fafc !important"
+                  }
                 },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#0a2558",
-                }
+                "& .MuiInputLabel-root": { 
+                  color: "#94a3b8",
+                  "&.Mui-disabled": {
+                    color: "#94a3b8 !important"
+                  }
+                },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  backgroundColor: "rgba(0, 0, 0, 0.2)",
+                  "& fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+                  "&:hover fieldset": { borderColor: "rgba(255,255,255,0.25)" },
+                  "&.Mui-focused fieldset": { borderColor: "#f97316", borderWidth: "2px" },
+                  "&.Mui-disabled fieldset": { borderColor: "rgba(255,255,255,0.1) !important" }
+                },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#f97316" }
               }}
             />
           </>
