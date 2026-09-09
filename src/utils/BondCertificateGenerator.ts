@@ -297,10 +297,10 @@ body {
   <div class="inner-frame"></div>
   
   <!-- Edge Watermarks (Outside Border) -->
-  <div style="position: absolute; top: 4mm; left: 50%; transform: translate(-50%, -50%); font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">FD BOND</div>
-  <div style="position: absolute; bottom: 4mm; left: 50%; transform: translate(-50%, 50%); font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">FD BOND</div>
-  <div style="position: absolute; top: 50%; left: 4mm; transform: translate(-50%, -50%) rotate(-90deg); font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">FD BOND</div>
-  <div style="position: absolute; top: 50%; right: 4mm; transform: translate(50%, -50%) rotate(90deg); font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">FD BOND</div>
+  <div style="position: absolute; top: 4mm; left: 50%; transform: translate(-50%, -50%); width: calc(210mm - 16mm); overflow: hidden; text-align: center; font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">${'FD BOND &nbsp; '.repeat(40)}</div>
+  <div style="position: absolute; bottom: 4mm; left: 50%; transform: translate(-50%, 50%); width: calc(210mm - 16mm); overflow: hidden; text-align: center; font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">${'FD BOND &nbsp; '.repeat(40)}</div>
+  <div style="position: absolute; top: 50%; left: 4mm; transform: translate(-50%, -50%) rotate(-90deg); width: calc(297mm - 16mm); overflow: hidden; text-align: center; font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">${'FD BOND &nbsp; '.repeat(60)}</div>
+  <div style="position: absolute; top: 50%; right: 4mm; transform: translate(50%, -50%) rotate(90deg); width: calc(297mm - 16mm); overflow: hidden; text-align: center; font-size: 12px; font-weight: 800; color: #d0d0d0; letter-spacing: 15px; z-index: 1; white-space: nowrap;">${'FD BOND &nbsp; '.repeat(60)}</div>
 
   <div class="bg-graphics">
     <!-- Top Right Corner Graphic -->

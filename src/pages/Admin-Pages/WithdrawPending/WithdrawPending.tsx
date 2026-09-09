@@ -155,12 +155,60 @@ const WithdrawPending: React.FC = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 p: 1.5,
+                backgroundColor: '#f8fafc',
+                borderRadius: 2,
+                border: '1px solid #e2e8f0'
+              }}>
+                <Typography sx={{ color: '#64748b' }}>Deduction</Typography>
+                <Typography sx={{ fontWeight: 600 }}>₹{Number(selectedTx?.deduction || 0).toFixed(2)}</Typography>
+              </Box>
+
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                p: 1.5,
                 backgroundColor: '#f0fdf4',
                 borderRadius: 2,
                 border: '1px solid #bbf7d0'
               }}>
                 <Typography sx={{ color: '#64748b' }}>Member</Typography>
                 <Typography sx={{ fontWeight: 600, color: '#059669' }}>{selectedTx?.member_id}</Typography>
+              </Box>
+
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                p: 1.5,
+                backgroundColor: '#f8fafc',
+                borderRadius: 2,
+                border: '1px solid #e2e8f0'
+              }}>
+                <Typography sx={{ color: '#64748b' }}>Mobile No.</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{selectedTx?.memberDetails?.mobileno || 'N/A'}</Typography>
+              </Box>
+
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                p: 1.5,
+                backgroundColor: '#f8fafc',
+                borderRadius: 2,
+                border: '1px solid #e2e8f0'
+              }}>
+                <Typography sx={{ color: '#64748b' }}>Account No.</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{selectedTx?.memberDetails?.account_number || 'N/A'}</Typography>
+              </Box>
+
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                p: 1.5,
+                backgroundColor: '#f8fafc',
+                borderRadius: 2,
+                border: '1px solid #e2e8f0'
+              }}>
+                <Typography sx={{ color: '#64748b' }}>IFSC Code</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{selectedTx?.memberDetails?.ifsc_code || 'N/A'}</Typography>
               </Box>
             </Box>
           </Box>
