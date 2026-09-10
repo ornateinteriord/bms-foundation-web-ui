@@ -96,6 +96,40 @@ const buildStamp = (): string => {
 </svg>`;
 };
 
+// ─── Badge SVG ───────────────────────────────────────────────────────────────
+
+const buildBadge = (): string => {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" width="100" height="140" class="trust-badge">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcedb3" />
+      <stop offset="50%" stop-color="#d4af37" />
+      <stop offset="100%" stop-color="#997300" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ribbon -->
+  <path d="M 25 50 L 25 130 L 50 115 L 75 130 L 75 50 Z" fill="#0c2340" />
+  
+  <!-- Outer Gold Base -->
+  <circle cx="50" cy="50" r="42" fill="url(#goldGrad)" />
+  
+  <!-- Serrated edge (sunburst effect) -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#b88a00" stroke-width="4" stroke-dasharray="3 3" />
+  
+  <circle cx="50" cy="50" r="37" fill="url(#goldGrad)" />
+  
+  <!-- Inner Ring -->
+  <circle cx="50" cy="50" r="34" fill="none" stroke="#7a5500" stroke-width="1.5" />
+  <circle cx="50" cy="50" r="31" fill="#fdfaf0" />
+
+  <!-- Text -->
+  <text x="50" y="44" text-anchor="middle" font-size="8.5" font-family="'Arial', sans-serif" font-weight="900" fill="#3a2800" letter-spacing="0.5">TRUST</text>
+  <text x="50" y="55" text-anchor="middle" font-size="7.5" font-family="'Arial', sans-serif" font-weight="900" fill="#3a2800" letter-spacing="0.5">GROWTH</text>
+  <text x="50" y="66" text-anchor="middle" font-size="6.5" font-family="'Arial', sans-serif" font-weight="900" fill="#3a2800" letter-spacing="0.2">COMMUNITY</text>
+</svg>`;
+};
+
 // ─── HTML Generator ──────────────────────────────────────────────────────────
 
 export const generateBondCertificate = (data: BondData, logoDataUrl: string, profilePhotoDataUrl?: string): string => {
@@ -106,6 +140,7 @@ export const generateBondCertificate = (data: BondData, logoDataUrl: string, pro
   const commDate = fmt(data.commencementDate);
   const matDate = fmt(maturityDate);
   const stamp = buildStamp();
+  const badge = buildBadge();
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -130,7 +165,10 @@ body {
 
 .page {
   width: 210mm; height: 297mm;
-  background: #fff;
+  background-color: #fff;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='200'%3E%3Ctext x='40' y='100' transform='rotate(-30 40 100)' font-size='45' font-family='sans-serif' font-weight='900' letter-spacing='8' fill='rgba(0,0,0,0.035)'%3EFD BOND%3C/text%3E%3C/svg%3E"),
+    linear-gradient(to right, rgba(215, 240, 255, 0.7) 0%, rgba(255, 230, 235, 0.7) 35%, rgba(215, 240, 255, 0.7) 70%, rgba(255, 230, 235, 0.7) 100%);
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -149,9 +187,17 @@ body {
   pointer-events: none; z-index: 1;
 }
 
+.trust-badge {
+  position: absolute;
+  top: 130px;
+  right: 40px;
+  z-index: 10;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
 .content {
   position: relative; z-index: 2;
-  padding: 12mm 15mm 25mm 15mm;
+  padding: 10mm 15mm 25mm 15mm;
   height: 100%;
   display: flex; flex-direction: column;
 }
@@ -177,7 +223,7 @@ body {
 .photo-box svg { width: 35px; height: 35px; margin-bottom: 8px; fill: #adb5bd; }
 
 /* Title Ribbon */
-.title-container { text-align: center; margin: 10px 0 12px; }
+.title-container { text-align: center; margin: 4px 0 8px; }
 .ribbon-outer {
   display: inline-block; background: #d4af37; padding: 3px;
   clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 20px 100%, 0 50%);
@@ -195,13 +241,13 @@ body {
 .sub-line { height: 1.5px; background: #d4af37; width: 60px; }
 
 /* Intro */
-.intro-section { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.intro-section { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
 .intro-text { flex: 1; padding-right: 25px; }
-.intro-text h3 { font-size: 14px; font-weight: 800; color: #0c2340; margin-bottom: 8px; }
-.intro-text p { font-size: 11px; font-weight: 500; line-height: 1.6; color: #333; text-align: justify; }
+.intro-text h3 { font-size: 16px; font-weight: 800; color: #0c2340; margin-bottom: 8px; }
+.intro-text p { font-size: 12.5px; font-weight: 500; line-height: 1.6; color: #333; text-align: justify; }
 
 .quote-box {
-  width: 170px; background: #eef4fc; padding: 15px 15px; border-radius: 8px;
+  width: 170px; background: #eef4fc; padding: 10px 15px; border-radius: 8px;
   position: relative; text-align: center; margin-top: 5px;
 }
 .quote-box p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; font-weight: 600; line-height: 1.4; color: #0c2340; }
@@ -211,13 +257,13 @@ body {
 
 /* Cards Grid */
 .cards-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 5px;
 }
 .card { border-radius: 10px; overflow: hidden; }
-.card-blue { border: 1.5px solid #a8c2f0; background: #eef5fc; }
-.card-gold { border: 1.5px solid #d4af37; background: #fdfaf0; }
+.card-blue { border: 1.5px solid rgba(168, 194, 240, 0.8); background: rgba(238, 245, 252, 0.65); backdrop-filter: blur(2px); }
+.card-gold { border: 1.5px solid rgba(212, 175, 55, 0.8); background: rgba(253, 250, 240, 0.65); backdrop-filter: blur(2px); }
 
-.card-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; }
 .card-blue .card-header { border-bottom: 1.5px solid #a8c2f0; }
 .card-gold .card-header { border-bottom: 1.5px solid #d4af37; }
 
@@ -230,21 +276,21 @@ body {
 .card-gold .icon-circle { background: #b8860b; color: #fff; }
 .icon-circle svg { width: 16px; height: 16px; fill: currentColor; }
 
-.card-title { font-size: 12px; font-weight: 800; color: #0c2340; letter-spacing: 0.5px; }
-.card-tagline { font-size: 7.5px; font-weight: 700; color: #666; text-align: right; line-height: 1.2; text-transform: uppercase; }
+.card-title { font-size: 13.5px; font-weight: 800; color: #0c2340; letter-spacing: 0.5px; }
+.card-tagline { font-size: 8px; font-weight: 700; color: #666; text-align: right; line-height: 1.2; text-transform: uppercase; }
 
-.card-body { padding: 6px 10px; }
-.data-row { display: flex; margin-bottom: 4px; font-size: 10px; align-items: flex-end; }
+.card-body { padding: 4px 10px; }
+.data-row { display: flex; margin-bottom: 3px; font-size: 11.5px; align-items: flex-end; }
 .data-row:last-child { margin-bottom: 0; }
-.data-label { width: 140px; color: #333; font-weight: 500; }
+.data-label { width: 155px; color: #333; font-weight: 500; }
 .data-colon { width: 15px; color: #333; font-weight: 600; text-align: center; }
-.data-value { flex: 1; color: #000; font-weight: 600; border-bottom: 1px solid #ddd; padding-bottom: 2px; }
+.data-value { flex: 1; color: #000; font-weight: 600; font-family: 'Courier New', Courier, monospace; font-size: 13px; letter-spacing: 0.5px; border-bottom: 1px solid #ddd; padding-bottom: 2px; }
 
 /* Full card */
 .card-full { grid-column: 1 / -1; }
-.card-full .card-body { display: flex; justify-content: space-between; align-items: stretch; padding: 10px 15px; }
+.card-full .card-body { display: flex; justify-content: space-between; align-items: stretch; padding: 8px 15px; }
 .mat-details-left { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.mat-details-left .data-label { width: 160px; }
+.mat-details-left .data-label { width: 175px; }
 .mat-details-left .data-row { margin-bottom: 4px; }
 
 .mat-details-right {
@@ -272,11 +318,11 @@ body {
 
 .stamp-center { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
 
-.bottom-bar { display: flex; align-items: center; justify-content: flex-start; gap: 15px; position: absolute; bottom: 35px; left: 45px; z-index: 10; }
-.bot-item { display: flex; align-items: center; gap: 5px; font-size: 8px; font-weight: 700; color: #0c2340; text-transform: uppercase; }
-.bot-item svg { width: 12px; height: 12px; fill: #0c2340; }
+.bottom-bar { display: flex; align-items: center; justify-content: flex-start; gap: 8px; position: absolute; bottom: 40px; left: 50px; z-index: 10; }
+.bot-item { display: flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; color: #0c2340; text-transform: uppercase; letter-spacing: -0.2px; }
+.bot-item svg { width: 13px; height: 13px; fill: #0c2340; }
 
-.prosperity-text { position: absolute; right: 45px; bottom: 30px; text-align: right; color: #fff; line-height: 1.3; z-index: 10; }
+.prosperity-text { position: absolute; right: 50px; bottom: 40px; text-align: right; color: #fff; line-height: 1.3; z-index: 10; }
 .pt-1 { font-size: 8px; font-weight: 600; letter-spacing: 3px; color: #d4af37; }
 .pt-2 { font-size: 11px; font-weight: 800; letter-spacing: 2px; }
 
@@ -322,6 +368,8 @@ body {
       <path d="M0,200 Q250,250 600,130 T1000,30 L1000,200 L0,200 Z" fill="#0c2340" />
     </svg>
   </div>
+
+  ${badge}
 
   <div class="content">
     
