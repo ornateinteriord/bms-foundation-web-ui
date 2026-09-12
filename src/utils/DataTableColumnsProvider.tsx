@@ -1002,7 +1002,10 @@ export const getRequestColumns = (approveTrasaction: (id: any) => void) => [
   },
   {
     name: "Member",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => {
+      const name = row.memberDetails?.Name || "";
+      return name ? `${row.member_id} - ${name}` : (row.member_id || "-");
+    },
     sortable: true,
   },
   {
@@ -1056,7 +1059,10 @@ export const getProccessedColumns = () => [
   },
   {
     name: "Member",
-    selector: (row: any) => row.member_id || "-",
+    selector: (row: any) => {
+      const name = row.memberDetails?.Name || "";
+      return name ? `${row.member_id} - ${name}` : (row.member_id || "-");
+    },
     sortable: true,
   },
   {
@@ -1347,7 +1353,10 @@ export const getWithdrawPendingColumns = (onRepay: (transaction: any) => void) =
   },
   {
     name: 'Member',
-    selector: (row: any) => row.member_id || '-',
+    selector: (row: any) => {
+      const name = row.memberDetails?.Name || "";
+      return name ? `${row.member_id} - ${name}` : (row.member_id || "-");
+    },
     sortable: true,
   },
   {
