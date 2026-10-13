@@ -378,6 +378,7 @@ export const useGetMemberDetails = (userId: string | null) => {
       }
     },
     enabled: !!userId,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -565,7 +566,7 @@ export const useWalletWithdraw = (memberId: any) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { memberId: string; amount: string }) => {
+    mutationFn: async (data: { memberId: string; amount: string; withdrawalType?: string }) => {
       return await post(`user/withdraw/${memberId}`, data);
     },
     onSuccess: (response) => {

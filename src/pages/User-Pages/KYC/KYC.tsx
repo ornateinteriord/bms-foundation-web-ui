@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import {
   Accordion,
   AccordionSummary,
@@ -33,20 +33,83 @@ const KYC: React.FC = () => {
 
   const submitKYC = useSubmitKYC();
 
+  const isInitializedRef = useRef(false);
+  const isDirtyRef = useRef(false);
+  const currentMemberIdRef = useRef<string | null>(null);
+
+  const getDraftKey = (memberId?: string) => `bms_kyc_draft_${memberId || currentMemberIdRef.current || 'temp'}`;
+
+  const saveDraft = (data: typeof formData) => {
+    try {
+      const key = getDraftKey(user?.Member_id);
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (err) {
+      console.warn("Failed to save KYC draft:", err);
+    }
+  };
+
+  const clearDraft = (memberId?: string) => {
+    try {
+      const key = getDraftKey(memberId || user?.Member_id);
+      localStorage.removeItem(key);
+    } catch (err) {
+      console.warn("Failed to clear KYC draft:", err);
+    }
+  };
+
   useEffect(() => {
-    if (user) {
-      setFormData({
-        accountName: user.Name,
-        account_number: user.account_number || '',
-        ifsc_code: user.ifsc_code || '',
-        bank_name: user.bank_name || '',
-      });
+    if (!user) return;
+
+    const memberId = user.Member_id;
+    const isDifferentMember = currentMemberIdRef.current !== memberId;
+
+    if (isDifferentMember) {
+      currentMemberIdRef.current = memberId;
+      isInitializedRef.current = false;
+      isDirtyRef.current = false;
+    }
+
+    let savedDraft: any = null;
+    try {
+      const rawDraft = localStorage.getItem(getDraftKey(memberId));
+      if (rawDraft) savedDraft = JSON.parse(rawDraft);
+    } catch (err) {
+      console.warn("Failed to load KYC draft:", err);
+    }
+
+    const serverData = {
+      accountName: user.Name || '',
+      account_number: user.account_number || '',
+      ifsc_code: user.ifsc_code || '',
+      bank_name: user.bank_name || '',
+    };
+
+    if (!isInitializedRef.current) {
+      if (savedDraft) {
+        setFormData({ ...serverData, ...savedDraft });
+        isDirtyRef.current = true;
+      } else {
+        setFormData(serverData);
+      }
+      isInitializedRef.current = true;
+    } else {
+      if (!isDirtyRef.current) {
+        setFormData(serverData);
+      }
     }
   }, [user]);
 
   const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    let { name, value } = e.target;
+    if (name === "ifsc_code") {
+      value = value.toUpperCase();
+    }
+    isDirtyRef.current = true;
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      saveDraft(next);
+      return next;
+    });
   };
 
   const handleSubmit = () => {
@@ -56,12 +119,20 @@ const KYC: React.FC = () => {
       return;
     }
 
-    submitKYC.mutate({
-      ref_no: user.Member_id,
-      bankAccount: formData.account_number,
-      ifsc: formData.ifsc_code,
-      bankName: formData.bank_name,
-    });
+    submitKYC.mutate(
+      {
+        ref_no: user.Member_id,
+        bankAccount: formData.account_number,
+        ifsc: formData.ifsc_code,
+        bankName: formData.bank_name,
+      },
+      {
+        onSuccess: () => {
+          isDirtyRef.current = false;
+          clearDraft(user?.Member_id);
+        },
+      }
+    );
   };
 
 

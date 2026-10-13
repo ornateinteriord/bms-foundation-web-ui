@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -37,7 +37,7 @@ import { toast } from "react-toastify";
 
 const Profile: React.FC = () => {
   const { user } = useContext(UserContext);
-  // Initialize state once user data is available
+
   const [formData, setFormData] = useState({
     Name: "",
     gender: "",
@@ -60,32 +60,109 @@ const Profile: React.FC = () => {
   const [aadhaarImage, setAadhaarImage] = useState<string | null>(null);
   const [uploadingDoc, setUploadingDoc] = useState<string | null>(null);
 
+  const isInitializedRef = useRef(false);
+  const isDirtyRef = useRef(false);
+  const currentMemberIdRef = useRef<string | null>(null);
+
+  const getDraftKey = (memberId?: string) => `bms_profile_draft_${memberId || currentMemberIdRef.current || 'temp'}`;
+
+  const saveDraft = (data: typeof formData, currentPanImg: string | null, currentAadhaarImg: string | null) => {
+    try {
+      const key = getDraftKey(user?.Member_id);
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          formData: data,
+          panImage: currentPanImg,
+          aadhaarImage: currentAadhaarImg,
+        })
+      );
+    } catch (err) {
+      console.warn("Failed to save profile draft to localStorage:", err);
+    }
+  };
+
+  const clearDraft = (memberId?: string) => {
+    try {
+      const key = getDraftKey(memberId || user?.Member_id);
+      localStorage.removeItem(key);
+    } catch (err) {
+      console.warn("Failed to clear profile draft:", err);
+    }
+  };
+
   const uploadPanImage = useUploadKYCDocument(user?.Member_id || '', 'pan');
   const uploadAadhaarImage = useUploadKYCDocument(user?.Member_id || '', 'aadhaar');
 
-  const imageKit = useImageKitUpload(user?.Member_id)
+  const imageKit = useImageKitUpload(user?.Member_id);
 
-  // Update state when user data is fetched
+  // Initialize or update state when user data is fetched
   useEffect(() => {
-    if (user) {
-      setFormData({
-        Name: user.Name ?? "",
-        gender: user.gender ?? "",
-        email: user.email ?? "",
-        mobileno: user.mobileno ?? "",
-        profile_image: user.profile_image,
-        profile_image_name: "",
-        dob: user.dob ?? "",
-        Father_name: user.Father_name ?? "",
-        Nominee_name: user.Nominee_name ?? "",
-        Nominee_Relation: user.Nominee_Relation ?? "",
-        Pan_no: user.Pan_no ?? "",
-        aadharcard_no: user.aadharcard_no ?? "",
-        address: user.address ?? "",
-      });
-      // Load existing document images if saved
-      setPanImage(user.panImage || null);
-      setAadhaarImage(user.aadhaarImage || null);
+    if (!user) return;
+
+    const memberId = user.Member_id;
+    const isDifferentMember = currentMemberIdRef.current !== memberId;
+
+    if (isDifferentMember) {
+      currentMemberIdRef.current = memberId;
+      isInitializedRef.current = false;
+      isDirtyRef.current = false;
+    }
+
+    // Attempt to load saved draft from localStorage
+    let savedDraft: any = null;
+    try {
+      const rawDraft = localStorage.getItem(getDraftKey(memberId));
+      if (rawDraft) {
+        savedDraft = JSON.parse(rawDraft);
+      }
+    } catch (err) {
+      console.warn("Failed to load profile draft:", err);
+    }
+
+    const formattedDob = user.dob
+      ? (typeof user.dob === "string" && user.dob.includes("T") ? user.dob.split("T")[0] : user.dob)
+      : "";
+
+    const serverData = {
+      Name: user.Name ?? "",
+      gender: user.gender ?? "",
+      email: user.email ?? "",
+      mobileno: user.mobileno ?? "",
+      profile_image: user.profile_image ?? null,
+      profile_image_name: "",
+      dob: formattedDob,
+      Father_name: user.Father_name ?? "",
+      Nominee_name: user.Nominee_name ?? "",
+      Nominee_Relation: user.Nominee_Relation ?? "",
+      Pan_no: user.Pan_no || (user as any).pan_no || "",
+      aadharcard_no: user.aadharcard_no || (user as any).aadhar_no || "",
+      address: user.address ?? "",
+    };
+
+    if (!isInitializedRef.current) {
+      if (savedDraft && savedDraft.formData) {
+        // Restore user's unsaved draft (e.g. after switching apps or mobile tab reload)
+        setFormData({
+          ...serverData,
+          ...savedDraft.formData,
+        });
+        setPanImage(savedDraft.panImage !== undefined ? savedDraft.panImage : (user.panImage || null));
+        setAadhaarImage(savedDraft.aadhaarImage !== undefined ? savedDraft.aadhaarImage : (user.aadhaarImage || null));
+        isDirtyRef.current = true;
+      } else {
+        setFormData(serverData);
+        setPanImage(user.panImage || null);
+        setAadhaarImage(user.aadhaarImage || null);
+      }
+      isInitializedRef.current = true;
+    } else {
+      // If already initialized and user has modified inputs, DO NOT overwrite with background refetch data!
+      if (!isDirtyRef.current) {
+        setFormData(serverData);
+        setPanImage(user.panImage || null);
+        setAadhaarImage(user.aadhaarImage || null);
+      }
     }
   }, [user]);
 
@@ -94,34 +171,58 @@ const Profile: React.FC = () => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    let { name, value } = e.target;
+    // Format PAN number (uppercase, max 10 chars)
+    if (name === "Pan_no") {
+      value = value.toUpperCase().slice(0, 10);
+    }
+    // Format Aadhaar number (numeric digits only, max 12 digits)
+    else if (name === "aadharcard_no") {
+      value = value.replace(/\D/g, "").slice(0, 12);
+    }
+
+    isDirtyRef.current = true;
+    setFormData((prevData) => {
+      const nextData = {
+        ...prevData,
+        [name]: value,
+      };
+      saveDraft(nextData, panImage, aadhaarImage);
+      return nextData;
+    });
   };
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      gender: e.target.value,
-    }));
+    const val = e.target.value;
+    isDirtyRef.current = true;
+    setFormData((prevData) => {
+      const nextData = {
+        ...prevData,
+        gender: val,
+      };
+      saveDraft(nextData, panImage, aadhaarImage);
+      return nextData;
+    });
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     if (!file) return;
-    setLoading(true)
+    setLoading(true);
     try {
-      // Pass the file as a parameter to the mutate function
       imageKit.mutate(file, {
         onSuccess: (data) => {
           if (data.url) {
-            setFormData((prev) => ({
-              ...prev,
-              profile_image: data.url,
-              profile_image_name: file.name,
-            }));
+            isDirtyRef.current = true;
+            setFormData((prev) => {
+              const next = {
+                ...prev,
+                profile_image: data.url,
+                profile_image_name: file.name,
+              };
+              saveDraft(next, panImage, aadhaarImage);
+              return next;
+            });
             toast.success("Image uploaded Successfully");
           } else {
             toast.error("Failed to get image URL");
@@ -135,17 +236,25 @@ const Profile: React.FC = () => {
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
   };
 
   const handleSubmit = () => {
-    updateMember.mutate({
-      ...formData,
-      panImage,
-      aadhaarImage
-    });
+    updateMember.mutate(
+      {
+        ...formData,
+        pan_no: formData.Pan_no, // Sync pan_no and Pan_no for backend schema compatibility
+        panImage,
+        aadhaarImage,
+      },
+      {
+        onSuccess: () => {
+          isDirtyRef.current = false;
+          clearDraft(user?.Member_id);
+        },
+      }
+    );
   };
 
   // ── Document image upload handlers ──────────────────────────
@@ -156,14 +265,32 @@ const Profile: React.FC = () => {
     try {
       const uploader = type === 'pan' ? uploadPanImage : uploadAadhaarImage;
       const result = await uploader.mutateAsync(file);
-      if (type === 'pan') setPanImage(result.url);
-      else setAadhaarImage(result.url);
+      isDirtyRef.current = true;
+      if (type === 'pan') {
+        setPanImage(result.url);
+        saveDraft(formData, result.url, aadhaarImage);
+      } else {
+        setAadhaarImage(result.url);
+        saveDraft(formData, panImage, result.url);
+      }
       toast.success(`${type === 'pan' ? 'PAN' : 'Aadhaar'} image uploaded!`);
     } catch (err: any) {
       toast.error(err?.message || 'Upload failed');
     } finally {
       setUploadingDoc(null);
     }
+  };
+
+  const handleRemovePanImage = () => {
+    isDirtyRef.current = true;
+    setPanImage(null);
+    saveDraft(formData, null, aadhaarImage);
+  };
+
+  const handleRemoveAadhaarImage = () => {
+    isDirtyRef.current = true;
+    setAadhaarImage(null);
+    saveDraft(formData, panImage, null);
   };
 
   return (
@@ -403,7 +530,7 @@ const Profile: React.FC = () => {
                             />
                             <Box display="flex" justifyContent="space-between" alignItems="center">
                               <Button size="small" variant="outlined" onClick={() => window.open(panImage, '_blank')} sx={{ flex: 1, mr: 1 }}>View</Button>
-                              <IconButton color="error" size="small" onClick={() => setPanImage(null)} disabled={uploadingDoc === 'pan'}>
+                              <IconButton color="error" size="small" onClick={handleRemovePanImage} disabled={uploadingDoc === 'pan'}>
                                 <DeleteIcon />
                               </IconButton>
                             </Box>
@@ -446,7 +573,7 @@ const Profile: React.FC = () => {
                             />
                             <Box display="flex" justifyContent="space-between" alignItems="center">
                               <Button size="small" variant="outlined" onClick={() => window.open(aadhaarImage, '_blank')} sx={{ flex: 1, mr: 1 }}>View</Button>
-                              <IconButton color="error" size="small" onClick={() => setAadhaarImage(null)} disabled={uploadingDoc === 'aadhaar'}>
+                              <IconButton color="error" size="small" onClick={handleRemoveAadhaarImage} disabled={uploadingDoc === 'aadhaar'}>
                                 <DeleteIcon />
                               </IconButton>
                             </Box>

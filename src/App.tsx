@@ -244,10 +244,17 @@ const ShouldShowFooter = () => {
 };
 
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
 function App() {
   const [isOpen, setIsOpen] = useState(() => window.innerWidth > 768);
-
-  const queryClient = new QueryClient();
 
   return (
     <UserProvider>

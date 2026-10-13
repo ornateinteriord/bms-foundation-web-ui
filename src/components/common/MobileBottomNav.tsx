@@ -16,7 +16,7 @@ const MobileBottomNav: React.FC = () => {
 
   const memberId = TokenService.getMemberId();
   const { data: memberDetails } = useGetMemberDetails(memberId);
-  const isROIActive = memberDetails?.upgrade_status === 'Active';
+  const isROIActive = memberDetails?.upgrade_status === 'Active' || (memberDetails?.status === 'active' && Number(memberDetails?.package_value || 0) > 0);
 
   // Sync state with current path
   React.useEffect(() => {

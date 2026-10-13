@@ -85,7 +85,7 @@ const UserDashboard = () => {
   const displayDeposit = Math.max(0, totalPrincipal - extraROI);
 
   const isUserActive = memberDetails?.status === 'active';
-  const isPackageActive = memberDetails?.upgrade_status === 'Active';
+  const isPackageActive = memberDetails?.upgrade_status === 'Active' || (memberDetails?.status === 'active' && Number(memberDetails?.package_value || 0) > 0);
 
   useEffect(() => {
     const orderId = searchParams.get('order_id');

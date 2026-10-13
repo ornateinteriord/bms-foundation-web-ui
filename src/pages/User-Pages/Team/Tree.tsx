@@ -62,7 +62,7 @@ const Tree = () => {
     { field: "Direct", value: hoveredSponsor.direct_referrals?.length || 0 },
     { field: "Team", value: hoveredSponsor.total_team || 0 },
     { field: "Activation Date", value: getFormattedDate(hoveredSponsor.Date_of_joining) },
-    { field: "Club", value: "2K" },
+    // { field: "Club", value: "2K" },
     { field: "Earnings", value: `Rs. ${hoveredSponsor.wallet_balance || 0}` },
   ] : []
 

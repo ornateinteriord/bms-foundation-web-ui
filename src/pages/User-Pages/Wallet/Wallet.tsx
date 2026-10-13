@@ -11,7 +11,11 @@ import {
   Box,
   Button,
   CircularProgress,
-
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Alert,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
@@ -27,10 +31,12 @@ import { toast } from "react-toastify";
 const Wallet = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const [amount, setAmount] = useState("");
-  const [tds, setTds] = useState(0); const [netAmount, setNetAmount] = useState(0);
+  const [tds, setTds] = useState(0);
+  const [netAmount, setNetAmount] = useState(0);
   const [optimisticBalance, setOptimisticBalance] = useState<number | null>(null);
   const [isWithdrawalAllowed, setIsWithdrawalAllowed] = useState<boolean>(true);
-  // const [ setLoanStatusMessage] = useState<string>("");
+  // Default to 'monthly' as required
+  const [withdrawalType, setWithdrawalType] = useState<"monthly" | "monday_to_friday">("monthly");
 
   const memberId = TokenService.getMemberId();
 
@@ -51,9 +57,83 @@ const Wallet = () => {
     // Check withdrawal allowance from API response
     if (walletData?.loanStatus) {
       setIsWithdrawalAllowed(walletData.loanStatus.isWithdrawalAllowed);
-      // setLoanStatusMessage(walletData.loanStatus.message || "");
     }
   }, [walletData?.data?.balance, walletData?.loanStatus]);
+
+  // Date and timing validations
+  const now = new Date();
+  const currentDayOfMonth = now.getDate();
+  const currentDayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon, ..., 5 = Fri, 6 = Sat
+
+  // Rule 1: Monthly Window is 1st to 5th
+  const isDateInMonthlyWindow = currentDayOfMonth >= 1 && currentDayOfMonth <= 5;
+
+  // Rule 2: Monthly is once per month
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
+  const alreadyWithdrawnThisMonth = (walletData?.transactions || []).some((tx: any) => {
+    const isWithdrawal =
+      tx.transaction_type?.toLowerCase() === "withdrawal" ||
+      tx.description?.toLowerCase().includes("withdrawal");
+    const isNotRejected = tx.status !== "Rejected" && tx.status !== "Failed";
+    if (!isWithdrawal || !isNotRejected) return false;
+
+    const txDate = new Date(tx.createdAt || tx.transaction_date);
+    return (
+      !isNaN(txDate.getTime()) &&
+      txDate.getFullYear() === currentYear &&
+      txDate.getMonth() === currentMonth
+    );
+  });
+
+  // Rule 3: Monday to Friday
+  const isWeekday = currentDayOfWeek >= 1 && currentDayOfWeek <= 5;
+
+  // Rule 4: Monday to Friday is once per day
+  const todayDateStr = now.toDateString();
+  const alreadyWithdrawnToday = (walletData?.transactions || []).some((tx: any) => {
+    const isWithdrawal =
+      tx.transaction_type?.toLowerCase() === "withdrawal" ||
+      tx.description?.toLowerCase().includes("withdrawal");
+    const isNotRejected = tx.status !== "Rejected" && tx.status !== "Failed";
+    if (!isWithdrawal || !isNotRejected) return false;
+
+    const txDate = new Date(tx.createdAt || tx.transaction_date);
+    return !isNaN(txDate.getTime()) && txDate.toDateString() === todayDateStr;
+  });
+
+  const getOrdinalSuffix = (d: number) => {
+    if (d > 3 && d < 21) return `${d}th`;
+    switch (d % 10) {
+      case 1:  return `${d}st`;
+      case 2:  return `${d}nd`;
+      case 3:  return `${d}rd`;
+      default: return `${d}th`;
+    }
+  };
+
+  let isWindowAllowed = true;
+  let windowRestrictionMessage = "";
+
+  if (withdrawalType === "monthly") {
+    if (!isDateInMonthlyWindow) {
+      isWindowAllowed = false;
+      windowRestrictionMessage = `Monthly withdrawals are only permitted from the 1st to 5th of each month. (Today is the ${getOrdinalSuffix(currentDayOfMonth)})`;
+    } else if (alreadyWithdrawnThisMonth) {
+      isWindowAllowed = false;
+      windowRestrictionMessage = `You have already submitted a monthly withdrawal for ${now.toLocaleString("default", { month: "long" })}. Monthly withdrawals can only be made once per month.`;
+    }
+  } else {
+    if (!isWeekday) {
+      isWindowAllowed = false;
+      windowRestrictionMessage = "Withdrawals are only allowed from Monday to Friday.";
+    } else if (alreadyWithdrawnToday) {
+      isWindowAllowed = false;
+      windowRestrictionMessage = "You have already made a withdrawal today. One withdrawal per day is allowed.";
+    }
+  }
+
+  const canWithdraw = isWithdrawalAllowed && isWindowAllowed;
 
   const handleAmountChange = (e: any) => {
     const value = e.target.value;
@@ -84,10 +164,21 @@ const Wallet = () => {
       return;
     }
 
+    if (!isWithdrawalAllowed) {
+      toast.error("Withdrawal disabled due to unpaid loan from last Saturday");
+      return;
+    }
+
+    if (!isWindowAllowed) {
+      toast.error(windowRestrictionMessage);
+      return;
+    }
+
     const withdrawalAmount = parseFloat(amount);
     const currentBalance = optimisticBalance !== null ? optimisticBalance : parseFloat(walletData?.balance || 0);
 
     if (withdrawalAmount > currentBalance) {
+      toast.error("Insufficient balance");
       return;
     }
 
@@ -100,7 +191,7 @@ const Wallet = () => {
     setOptimisticBalance(newBalance);
 
     withdrawMutation.mutate(
-      { memberId: memberId, amount: amount },
+      { memberId: memberId, amount: amount, withdrawalType },
       {
         onSuccess: () => {
           setAmount("");
@@ -278,15 +369,83 @@ const Wallet = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800",
+              backgroundColor: canWithdraw ? "#0a2558" : (isWithdrawalAllowed ? "#1e293b" : "#ff9800"),
               color: "#fff",
               "& .MuiSvgIcon-root": { color: "#fff" },
               minHeight: isMobile ? "48px" : "64px",
             }}
           >
-            Withdrawal Request {!isWithdrawalAllowed && "(Temporarily Disabled)"}
+            Withdrawal Request {!canWithdraw && (isWithdrawalAllowed ? `(${withdrawalType === 'monthly' ? 'Monthly Window 1st-5th' : 'Weekday Window'})` : "(Temporarily Disabled)")}
           </AccordionSummary>
           <AccordionDetails>
+            {/* Top Bar with Title and Top-Right Dropdown */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 2,
+                mb: 2.5,
+                pb: 1.5,
+                borderBottom: "1px solid #e2e8f0",
+              }}
+            >
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold" sx={{ color: "#0a2558" }}>
+                  Withdrawal Schedule
+                </Typography>
+                <Typography variant="caption" sx={{ color: "#64748b" }}>
+                  {withdrawalType === "monthly"
+                    ? "Monthly Schedule: 1st to 5th date of each month (Once per month)"
+                    : "Standard Schedule: Monday to Friday (Once per day)"}
+                </Typography>
+              </Box>
+
+              <FormControl size="small" sx={{ minWidth: isMobile ? "100%" : 220 }}>
+                <InputLabel id="withdrawal-type-select-label" sx={{ color: "#0a2558", fontWeight: 600 }}>
+                  Withdrawal Type
+                </InputLabel>
+                <Select
+                  labelId="withdrawal-type-select-label"
+                  id="withdrawal-type-select"
+                  value={withdrawalType}
+                  label="Withdrawal Type"
+                  onChange={(e) => setWithdrawalType(e.target.value as "monthly" | "monday_to_friday")}
+                  sx={{
+                    fontWeight: 600,
+                    color: "#0a2558",
+                    backgroundColor: "#f8fafc",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#cbd5e1",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#0a2558",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#0a2558",
+                    },
+                  }}
+                >
+                  <MenuItem value="monthly" sx={{ fontWeight: 500 }}>
+                    1. Monthly
+                  </MenuItem>
+                  <MenuItem value="monday_to_friday" sx={{ fontWeight: 500 }}>
+                    2. Monday to Friday
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Informational Alert for current status */}
+            {!canWithdraw && (
+              <Alert severity="warning" sx={{ mb: 2.5, borderRadius: 2 }}>
+                {!isWithdrawalAllowed
+                  ? "Withdrawal disabled due to unpaid loan from last Saturday"
+                  : windowRestrictionMessage}
+              </Alert>
+            )}
+
             <form
               style={{
                 marginTop: 2,
@@ -303,8 +462,8 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
                   },
                 }}
               />
@@ -317,32 +476,16 @@ const Wallet = () => {
                 fullWidth
                 size="medium"
                 placeholder="Enter amount (Min ₹100)"
-                disabled={withdrawMutation.isPending || !isWithdrawalAllowed}
+                disabled={withdrawMutation.isPending || !canWithdraw}
                 error={parseFloat(amount) > displayBalance}
                 helperText={parseFloat(amount) > displayBalance ? "Insufficient Balance" : ""}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
                   },
                 }}
               />
-
-              {/* 
-              <TextField
-                label="Admin Charges (15%)"
-                value={`₹${adminCharges.toFixed(2)}`}
-                fullWidth
-                size="medium"
-                InputProps={{ readOnly: true }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
-                  },
-                }}
-              />
-              */}
 
               <TextField
                 label="TDS (5%)"
@@ -352,8 +495,8 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
                   },
                 }}
               />
@@ -366,8 +509,8 @@ const Wallet = () => {
                 InputProps={{ readOnly: true }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800" },
+                    "&:hover fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
+                    "&.Mui-focused fieldset": { borderColor: canWithdraw ? "#0a2558" : "#ff9800" },
                   },
                 }}
               />
@@ -383,14 +526,23 @@ const Wallet = () => {
               >
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Terms & Conditions:</strong>
+                    <strong>Terms & Conditions ({withdrawalType === "monthly" ? "Monthly Policy" : "Monday to Friday Policy"}):</strong>
                   </Typography>
                   <Box sx={{ display: "flex", gap: 4, flexDirection: isMobile ? "column" : "row" }}>
                     <Box>
-                      <Typography variant="body2">• Withdrawals only allowed from Monday to Friday</Typography>
+                      {withdrawalType === "monthly" ? (
+                        <>
+                          <Typography variant="body2">• Monthly withdrawals are only allowed from the 1st to 5th date of each month</Typography>
+                          <Typography variant="body2">• Allowed once per month</Typography>
+                        </>
+                      ) : (
+                        <>
+                          <Typography variant="body2">• Withdrawals only allowed from Monday to Friday</Typography>
+                          <Typography variant="body2">• One withdrawal per day allowed</Typography>
+                        </>
+                      )}
                       <Typography variant="body2">• 5% TDS applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹100</Typography>
-                      <Typography variant="body2">• One withdrawal per day allowed</Typography>
                     </Box>
                   </Box>
                   {!isWithdrawalAllowed && (
@@ -405,6 +557,18 @@ const Wallet = () => {
                       • Withdrawal disabled due to unpaid loan from last Saturday
                     </Typography>
                   )}
+                  {isWithdrawalAllowed && !isWindowAllowed && (
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#d97706",
+                        fontWeight: "bold",
+                        mt: 1
+                      }}
+                    >
+                      • {windowRestrictionMessage}
+                    </Typography>
+                  )}
                 </Box>
 
                 <Button
@@ -415,21 +579,23 @@ const Wallet = () => {
                     !amount ||
                     amount === "0" ||
                     parseFloat(amount) > displayBalance ||
-                    !isWithdrawalAllowed
+                    !canWithdraw
                   }
                   sx={{
-                    backgroundColor: isWithdrawalAllowed ? "#0a2558" : "#ff9800",
-                    minWidth: "120px",
+                    backgroundColor: canWithdraw ? "#0a2558" : "#94a3b8",
+                    minWidth: "150px",
                     "&:hover": {
-                      backgroundColor: isWithdrawalAllowed ? "#581c87" : "#f57c00"
+                      backgroundColor: canWithdraw ? "#581c87" : "#94a3b8"
                     },
                     "&:disabled": { backgroundColor: "#cccccc" },
                   }}
                 >
                   {withdrawMutation.isPending ? (
                     <CircularProgress size={24} sx={{ color: "white" }} />
+                  ) : canWithdraw ? (
+                    "Withdraw"
                   ) : (
-                    isWithdrawalAllowed ? "Withdraw" : "Disabled"
+                    "Withdrawal Closed"
                   )}
                 </Button>
               </Box>
