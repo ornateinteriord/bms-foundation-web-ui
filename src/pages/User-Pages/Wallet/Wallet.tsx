@@ -141,10 +141,13 @@ const Wallet = () => {
     if (value !== "" && !/^\d*$/.test(value)) return;
 
     setAmount(value);
+  };
 
-    if (value && value !== "0") {
-      const withdrawalAmount = parseFloat(value);
-      const tdsAmount = withdrawalAmount * 0.05; // 5% TDS
+  useEffect(() => {
+    if (amount && amount !== "0") {
+      const withdrawalAmount = parseFloat(amount);
+      const tdsRate = withdrawalType === "monthly" ? 0 : 0.05;
+      const tdsAmount = withdrawalAmount * tdsRate;
       const calculatedNetAmount = withdrawalAmount - tdsAmount;
 
       setTds(tdsAmount);
@@ -153,7 +156,7 @@ const Wallet = () => {
       setTds(0);
       setNetAmount(0);
     }
-  };
+  }, [amount, withdrawalType]);
 
   const handleWithdraw = () => {
     if (!amount || amount === "0") {
@@ -488,7 +491,7 @@ const Wallet = () => {
               />
 
               <TextField
-                label="TDS (5%)"
+                label={withdrawalType === "monthly" ? "TDS / Deduction (0%)" : "TDS (5%)"}
                 value={`₹${tds.toFixed(2)}`}
                 fullWidth
                 size="medium"
@@ -534,14 +537,15 @@ const Wallet = () => {
                         <>
                           <Typography variant="body2">• Monthly withdrawals are only allowed from the 1st to 5th date of each month</Typography>
                           <Typography variant="body2">• Allowed once per month</Typography>
+                          <Typography variant="body2">• 0% TDS / Deduction (No deduction applied)</Typography>
                         </>
                       ) : (
                         <>
                           <Typography variant="body2">• Withdrawals only allowed from Monday to Friday</Typography>
                           <Typography variant="body2">• One withdrawal per day allowed</Typography>
+                          <Typography variant="body2">• 5% TDS applied</Typography>
                         </>
                       )}
-                      <Typography variant="body2">• 5% TDS applied</Typography>
                       <Typography variant="body2">• Minimum withdrawal: ₹100</Typography>
                     </Box>
                   </Box>
