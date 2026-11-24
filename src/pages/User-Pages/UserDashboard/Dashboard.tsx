@@ -246,13 +246,32 @@ const UserDashboard = () => {
             {memberDetails?.Name || (isMemberLoading ? '...' : '')}
           </Typography>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, opacity: 0.9 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgba(16, 185, 129, 0.2)', borderRadius: '6px', p: 0.3 }}>
-               <VerifiedUserIcon sx={{ fontSize: 14, color: '#34d399' }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, flexWrap: 'wrap', mt: 0.3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, opacity: 0.9 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgba(16, 185, 129, 0.2)', borderRadius: '6px', p: 0.3 }}>
+                 <VerifiedUserIcon sx={{ fontSize: 14, color: '#34d399' }} />
+              </Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, letterSpacing: '1px', color: '#cbd5e1' }}>
+                ID: {memberDetails?.Member_id || memberId || ''}
+              </Typography>
             </Box>
-            <Typography variant="caption" sx={{ fontWeight: 600, letterSpacing: '1px', color: '#cbd5e1' }}>
-              ID: {memberDetails?.Member_id || memberId || ''}
-            </Typography>
+
+            {/* Level Badge */}
+            <Box sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5,
+              bgcolor: 'rgba(56, 189, 248, 0.2)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              px: 1,
+              py: 0.2,
+              borderRadius: '6px'
+            }}>
+              <AccountTreeIcon sx={{ fontSize: 12, color: '#38bdf8' }} />
+              <Typography variant="caption" sx={{ fontWeight: 800, color: '#e0f2fe', fontSize: '11px', letterSpacing: '0.5px' }}>
+                Level {parseInt(memberDetails?.level_eligible || '0', 10) || (memberDetails?.direct_referrals?.length || 0) || 0}
+              </Typography>
+            </Box>
           </Box>
 
           {/* Wallet Badge */}

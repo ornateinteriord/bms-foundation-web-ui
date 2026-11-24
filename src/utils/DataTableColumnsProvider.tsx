@@ -472,6 +472,30 @@ export const getMembersColumns = (
       sortable: true,
     },
     {
+      name: "Level",
+      selector: (row: any) => parseInt(row.level_eligible || "0", 10) || (row.direct_referrals?.length || 0) || 0,
+      sortable: true,
+      width: "95px",
+      cell: (row: any) => {
+        const lvl = parseInt(row.level_eligible || "0", 10) || (row.direct_referrals?.length || 0) || 0;
+        return (
+          <div
+            style={{
+              backgroundColor: '#e0f2fe',
+              color: '#0369a1',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              fontWeight: 700,
+              fontSize: '12px',
+              display: 'inline-block'
+            }}
+          >
+            Level {lvl}
+          </div>
+        );
+      },
+    },
+    {
       name: "MobileNo",
       selector: (row: any) => row.mobileno,
       sortable: true,
@@ -560,6 +584,30 @@ export const getPermissionsColumns = (
       },
     },
     {
+      name: "Level",
+      selector: (row: any) => parseInt(row.level_eligible || "0", 10) || (row.direct_referrals?.length || 0) || 0,
+      sortable: true,
+      width: "95px",
+      cell: (row: any) => {
+        const lvl = parseInt(row.level_eligible || "0", 10) || (row.direct_referrals?.length || 0) || 0;
+        return (
+          <div
+            style={{
+              backgroundColor: '#e0f2fe',
+              color: '#0369a1',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              fontWeight: 700,
+              fontSize: '12px',
+              display: 'inline-block'
+            }}
+          >
+            Level {lvl}
+          </div>
+        );
+      },
+    },
+    {
       name: "Status",
       selector: (row: any) => row.upgrade_status || row.status,
       sortable: true,
@@ -626,6 +674,30 @@ export const getPendingMembersColumns = (
       cell: (row: any) => {
         const amt = row.package_value ?? row.spackage;
         return amt ? `₹${amt}` : "-";
+      },
+    },
+    {
+      name: "Level",
+      selector: (row: any) => parseInt(row.level_eligible || "0", 10) || (row.direct_referrals?.length || 0) || 0,
+      sortable: true,
+      width: "95px",
+      cell: (row: any) => {
+        const lvl = parseInt(row.level_eligible || "0", 10) || (row.direct_referrals?.length || 0) || 0;
+        return (
+          <div
+            style={{
+              backgroundColor: '#e0f2fe',
+              color: '#0369a1',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              fontWeight: 700,
+              fontSize: '12px',
+              display: 'inline-block'
+            }}
+          >
+            Level {lvl}
+          </div>
+        );
       },
     },
     {

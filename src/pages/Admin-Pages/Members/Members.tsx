@@ -232,6 +232,8 @@ interface Member {
   status: string;
   Name: string;
   package_value?: number | string;
+  level_eligible?: string;
+  direct_referrals?: string[];
 }
 
 type status = "All" | "active" | "Inactive" | "Pending";

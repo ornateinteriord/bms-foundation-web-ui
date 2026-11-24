@@ -34,9 +34,11 @@ const ROIBenefits = () => {
       return n + (s[(v - 20) % 10] || s[v] || s[0]);
     };
 
-    const levelStr = transaction.level 
-      ? `${getOrdinal(transaction.level)} Level Benefit` 
-      : 'N/A';
+    const levelStr = transaction.description 
+      ? transaction.description 
+      : transaction.level 
+        ? `${getOrdinal(transaction.level)} Level Benefit` 
+        : 'N/A';
 
     return {
       id: transaction._id || transaction.transaction_id,
